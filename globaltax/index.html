@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>GlobalTax — World Tax Rate Explorer</title>
+<meta name="description" content="An interactive 3D globe of world tax rates. Set your income, pick a tax type, and see every country graded green to red — plus a New-resident mode for relocation tax regimes." />
+<link rel="icon" href="img/icon128.png" />
+<style>
+  :root{--bg:#02030a;--bg2:#0a1530;--fg:#e6ecff;--muted:#93a0c5;--acc:#5ad1c5;--line:rgba(255,255,255,.1);
+    --green:#2fd07a;--yellow:#f4c145;--red:#ef4d52;}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'SF Pro Display',-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;
+    color:var(--fg);background:radial-gradient(ellipse at 50% -10%,#0a1530,#02030a 70%);line-height:1.6;-webkit-font-smoothing:antialiased}
+  a{color:var(--acc);text-decoration:none}a:hover{text-decoration:underline}
+  .wrap{max-width:1040px;margin:0 auto;padding:0 22px}
+  header{display:flex;align-items:center;justify-content:space-between;padding:20px 0}
+  .brand{display:flex;align-items:center;gap:12px}
+  .brand img{width:40px;height:40px;border-radius:10px}
+  .brand .t{font-size:19px;font-weight:700;letter-spacing:2px}.brand .t span{color:var(--acc)}
+  nav a{margin-left:20px;font-size:14px;color:var(--muted)}
+  .hero{text-align:center;padding:50px 0 30px}
+  .hero h1{font-size:46px;font-weight:800;line-height:1.15;letter-spacing:-.5px}
+  .hero h1 span{color:var(--acc)}
+  .hero p{font-size:18px;color:var(--muted);max-width:680px;margin:18px auto 0}
+  .cta{display:flex;gap:14px;justify-content:center;margin-top:30px;flex-wrap:wrap}
+  .btn{background:var(--acc);color:#04121a;font-weight:700;padding:13px 24px;border-radius:11px;font-size:15px;border:none;cursor:pointer}
+  .btn.ghost{background:rgba(255,255,255,.05);color:var(--fg);border:1px solid var(--line)}
+  .shot{display:block;width:100%;border-radius:16px;border:1px solid var(--line);margin:36px 0;box-shadow:0 30px 80px rgba(0,0,0,.5)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;margin:36px 0}
+  .card{background:rgba(8,14,33,.7);border:1px solid var(--line);border-radius:14px;padding:20px}
+  .card .ic{font-size:24px}.card h3{font-size:16px;margin:8px 0 6px}.card p{font-size:13.5px;color:var(--muted)}
+  h2{font-size:28px;font-weight:700;margin:54px 0 6px;text-align:center}
+  .sub{text-align:center;color:var(--muted);margin-bottom:8px}
+  .legend{display:flex;gap:18px;justify-content:center;margin:14px 0 0;font-size:13px;color:var(--muted)}
+  .dot{display:inline-block;width:12px;height:12px;border-radius:4px;vertical-align:-1px;margin-right:6px}
+  .warn{background:rgba(239,77,82,.1);border:1px solid rgba(239,77,82,.35);border-radius:14px;padding:18px 20px;margin:40px 0;font-size:14px;color:#ffd9a8}
+  .warn b{color:#ffe9c2}
+  .src{font-size:13.5px;color:var(--muted)}
+  .src b{color:var(--fg)}
+  footer{border-top:1px solid var(--line);margin-top:50px;padding:26px 0 50px;color:var(--muted);font-size:13px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+  ol{margin:10px 0 0 20px;color:var(--muted);font-size:14px}ol li{margin:4px 0}
+  code{background:rgba(255,255,255,.07);padding:2px 6px;border-radius:5px;font-size:13px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand"><img src="img/icon128.png" alt="" /><div class="t">GLOBAL<span>·</span>TAX</div></div>
+    <nav>
+      <a href="#install">Install</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="globaltax.zip">Download</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <h1>The world's tax rates,<br><span>on a 3D globe.</span></h1>
+    <p>Set your income and currency, pick a tax type, and every country is graded green → yellow → red by its
+       tax burden. Flip on <b>New-resident mode</b> to see where movers get a tax break.</p>
+    <div class="cta">
+      <a class="btn" href="globaltax.zip">Download for Chrome</a>
+      <a class="btn ghost" href="#install">How to install</a>
+    </div>
+    <div class="legend">
+      <span><span class="dot" style="background:var(--green)"></span>Low / none</span>
+      <span><span class="dot" style="background:var(--yellow)"></span>Moderate</span>
+      <span><span class="dot" style="background:var(--red)"></span>High</span>
+    </div>
+  </section>
+
+  <img class="shot" src="img/screenshot-1-overview.png" alt="GlobalTax globe coloured by tax burden" />
+
+  <div class="grid">
+    <div class="card"><div class="ic">🌍</div><h3>Interactive 3D globe</h3><p>Spin, zoom and explore 160+ countries &amp; territories — tiny tax havens shown as labelled markers.</p></div>
+    <div class="card"><div class="ic">💷</div><h3>Your income, your currency</h3><p>A $0–$5M income slider in 27 currencies. Personal tax computed from real progressive brackets.</p></div>
+    <div class="card"><div class="ic">🧾</div><h3>8 tax types</h3><p>Income (marginal &amp; effective), corporate, VAT/GST, capital gains, estate, gift and social security.</p></div>
+    <div class="card"><div class="ic">✦</div><h3>New-resident mode</h3><p>Non-dom, expat, retiree &amp; HNWI regimes plus the world's permanent no-income-tax havens.</p></div>
+    <div class="card"><div class="ic">🔎</div><h3>Search &amp; detail cards</h3><p>Jump to any country and see all eight rates at once, colour-graded, with any relocation perk.</p></div>
+    <div class="card"><div class="ic">🔒</div><h3>Private by design</h3><p>No accounts, no tracking, no permissions, no network requests. Everything runs locally.</p></div>
+  </div>
+
+  <h2>New-resident mode</h2>
+  <p class="sub">Where people who relocate get a tax break.</p>
+  <img class="shot" src="img/screenshot-2-newresident.png" alt="New-resident mode highlighting relocation tax regimes" />
+
+  <h2 id="install">Install</h2>
+  <p class="sub">Until it's on the Chrome Web Store, load it in seconds:</p>
+  <ol>
+    <li><a href="globaltax.zip">Download <b>globaltax.zip</b></a> and unzip it.</li>
+    <li>Open <code>chrome://extensions</code> and turn on <b>Developer mode</b> (top-right).</li>
+    <li>Click <b>Load unpacked</b> and select the unzipped folder.</li>
+    <li>Pin it and click the rocket 🚀 — a new tab opens with the globe.</li>
+  </ol>
+
+  <div class="warn">
+    ⚠️ <b>Not tax, legal or financial advice.</b> The figures are approximate <b>headline</b> rates for
+    illustration only and may be incomplete, simplified or out of date. They exclude state/local taxes,
+    deductions, reliefs, treaties and personal circumstances. <b>Always do your own research</b> and consult a
+    qualified professional or the relevant tax authority before making any decision.
+  </div>
+
+  <h2>Where the data comes from</h2>
+  <p class="src" style="text-align:center;max-width:760px;margin:8px auto 0">
+    Rates were hand-assembled and <b>web-verified</b> (≈2025/26) against public references — primarily
+    <b>PwC Worldwide Tax Summaries</b>, <b>KPMG</b>, <b>Deloitte</b>, the <b>OECD</b> and national tax
+    authorities. They are a fixed snapshot bundled with the extension, not a live feed. Country borders:
+    <b>Natural Earth</b> (public domain). Globe rendering: <b>globe.gl</b> / <b>three.js</b> (MIT).
+  </p>
+
+  <footer>
+    <span>© 2026 GlobalTax · 42-apps</span>
+    <span><a href="globaltax.zip">Download</a> · <a href="privacy.html">Privacy</a></span>
+  </footer>
+</div>
+</body>
+</html>
