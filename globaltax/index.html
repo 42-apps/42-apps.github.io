@@ -24,7 +24,7 @@
   .hero h1 span{color:var(--acc)}
   .hero p{font-size:18px;color:var(--muted);max-width:680px;margin:18px auto 0}
   .cta{display:flex;gap:14px;justify-content:center;margin-top:30px;flex-wrap:wrap}
-  .btn{background:var(--acc);color:#04121a;font-weight:700;padding:13px 24px;border-radius:11px;font-size:15px;border:none;cursor:pointer}
+  .btn{display:inline-block;background:var(--acc);color:#04121a;font-weight:700;padding:13px 24px;border-radius:11px;font-size:15px;border:none;cursor:pointer;text-align:center}
   .btn.ghost{background:rgba(255,255,255,.05);color:var(--fg);border:1px solid var(--line)}
   .shot{display:block;width:100%;border-radius:16px;border:1px solid var(--line);margin:36px 0;box-shadow:0 30px 80px rgba(0,0,0,.5)}
   .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;margin:36px 0}
@@ -48,9 +48,10 @@
   <header>
     <div class="brand"><img src="img/icon128.png" alt="" /><div class="t">GLOBAL<span>·</span>TAX</div></div>
     <nav>
-      <a href="#install">Install</a>
+      <a href="app/">Use online</a>
+      <a href="#get">Get it</a>
       <a href="privacy.html">Privacy</a>
-      <a href="globaltax.zip">Download</a>
+      <a href="https://chromewebstore.google.com/detail/ocjdhoegdajloidcpidlacmigldcopeo" target="_blank" rel="noopener">Add to Chrome</a>
     </nav>
   </header>
 
@@ -59,8 +60,8 @@
     <p>Set your income and currency, pick a tax type, and every country is graded green → yellow → red by its
        tax burden. Flip on <b>New-resident mode</b> to see where movers get a tax break.</p>
     <div class="cta">
-      <a class="btn" href="globaltax.zip">Download for Chrome</a>
-      <a class="btn ghost" href="#install">How to install</a>
+      <a class="btn" href="https://chromewebstore.google.com/detail/ocjdhoegdajloidcpidlacmigldcopeo" target="_blank" rel="noopener">Add to Chrome — it's free</a>
+      <a class="btn ghost" href="app/">Use it online — no install</a>
     </div>
     <div class="legend">
       <span><span class="dot" style="background:var(--green)"></span>Low / none</span>
@@ -77,21 +78,31 @@
     <div class="card"><div class="ic">🧾</div><h3>8 tax types</h3><p>Income (marginal &amp; effective), corporate, VAT/GST, capital gains, estate, gift and social security.</p></div>
     <div class="card"><div class="ic">✦</div><h3>New-resident mode</h3><p>Non-dom, expat, retiree &amp; HNWI regimes plus the world's permanent no-income-tax havens.</p></div>
     <div class="card"><div class="ic">🔎</div><h3>Search &amp; detail cards</h3><p>Jump to any country and see all eight rates at once, colour-graded, with any relocation perk.</p></div>
-    <div class="card"><div class="ic">🔒</div><h3>Private by design</h3><p>No accounts, no tracking, no permissions, no network requests. Everything runs locally.</p></div>
+    <div class="card"><div class="ic">🔒</div><h3>Private by design</h3><p>No accounts, no tracking, no analytics. Your income and choices never leave your device.</p></div>
   </div>
 
   <h2>New-resident mode</h2>
   <p class="sub">Where people who relocate get a tax break.</p>
   <img class="shot" src="img/screenshot-2-newresident.png" alt="New-resident mode highlighting relocation tax regimes" />
 
-  <h2 id="install">Install</h2>
-  <p class="sub">Until it's on the Chrome Web Store, load it in seconds:</p>
-  <ol>
-    <li><a href="globaltax.zip">Download <b>globaltax.zip</b></a> and unzip it.</li>
-    <li>Open <code>chrome://extensions</code> and turn on <b>Developer mode</b> (top-right).</li>
-    <li>Click <b>Load unpacked</b> and select the unzipped folder.</li>
-    <li>Pin it and click the rocket 🚀 — a new tab opens with the globe.</li>
-  </ol>
+  <h2 id="get">Get GlobalTax</h2>
+  <p class="sub">Three ways to use it — pick whatever suits you.</p>
+  <div class="grid">
+    <div class="card">
+      <div class="ic">🧩</div><h3>Add to Chrome</h3>
+      <p>The easy way — install from the Chrome Web Store in one click. It stays pinned and updates automatically.</p>
+      <p style="margin-top:14px"><a class="btn" href="https://chromewebstore.google.com/detail/ocjdhoegdajloidcpidlacmigldcopeo" target="_blank" rel="noopener">Add to Chrome</a></p>
+    </div>
+    <div class="card">
+      <div class="ic">🌐</div><h3>Use it on the web</h3>
+      <p>Nothing to install — open the full interactive globe right in your browser. Works on any modern desktop browser.</p>
+      <p style="margin-top:14px"><a class="btn ghost" href="app/">Launch the web app →</a></p>
+    </div>
+    <div class="card">
+      <div class="ic">⬇️</div><h3>Manual install</h3>
+      <p>Side-load or run offline: <a href="globaltax.zip">download the ZIP</a>, open <code>chrome://extensions</code>, turn on <b>Developer mode</b>, and <b>Load unpacked</b>.</p>
+    </div>
+  </div>
 
   <div class="warn">
     ⚠️ <b>Not tax, legal or financial advice.</b> The figures are approximate <b>headline</b> rates for
@@ -104,13 +115,13 @@
   <p class="src" style="text-align:center;max-width:760px;margin:8px auto 0">
     Rates were hand-assembled and <b>web-verified</b> (≈2025/26) against public references — primarily
     <b>PwC Worldwide Tax Summaries</b>, <b>KPMG</b>, <b>Deloitte</b>, the <b>OECD</b> and national tax
-    authorities. They are a fixed snapshot bundled with the extension, not a live feed. Country borders:
+    authorities. They are a fixed snapshot bundled with the app, not a live feed. Country borders:
     <b>Natural Earth</b> (public domain). Globe rendering: <b>globe.gl</b> / <b>three.js</b> (MIT).
   </p>
 
   <footer>
     <span>© 2026 GlobalTax · 42-apps</span>
-    <span><a href="globaltax.zip">Download</a> · <a href="privacy.html">Privacy</a></span>
+    <span><a href="app/">Web app</a> · <a href="https://chromewebstore.google.com/detail/ocjdhoegdajloidcpidlacmigldcopeo" target="_blank" rel="noopener">Add to Chrome</a> · <a href="globaltax.zip">Download</a> · <a href="privacy.html">Privacy</a></span>
   </footer>
 </div>
 </body>

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GlobalTax — World Tax Rate Explorer</title>
+  <link rel="stylesheet" href="taxglobe.css" />
+</head>
+<body>
+  <div id="app">
+
+    <!-- ============================ HEADER ============================ -->
+    <header>
+      <div class="brand">
+        <div class="logo"><img src="icons/icon48.png" alt="GlobalTax rocket" /></div>
+        <div class="brand-text">
+          <div class="title">GLOBAL<span class="accent">·</span>TAX</div>
+          <div class="subtitle">World Tax Rate Explorer</div>
+        </div>
+      </div>
+
+      <div class="readout">
+        <div class="readout-label" id="readoutType">Personal — Marginal</div>
+        <div class="readout-sub" id="readoutSub">Spin the globe · hover a country</div>
+      </div>
+
+      <div class="actions">
+        <button id="spinBtn" title="Toggle auto-rotation">❙❙ Spin</button>
+        <button id="resetBtn" title="Reset view">⟳ Reset</button>
+        <button id="fsBtn" title="Fullscreen">⛶ Full</button>
+        <button id="aboutBtn" title="About, data sources & disclaimer">ⓘ About</button>
+      </div>
+    </header>
+
+    <!-- ============================= MAIN ============================= -->
+    <main>
+      <!-- Control panel -->
+      <aside class="panel">
+        <!-- Income -->
+        <!-- Search -->
+        <section class="ctrl search-ctrl">
+          <input id="countrySearch" class="country-search" type="text" list="countryList"
+                 placeholder="🔍  Find a country or territory…" autocomplete="off" />
+          <datalist id="countryList"></datalist>
+        </section>
+
+        <section class="ctrl">
+          <div class="ctrl-head">
+            <span class="ctrl-title">Your Income</span>
+            <select id="currency" class="currency-select" title="Currency"></select>
+          </div>
+          <div class="income-display">
+            <span class="income-amount" id="incomeAmount">$75,000</span>
+            <span class="income-usd" id="incomeUsd"></span>
+          </div>
+          <input type="range" id="incomeSlider" min="0" max="100" value="51" step="1" />
+          <div class="slider-scale">
+            <span>$0</span><span>10k</span><span>75k</span><span>600k</span><span>5M</span>
+          </div>
+        </section>
+
+        <!-- Tax type -->
+        <section class="ctrl">
+          <div class="ctrl-head"><span class="ctrl-title">Tax Type</span></div>
+          <div class="taxtype-grid" id="taxTypeGrid"><!-- buttons injected --></div>
+          <p class="taxtype-desc" id="taxTypeDesc"></p>
+          <div class="explainer" id="explainer"></div>
+        </section>
+
+        <!-- New-resident / relocation regimes -->
+        <section class="ctrl regime-ctrl">
+          <label class="toggle-row" for="regimeToggle">
+            <span class="ctrl-title">✦ New-resident mode</span>
+            <span class="switch"><input type="checkbox" id="regimeToggle" /><span class="track"></span></span>
+          </label>
+          <p class="regime-hint">Highlight countries that give <b>movers</b> a tax break — non-dom, expat/impatriate, returning-citizen, retiree & HNWI schemes (Italy, Greece, Israel, Thailand, Cyprus…).</p>
+        </section>
+
+        <!-- Legend -->
+        <section class="ctrl">
+          <div class="ctrl-head"><span class="ctrl-title">Tax Burden</span></div>
+          <div class="legend">
+            <div class="legend-row"><span class="sw green"></span><span class="legend-txt">Low / none</span><span class="legend-rng" id="lgGreen"></span></div>
+            <div class="legend-row"><span class="sw yellow"></span><span class="legend-txt">Moderate</span><span class="legend-rng" id="lgYellow"></span></div>
+            <div class="legend-row"><span class="sw red"></span><span class="legend-txt">High</span><span class="legend-rng" id="lgRed"></span></div>
+            <div class="legend-row"><span class="sw grey"></span><span class="legend-txt">No data</span><span class="legend-rng"></span></div>
+          </div>
+        </section>
+
+        <p class="disclaimer">Approximate <b>headline</b> rates (≈2025–26), web-verified vs PwC / KPMG / OECD &amp; national authorities. Illustration only — <b>not tax advice</b>; do your own research. Tap <b>ⓘ About</b> for sources &amp; the full disclaimer.</p>
+      </aside>
+
+      <!-- Globe -->
+      <div id="globeViz"></div>
+
+      <!-- Country detail card -->
+      <div id="detailCard" class="detail-card hidden">
+        <button class="detail-close" id="detailClose">✕</button>
+        <div class="detail-flag" id="detailFlag">🏳️</div>
+        <div class="detail-name" id="detailName">—</div>
+        <div class="detail-grade" id="detailGrade"></div>
+        <div class="detail-sub hidden" id="detailSub"></div>
+        <div class="detail-rows" id="detailRows"></div>
+        <div class="detail-regime hidden" id="detailRegime"></div>
+      </div>
+
+      <!-- Hover tooltip -->
+      <div id="tooltip" class="tooltip hidden"></div>
+    </main>
+
+    <!-- ===================== About / disclaimer modal ===================== -->
+    <div id="aboutOverlay" class="overlay hidden">
+      <div class="modal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
+        <button class="modal-close" id="aboutClose" aria-label="Close">✕</button>
+        <div class="modal-brand">
+          <img src="icons/icon48.png" alt="" class="modal-logo" />
+          <div>
+            <div class="modal-title" id="aboutTitle">GlobalTax</div>
+            <div class="modal-sub">World Tax Rate Explorer</div>
+          </div>
+        </div>
+
+        <p class="modal-lead">An interactive 3D globe of world tax rates. Set your income &amp; currency,
+          pick a tax type, and every country is graded green → yellow → red by its tax burden — plus a
+          <b>New-resident mode</b> highlighting relocation tax regimes.</p>
+
+        <div class="modal-warn">
+          ⚠️ <b>Not tax, legal or financial advice.</b> The figures are approximate <b>headline</b> rates
+          for illustration and orientation only. They may be incomplete, simplified, or out of date, and
+          they exclude state/local taxes, deductions, reliefs, treaties and your personal circumstances.
+          <b>Always do your own research</b> and consult a qualified professional or the relevant tax
+          authority before making any decision.
+        </div>
+
+        <h3 class="modal-h">Where the data comes from</h3>
+        <p class="modal-p">Rates were hand-assembled and then <b>web-verified</b> (≈2025/26) against public
+          references — primarily <b>PwC Worldwide Tax Summaries</b>, <b>KPMG</b>, <b>Deloitte</b>, the
+          <b>OECD</b>, and national tax authorities. The “top personal income” rate aims to include
+          surcharges/cess that apply at the highest incomes. Progressive brackets exist for major economies;
+          elsewhere a representative curve is derived from the top rate. Relocation-regime details were
+          fact-checked the same way. These are <b>not pulled live</b> — they’re a fixed snapshot bundled with the app, so treat them as a starting point, not a source of record.</p>
+
+        <h3 class="modal-h">Privacy</h3>
+        <p class="modal-p">GlobalTax runs entirely in your browser. It collects <b>no personal data</b>,
+          needs <b>no accounts</b> and <b>no special permissions</b>. Map and tax data is served as static files from this site; nothing you enter is sent anywhere, stored, or tracked. Your income slider value never leaves your device.</p>
+
+        <h3 class="modal-h">Recent tax changes</h3>
+        <div class="changes-list" id="aboutChanges"></div>
+
+        <h3 class="modal-h">Credits</h3>
+        <p class="modal-p">Country borders: <b>Natural Earth</b> (public domain). Globe rendering:
+          <b>globe.gl</b> / <b>three.js</b> (MIT). More info:
+          <a href="https://42-apps.github.io/globaltax/" target="_blank" rel="noopener">42-apps.github.io/globaltax</a>.</p>
+
+        <p class="modal-ver" id="aboutVer">v1.0.9</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="lib/globe.gl.min.js"></script>
+  <script src="data/tax-data.js"></script>
+  <script src="taxglobe.js"></script>
+</body>
+</html>
