@@ -177,8 +177,49 @@ function showDetail(f) {
     ];
   }
   document.getElementById('detailBody').innerHTML = rows.map(([k, v]) => `<div class="db-row"><span>${k}</span><b>${v || '—'}</b></div>`).join('');
+  loadDescription(f, key);
   detailCard.classList.remove('hidden');
+  detailCard.scrollTop = 0;
   markListActive(key);
+}
+
+/* historical detail: a short Wikipedia summary, fetched on demand via the bundled Wikidata id */
+const descCache = new Map();
+const escHtml = s => s.replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
+async function loadDescription(f, key) {
+  const box = document.getElementById('detailDesc');
+  if (!isHist(f)) { box.classList.add('hidden'); box.innerHTML = ''; return; }   // pre-modern places only
+  box.classList.remove('hidden');
+  const qid = (f.properties.Wikidata || '').trim(), name = featName(f);
+  const cacheKey = qid || name;
+  if (descCache.has(cacheKey)) return renderDesc(descCache.get(cacheKey), key);
+  box.innerHTML = '<div class="dd-load">Loading summary…</div>';
+  try {
+    let title = name;
+    if (/^Q\d+$/.test(qid)) {
+      const wd = await fetch(`https://www.wikidata.org/w/api.php?action=wbgetentities&ids=${qid}&props=sitelinks&sitefilter=enwiki&format=json&origin=*`).then(r => r.json());
+      const sl = wd.entities && wd.entities[qid] && wd.entities[qid].sitelinks && wd.entities[qid].sitelinks.enwiki;
+      title = (sl && sl.title) || name;
+    }
+    const ex = await fetch(`https://en.wikipedia.org/w/api.php?action=query&prop=extracts&exintro=1&explaintext=1&redirects=1&format=json&origin=*&titles=${encodeURIComponent(title)}`).then(r => r.json());
+    const page = Object.values(ex.query.pages)[0];
+    const data = (page && page.extract && page.extract.trim())
+      ? { extract: page.extract, url: 'https://en.wikipedia.org/wiki/' + encodeURIComponent(title.replace(/ /g, '_')) } : null;
+    descCache.set(cacheKey, data);
+    renderDesc(data, key);
+  } catch (e) { renderDesc(undefined, key); }   // network error — not cached, so we can retry
+}
+function renderDesc(data, key) {
+  if (state.selected !== key) return;            // user clicked elsewhere mid-fetch — don't clobber
+  const box = document.getElementById('detailDesc');
+  if (data === undefined) { box.innerHTML = '<div class="dd-none">Couldn’t load a summary — check your connection.</div>'; return; }
+  if (!data) { box.innerHTML = '<div class="dd-none">No Wikipedia summary available for this polity.</div>'; return; }
+  const paras = data.extract.split('\n').map(s => s.trim()).filter(Boolean);
+  let text = paras.slice(0, 2).join('\n\n');
+  if (text.length > 700) text = text.slice(0, 700).replace(/\s+\S*$/, '') + '…';
+  box.innerHTML = text.split('\n\n').map(p => `<p>${escHtml(p)}</p>`).join('')
+    + `<a class="dd-more" href="${data.url}" target="_blank" rel="noopener">Read more on Wikipedia →</a>`
+    + `<div class="dd-attr">Summary from Wikipedia · CC BY-SA</div>`;
 }
 function closeDetail() { detailCard.classList.add('hidden'); state.selected = null; refreshGlobe(); markListActive(null); }
 document.getElementById('detailClose').addEventListener('click', closeDetail);

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>A History of Nations</title>
-<link rel="stylesheet" href="nations.css?v=10">
+<link rel="stylesheet" href="nations.css?v=11">
 </head>
 <body>
   <!-- ===== Header ===== -->
@@ -78,6 +78,7 @@
       <div id="detailType" class="detail-type"></div></div>
     </div>
     <div id="detailBody"></div>
+    <div id="detailDesc" class="detail-desc hidden"></div>
   </div>
 
   <!-- ===== Time bar ===== -->
@@ -127,6 +128,8 @@
       <p class="about-cav"><b>Please note:</b> historical borders are inherently approximate —
       the deeper the past, the more estimated they are. Present-day borders are precise; historical
       polities are sampled at intervals, so the map steps between eras rather than morphing smoothly.</p>
+      <p class="about-cav">Click any historical place for a short summary fetched live from
+      <b>Wikipedia</b> (CC BY-SA) — the only external request the app makes, and only when you open a place.</p>
       <p class="about-src">Historical borders: <b>Cliopatria</b> / Seshat Global History Databank
       (CC BY 4.0, github.com/Seshat-Global-History-Databank/cliopatria). Present-day borders:
       Natural Earth (public domain). Globe: globe.gl. A companion to World Languages Explorer
@@ -136,6 +139,6 @@
 
   <script src="lib/globe.gl.min.js"></script>
   <script src="lib/topojson-client.min.js"></script>
-  <script src="nations.js?v=13"></script>
+  <script src="nations.js?v=14"></script>
 </body>
 </html>
