@@ -72,12 +72,13 @@ function savePins() { try { localStorage.setItem(PINS_KEY, JSON.stringify(pins))
 function pointInRing(x, y, ring) { let inside = false; for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) { const xi = ring[i][0], yi = ring[i][1], xj = ring[j][0], yj = ring[j][1]; if (((yi > y) !== (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi)) inside = !inside; } return inside; }
 function pointInFeature(lng, lat, f) { const g = f.geometry; if (!g) return false; const polys = g.type === 'Polygon' ? [g.coordinates] : g.type === 'MultiPolygon' ? g.coordinates : []; for (const poly of polys) { if (!poly.length || !pointInRing(lng, lat, poly[0])) continue; let inHole = false; for (let h = 1; h < poly.length; h++) if (pointInRing(lng, lat, poly[h])) { inHole = true; break; } if (!inHole) return true; } return false; }
 function polityAt(lng, lat) { const fs = activeFeatures(); for (const f of fs) if (pointInFeature(lng, lat, f)) return f; return null; }
-// GeoJSON winding: three-globe fills a Polygon's INSIDE only if the outer ring is counter-clockwise.
-// Hand-traced rings can be clockwise → they'd fill the whole globe. Normalise (outer CCW, holes CW).
+// This globe build fills a Polygon's INSIDE when the outer ring is CLOCKWISE (the bundled
+// Natural-Earth / Cliopatria polygons are all CW). A wrong-wound ring fills the WHOLE globe.
+// Normalise hand-traced land to match: outer ring CW, holes CCW.
 function ringSignedArea(ring) { let a = 0; for (let i = 0, n = ring.length; i < n; i++) { const p = ring[i], q = ring[(i + 1) % n]; a += p[0] * q[1] - q[0] * p[1]; } return a; }
 function fixWinding(geom) {
   if (!geom || geom.type !== 'Polygon') return geom;
-  const rings = geom.coordinates.map((ring, i) => { const cw = ringSignedArea(ring) < 0; return ((i === 0) === cw) ? ring.slice().reverse() : ring; });
+  const rings = geom.coordinates.map((ring, i) => { const cw = ringSignedArea(ring) < 0; return ((i === 0) !== cw) ? ring.slice().reverse() : ring; });
   return { type: 'Polygon', coordinates: rings };
 }
 function refreshPins() { if (globe) globe.pointsData(pins.slice()); }
