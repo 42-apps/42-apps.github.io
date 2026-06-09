@@ -52,7 +52,6 @@ const fmtPop = n => !n || n < 0 ? '—' : n >= 1e9 ? (n/1e9).toFixed(2)+' bn' : 
 const state = { hovered: null, selected: null };
 let globe, neCountries = [], histAll = null, spinOn = true;
 let ghostFeatures = [], ghostToday = true;    // faint "today's borders" reference layer (history mode only) — on by default
-let perfMode = (() => { try { return localStorage.getItem('hon_perf_v1') === '1'; } catch (e) { return false; } })();  // lower-cost rendering
 const elViz = document.getElementById('globeViz');
 const tooltip = document.getElementById('tooltip');
 
@@ -163,8 +162,8 @@ function initGlobe(geo) {
   setZoomSpeed(); setTimeout(setZoomSpeed, 300); c.addEventListener('change', setZoomSpeed);
   globe.pointOfView({ lat: 20, lng: 10, altitude: 2.3 });
   sizeGlobe();
-  // cap render resolution on hi-DPI screens (+ Performance mode goes further)
-  try { applyPerf(); } catch (e) {}
+  // full retina sharpness, capped at 2x (avoids wasteful 3x on extreme displays)
+  try { globe.renderer().setPixelRatio(Math.min(window.devicePixelRatio || 1, 2)); } catch (e) {}
   render();
 }
 function refreshGlobe() { if (globe) globe.polygonCapColor(capColor).polygonAltitude(altOf); }
@@ -445,13 +444,6 @@ const miGhost = document.getElementById('miGhost');
 function syncGhost() { const s = miGhost.querySelector('.mi-state'); if (s) s.textContent = ghostToday ? 'On' : 'Off'; miGhost.classList.toggle('on', ghostToday); }
 miGhost.addEventListener('click', () => { ghostToday = !ghostToday; syncGhost(); render(); });
 syncGhost();
-
-/* ---- Performance mode: lower render resolution + drop the atmosphere glow ---- */
-const miPerf = document.getElementById('miPerf');
-function syncPerf() { const s = miPerf.querySelector('.mi-state'); if (s) s.textContent = perfMode ? 'On' : 'Off'; miPerf.classList.toggle('on', perfMode); }
-function applyPerf() { if (!globe) return; try { globe.renderer().setPixelRatio(perfMode ? 1 : Math.min(window.devicePixelRatio || 1, 1.5)); } catch (e) {} globe.showAtmosphere(!perfMode); }
-miPerf.addEventListener('click', () => { perfMode = !perfMode; try { localStorage.setItem('hon_perf_v1', perfMode ? '1' : '0'); } catch (e) {} applyPerf(); syncPerf(); });
-syncPerf();
 
 /* ---- Water layers: modern Rivers + time-enabled "Lost rivers & lakes" (both lazy) ---- */
 let riversOn = false, riverPaths = null, riverLabels = null, riversLoading = false;
