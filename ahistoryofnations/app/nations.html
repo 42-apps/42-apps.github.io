@@ -45,7 +45,7 @@
         <button class="mi" id="miFull"><span class="mi-ic">⛶</span><span class="mi-tx">Fullscreen</span></button>
         <button class="mi" id="miGhost"><span class="mi-ic">🗺️</span><span class="mi-tx">Today's borders</span><span class="mi-state">On</span></button>
         <button class="mi" id="miRivers"><span class="mi-ic">🌊</span><span class="mi-tx">Rivers</span><span class="mi-state">Off</span></button>
-        <button class="mi" id="miPaleo"><span class="mi-ic">🏜️</span><span class="mi-tx">Lost rivers &amp; lakes</span><span class="mi-state">Off</span></button>
+        <button class="mi" id="miPaleo"><span class="mi-ic">🏜️</span><span class="mi-tx">Lost rivers &amp; coasts</span><span class="mi-state">Off</span></button>
         <div class="mi-sep"></div>
         <div class="mi-label">My nations</div>
         <button class="mi" id="miBeen"><span class="mi-ic">✅</span><span class="mi-tx">Been</span><span class="mi-state" id="cntBeen">0</span></button>
@@ -106,7 +106,7 @@
       <button id="playFwd" class="play" title="Play forward through time">▶</button>
       <button id="nowBtn" class="nowbtn" title="Jump to today">today</button>
     </div>
-    <div class="time-ends"><span>3000 BC</span><span id="tNote">Drag to travel through recorded history</span><span>Today</span></div>
+    <div class="time-ends"><span>14,000 BC</span><span id="tNote">Drag to travel from the Ice Age to today</span><span>Today</span></div>
   </div>
 
   <!-- ===== Welcome / first run ===== -->
@@ -160,8 +160,10 @@
       These are the only external requests the app makes, and only when you ask for them.</p>
       <p class="about-cav"><b>Rivers</b> (menu toggle) shows present-day courses — major rivers barely shift
       over millennia, and reveal why so many early kingdoms clustered along water (the Nile, Tigris–Euphrates, Indus…).
-      <b>Lost rivers &amp; lakes</b> overlays approximate, dated reconstructions of vanished waters — the Sarasvati,
-      the Green-Sahara rivers, a lost Nile branch by the pyramids, the Aral Sea — each shown only in the era it existed.
+      <b>Lost rivers &amp; coasts</b> overlays approximate, dated reconstructions of vanished waters and Ice-Age
+      land — the Sarasvati, the Green-Sahara rivers, a lost Nile branch by the pyramids, the Aral Sea, and the
+      land bridges (Doggerland, Beringia, Sundaland) that drowned as the seas rose. Each appears only in the era
+      it existed; scrub back before <b>3000 BC</b> into deep prehistory to watch the land bridges flood.
       These are indicative tracings from published studies, not survey-accurate.</p>
       <p class="about-src">Historical borders: <b>Cliopatria</b> / Seshat Global History Databank
       (CC BY 4.0, github.com/Seshat-Global-History-Databank/cliopatria). Present-day borders:
@@ -172,6 +174,6 @@
 
   <script src="lib/globe.gl.min.js"></script>
   <script src="lib/topojson-client.min.js"></script>
-  <script src="nations.js?v=21"></script>
+  <script src="nations.js?v=23"></script>
 </body>
 </html>
