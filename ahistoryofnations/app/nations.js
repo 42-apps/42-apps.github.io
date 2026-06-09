@@ -133,15 +133,16 @@ function initGlobe(geo) {
     .pointLabel(d => '📍 ' + d.name)
     .onPointClick(p => { flyToPin(p); showPinHistory(p); })
     .pathsData([])
-    .pathPoints(d => d.coords).pathPointLat(p => p[1]).pathPointLng(p => p[0]).pathPointAlt(() => 0.013)
-    .pathColor(() => 'rgba(96,172,236,0.8)')
-    .pathStroke(0.7)
-    .pathLabel(d => '🌊 ' + d.name)
+    .pathPoints(d => d.coords).pathPointLat(p => p[1]).pathPointLng(p => p[0]).pathPointAlt(() => 0.014)
+    .pathColor(d => d.__paleo ? 'rgba(240,205,120,0.95)' : 'rgba(96,172,236,0.8)')
+    .pathStroke(d => d.__paleo ? 1.1 : 0.7)
+    .pathDashLength(d => d.__paleo ? 0.045 : 1).pathDashGap(d => d.__paleo ? 0.025 : 0)
+    .pathLabel(d => (d.__paleo ? '🏛 ' : '🌊 ') + d.name + (d.__paleo ? ' — lost' : ''))
     .pathTransitionDuration(0)
     .labelsData([])
     .labelLat(d => d.lat).labelLng(d => d.lng).labelText(d => d.text)
-    .labelColor(() => 'rgba(150,205,245,0.92)')
-    .labelSize(0.5).labelDotRadius(0.12).labelResolution(2).labelAltitude(0.014);
+    .labelColor(d => d.__paleo ? 'rgba(240,205,120,0.96)' : 'rgba(150,205,245,0.92)')
+    .labelSize(0.5).labelDotRadius(0.12).labelResolution(2).labelAltitude(0.015);
   const c = globe.controls(); c.autoRotate = true; c.autoRotateSpeed = 0.35; c.enableDamping = true;
   c.zoomSpeed = 1.4; c.rotateSpeed = 0.9; c.zoomToCursor = true;   // snappier zoom/rotate (default zoomSpeed was 0.35)
   globe.pointOfView({ lat: 20, lng: 10, altitude: 2.3 });
@@ -182,6 +183,7 @@ function render() {
   buildList(active);
   updateMineUI();
   updatePinCard();
+  if (paleoOn) updateWaterLayer();          // time-enabled paleo features change with the year
 }
 
 /* ----------------------------- hover / detail ----------------------------- */
@@ -406,13 +408,14 @@ function syncGhost() { const s = miGhost.querySelector('.mi-state'); if (s) s.te
 miGhost.addEventListener('click', () => { ghostToday = !ghostToday; syncGhost(); render(); });
 syncGhost();
 
-/* ---- Rivers layer (lazy-loaded; present-day courses, ~constant over history) ---- */
+/* ---- Water layers: modern Rivers + time-enabled "Lost rivers & lakes" (both lazy) ---- */
 let riversOn = false, riverPaths = null, riverLabels = null, riversLoading = false;
-const miRivers = document.getElementById('miRivers');
+let paleoOn = false, paleoPaths = null, paleoLoading = false;
+const miRivers = document.getElementById('miRivers'), miPaleo = document.getElementById('miPaleo');
 function syncRivers() { const s = miRivers.querySelector('.mi-state'); if (s) s.textContent = riversLoading ? '…' : (riversOn ? 'On' : 'Off'); miRivers.classList.toggle('on', riversOn); }
+function syncPaleo() { const s = miPaleo.querySelector('.mi-state'); if (s) s.textContent = paleoLoading ? '…' : (paleoOn ? 'On' : 'Off'); miPaleo.classList.toggle('on', paleoOn); }
 async function ensureRivers() {
-  if (riverPaths) return riverPaths;
-  if (riversLoading) return null;
+  if (riverPaths || riversLoading) return;
   riversLoading = true; syncRivers();
   try {
     const j = await fetch('data/rivers.geojson?v=1').then(r => r.json());
@@ -423,21 +426,43 @@ async function ensureRivers() {
       for (const line of lines) if (line.length > 1) paths.push({ name: nm, sr, coords: line });
     }
     riverPaths = paths;
-    // labels for the biggest rivers only (dedupe by name → midpoint of its longest segment)
-    const best = {};
+    const best = {};   // labels for the biggest rivers only (dedupe by name → midpoint of longest segment)
     for (const p of paths) { if (p.sr > 1 || !p.name) continue; if (!best[p.name] || p.coords.length > best[p.name].len) { const m = p.coords[Math.floor(p.coords.length / 2)]; best[p.name] = { len: p.coords.length, lat: m[1], lng: m[0], text: p.name }; } }
     riverLabels = Object.values(best).map(b => ({ lat: b.lat, lng: b.lng, text: b.text }));
   } catch (e) { riverPaths = []; riverLabels = []; }
   riversLoading = false; syncRivers();
-  return riverPaths;
 }
-async function setRivers(on) {
-  riversOn = on; syncRivers();
-  if (on) { await ensureRivers(); if (globe && riversOn) { globe.pathsData(riverPaths); globe.labelsData(riverLabels || []); } }
-  else if (globe) { globe.pathsData([]); globe.labelsData([]); }
-  syncRivers();
+async function ensurePaleo() {
+  if (paleoPaths || paleoLoading) return;
+  paleoLoading = true; syncPaleo();
+  try {
+    const j = await fetch('data/paleo.geojson?v=1').then(r => r.json());
+    const paths = [];
+    for (const f of j.features) {
+      const p = f.properties, g = f.geometry; if (!g) continue;
+      const line = g.type === 'LineString' ? g.coordinates : g.type === 'Polygon' ? g.coordinates[0] : null;
+      if (!line || line.length < 2) continue;
+      let labLng, labLat;
+      if (g.type === 'Polygon') { let sx = 0, sy = 0; for (const c of line) { sx += c[0]; sy += c[1]; } labLng = sx / line.length; labLat = sy / line.length; }
+      else { const m = line[Math.floor(line.length / 2)]; labLng = m[0]; labLat = m[1]; }
+      paths.push({ __paleo: true, name: p.name, kind: p.kind, fromYear: p.fromYear, toYear: p.toYear, coords: line, labLat, labLng });
+    }
+    paleoPaths = paths;
+  } catch (e) { paleoPaths = []; }
+  paleoLoading = false; syncPaleo();
 }
+function activePaleo() { if (!paleoOn || !paleoPaths) return []; const y = curYear(); return paleoPaths.filter(p => p.fromYear <= y && y <= p.toYear); }
+function updateWaterLayer() {
+  if (!globe) return;
+  const pal = activePaleo();
+  const paths = []; if (riversOn && riverPaths) for (const p of riverPaths) paths.push(p); for (const p of pal) paths.push(p);
+  const labels = []; if (riversOn && riverLabels) for (const l of riverLabels) labels.push(l); for (const p of pal) labels.push({ lat: p.labLat, lng: p.labLng, text: p.name, __paleo: true });
+  globe.pathsData(paths); globe.labelsData(labels);
+}
+async function setRivers(on) { riversOn = on; syncRivers(); if (on) await ensureRivers(); updateWaterLayer(); syncRivers(); }
+async function setPaleo(on) { paleoOn = on; syncPaleo(); if (on) await ensurePaleo(); updateWaterLayer(); syncPaleo(); }
 miRivers.addEventListener('click', () => setRivers(!riversOn));
+miPaleo.addEventListener('click', () => setPaleo(!paleoOn));
 const aboutOverlay = document.getElementById('aboutOverlay');
 document.getElementById('miAbout').addEventListener('click', () => { menu.classList.add('hidden'); aboutOverlay.classList.remove('hidden'); });
 document.getElementById('aboutClose').addEventListener('click', () => aboutOverlay.classList.add('hidden'));
