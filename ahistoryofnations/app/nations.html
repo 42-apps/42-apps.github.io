@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A History of Nations</title>
+<link rel="stylesheet" href="nations.css?v=10">
+</head>
+<body>
+  <!-- ===== Header ===== -->
+  <header id="topbar">
+    <div class="brand">
+      <svg class="logo" viewBox="0 0 256 256" aria-hidden="true">
+        <defs>
+          <radialGradient id="hnBg" cx="50%" cy="30%" r="86%"><stop offset="0%" stop-color="#1b3c69"/><stop offset="58%" stop-color="#0b1c38"/><stop offset="100%" stop-color="#050a15"/></radialGradient>
+          <radialGradient id="hnGl" cx="40%" cy="34%" r="74%"><stop offset="0%" stop-color="#74c2d6"/><stop offset="52%" stop-color="#2f7493"/><stop offset="100%" stop-color="#143a55"/></radialGradient>
+          <linearGradient id="hnAu" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#f6dd86"/><stop offset="100%" stop-color="#cf9f35"/></linearGradient>
+        </defs>
+        <rect width="256" height="256" rx="58" fill="url(#hnBg)"/>
+        <circle cx="127" cy="129" r="56" fill="url(#hnGl)"/>
+        <g fill="none" stroke="#d4f0f8" stroke-opacity="0.5" stroke-width="2.2">
+          <circle cx="127" cy="129" r="56" stroke-opacity="0.32"/>
+          <line x1="71" y1="129" x2="183" y2="129"/>
+          <line x1="127" y1="73" x2="127" y2="185"/>
+          <ellipse cx="127" cy="129" rx="28" ry="56"/>
+          <ellipse cx="127" cy="129" rx="56" ry="28"/>
+        </g>
+        <path d="M 83.41 66.74 A 76 76 0 1 0 170.59 66.74" fill="none" stroke="url(#hnAu)" stroke-width="8.5" stroke-linecap="round"/>
+        <circle cx="170.59" cy="66.74" r="7.5" fill="url(#hnAu)" stroke="#0b1426" stroke-width="2"/>
+      </svg>
+      <div class="brand-txt">
+        <span class="brand-name">A History of Nations</span>
+        <span class="brand-sub">How the world's countries &amp; empires changed over time</span>
+      </div>
+    </div>
+    <div class="tools">
+      <div id="searchWrap">
+        <input id="search" type="text" placeholder="Search a country…" autocomplete="off" spellcheck="false" aria-label="Search a country">
+        <div id="searchResults" class="hidden"></div>
+      </div>
+      <button id="menuBtn" title="Menu" aria-label="Menu">☰</button>
+      <div id="menu" class="hidden">
+        <button class="mi" id="miReset"><span class="mi-ic">⤢</span><span class="mi-tx">Reset view</span></button>
+        <button class="mi" id="miSpin"><span class="mi-ic">⟳</span><span class="mi-tx">Auto-rotate</span><span class="mi-state">On</span></button>
+        <button class="mi" id="miFull"><span class="mi-ic">⛶</span><span class="mi-tx">Fullscreen</span></button>
+        <button class="mi" id="miGhost"><span class="mi-ic">🗺️</span><span class="mi-tx">Today's borders</span><span class="mi-state">On</span></button>
+        <div class="mi-sep"></div>
+        <div class="mi-label">My nations</div>
+        <button class="mi" id="miBeen"><span class="mi-ic">✅</span><span class="mi-tx">Been</span><span class="mi-state" id="cntBeen">0</span></button>
+        <button class="mi" id="miWant"><span class="mi-ic">🎯</span><span class="mi-tx">Want to go</span><span class="mi-state" id="cntWant">0</span></button>
+        <button class="mi" id="miClearMine"><span class="mi-ic">↺</span><span class="mi-tx">Clear my nations</span></button>
+        <div class="mi-sep"></div>
+        <button class="mi" id="miHelp"><span class="mi-ic">❔</span><span class="mi-tx">How it works</span></button>
+        <button class="mi" id="miAbout"><span class="mi-ic">ℹ</span><span class="mi-tx">About &amp; sources</span></button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== Globe ===== -->
+  <div id="globeViz"></div>
+  <div id="tooltip" class="hidden"></div>
+  <div id="mineBanner" class="hidden"></div>
+
+  <!-- ===== Nations panel (count + list) ===== -->
+  <div id="panel">
+    <div class="pn-head"><span id="pnCount">—</span> <span class="pn-sub">nations &amp; territories</span></div>
+    <div class="pn-split" id="pnSplit"></div>
+    <div class="pn-year">Year <span id="pnYear">2026</span></div>
+    <div id="mineStat" class="hidden"></div>
+    <div id="pnList"></div>
+  </div>
+
+  <!-- ===== Detail card ===== -->
+  <div id="detailCard" class="hidden">
+    <button id="detailClose" title="Close">×</button>
+    <div class="detail-head"><span id="detailFlag" class="detail-flag">🏳️</span>
+      <div><div id="detailName" class="detail-name">—</div>
+      <div id="detailType" class="detail-type"></div></div>
+    </div>
+    <div id="detailBody"></div>
+  </div>
+
+  <!-- ===== Time bar ===== -->
+  <div id="timebar">
+    <div id="eraJumps" class="era-jumps" aria-label="Jump to a notable era"></div>
+    <div class="era-readout"><span id="eraLabel" class="era-label">Today</span><span id="eraName" class="era-name-sub"></span></div>
+    <div class="slider-row">
+      <button id="prevEra" class="step" title="Earlier (←)">‹</button>
+      <button id="nextEra" class="step" title="Later (→)">›</button>
+      <input id="timeSlider" type="range" min="0" max="0" value="0" step="1" aria-label="Year">
+      <button id="playBtn" class="play" title="Play through time">▶</button>
+      <button id="nowBtn" class="nowbtn" title="Jump to today">today</button>
+    </div>
+    <div class="time-ends"><span>3000 BC</span><span id="tNote">Drag to travel through recorded history</span><span>Today</span></div>
+  </div>
+
+  <!-- ===== Welcome / first run ===== -->
+  <div id="welcomeOverlay" class="hidden">
+    <div class="about-box welcome-box">
+      <div class="wel-kicker">3000 BC &nbsp;→&nbsp; Today</div>
+      <h2>A History of Nations</h2>
+      <p class="wel-tag">Watch the world's <b>countries, empires and territories</b> rise, fall, split
+      and merge across recorded history — on a living 3D globe.</p>
+      <ul class="wel-tips">
+        <li><span class="wt-ic">🕰️</span><span><b>Travel through time.</b> Drag the timeline, tap an era
+          like <i>Rome</i> or <i>Empires</i>, or press <b>▶</b> — and watch the borders change.</span></li>
+        <li><span class="wt-ic">📋</span><span><b>Every nation, every year.</b> The panel lists who was on
+          the map in that year, with a live count. Click any to explore it.</span></li>
+        <li><span class="wt-ic">✅</span><span><b>Make it yours.</b> Tag the places you've <i>been</i> or
+          <i>want to go</i> from the menu — they stay saved on today's map.</span></li>
+      </ul>
+      <button id="welStart" class="wel-start">Start exploring →</button>
+      <p class="wel-foot">Historical borders are approximate, especially in deep antiquity.
+      Source: Cliopatria / Seshat (CC BY 4.0).</p>
+    </div>
+  </div>
+
+  <!-- ===== About ===== -->
+  <div id="aboutOverlay" class="hidden">
+    <div class="about-box">
+      <button id="aboutClose" class="about-close" title="Close">×</button>
+      <h2>A History of Nations</h2>
+      <p>An interactive atlas of how the world's <b>countries, territories, colonies and empires</b>
+      have changed over time. <b>Drag the timeline</b> to travel from <b>3000 BC to today</b> and
+      watch borders rise, fall, split and merge; today's view shows every sovereign state and
+      dependent territory. Tag the places you've <b>been</b> or <b>want to go</b> in the menu.</p>
+      <p class="about-cav"><b>Please note:</b> historical borders are inherently approximate —
+      the deeper the past, the more estimated they are. Present-day borders are precise; historical
+      polities are sampled at intervals, so the map steps between eras rather than morphing smoothly.</p>
+      <p class="about-src">Historical borders: <b>Cliopatria</b> / Seshat Global History Databank
+      (CC BY 4.0, github.com/Seshat-Global-History-Databank/cliopatria). Present-day borders:
+      Natural Earth (public domain). Globe: globe.gl. A companion to World Languages Explorer
+      &amp; World Religions Explorer · 42-apps.</p>
+    </div>
+  </div>
+
+  <script src="lib/globe.gl.min.js"></script>
+  <script src="lib/topojson-client.min.js"></script>
+  <script src="nations.js?v=13"></script>
+</body>
+</html>
