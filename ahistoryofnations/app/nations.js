@@ -461,7 +461,7 @@ async function ensurePaleo() {
   if (paleoPaths || paleoLoading) return;
   paleoLoading = true; syncPaleo();
   try {
-    const j = await fetch('data/paleo.geojson?v=1').then(r => r.json());
+    const j = await fetch('data/paleo.geojson?v=2').then(r => r.json());
     const paths = [];
     for (const f of j.features) {
       const p = f.properties, g = f.geometry; if (!g) continue;
@@ -473,7 +473,7 @@ async function ensurePaleo() {
       paths.push({ __paleo: true, name: p.name, kind: p.kind, fromYear: p.fromYear, toYear: p.toYear, coords: line, labLat, labLng });
     }
     paleoPaths = paths;
-    const j2 = await fetch('data/landbridges.geojson?v=1').then(r => r.json());   // Ice-Age exposed land (filled polygons)
+    const j2 = await fetch('data/landbridges.geojson?v=2').then(r => r.json());   // Ice-Age exposed land (filled polygons)
     paleoLand = j2.features.map(f => { const ring = (f.geometry && f.geometry.coordinates) ? f.geometry.coordinates[0] : []; let sx = 0, sy = 0; for (const c of ring) { sx += c[0]; sy += c[1]; } const n = ring.length || 1; return { type: 'Feature', __land: true, properties: f.properties, geometry: f.geometry, labLat: sy / n, labLng: sx / n }; });
   } catch (e) { paleoPaths = paleoPaths || []; paleoLand = paleoLand || []; }
   paleoLoading = false; syncPaleo();
