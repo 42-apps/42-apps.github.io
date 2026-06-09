@@ -72,6 +72,14 @@ function savePins() { try { localStorage.setItem(PINS_KEY, JSON.stringify(pins))
 function pointInRing(x, y, ring) { let inside = false; for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) { const xi = ring[i][0], yi = ring[i][1], xj = ring[j][0], yj = ring[j][1]; if (((yi > y) !== (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi)) inside = !inside; } return inside; }
 function pointInFeature(lng, lat, f) { const g = f.geometry; if (!g) return false; const polys = g.type === 'Polygon' ? [g.coordinates] : g.type === 'MultiPolygon' ? g.coordinates : []; for (const poly of polys) { if (!poly.length || !pointInRing(lng, lat, poly[0])) continue; let inHole = false; for (let h = 1; h < poly.length; h++) if (pointInRing(lng, lat, poly[h])) { inHole = true; break; } if (!inHole) return true; } return false; }
 function polityAt(lng, lat) { const fs = activeFeatures(); for (const f of fs) if (pointInFeature(lng, lat, f)) return f; return null; }
+// GeoJSON winding: three-globe fills a Polygon's INSIDE only if the outer ring is counter-clockwise.
+// Hand-traced rings can be clockwise → they'd fill the whole globe. Normalise (outer CCW, holes CW).
+function ringSignedArea(ring) { let a = 0; for (let i = 0, n = ring.length; i < n; i++) { const p = ring[i], q = ring[(i + 1) % n]; a += p[0] * q[1] - q[0] * p[1]; } return a; }
+function fixWinding(geom) {
+  if (!geom || geom.type !== 'Polygon') return geom;
+  const rings = geom.coordinates.map((ring, i) => { const cw = ringSignedArea(ring) < 0; return ((i === 0) === cw) ? ring.slice().reverse() : ring; });
+  return { type: 'Polygon', coordinates: rings };
+}
 function refreshPins() { if (globe) globe.pointsData(pins.slice()); }
 // bounding box per feature (cached) — to pre-filter the full-history point test
 function featBB(f) { if (f.__bb) return f.__bb; let x0=181,y0=91,x1=-181,y1=-91; const walk = c => { if (typeof c[0] === 'number') { if(c[0]<x0)x0=c[0]; if(c[0]>x1)x1=c[0]; if(c[1]<y0)y0=c[1]; if(c[1]>y1)y1=c[1]; } else for (let i=0;i<c.length;i++) walk(c[i]); }; const g = f.geometry; if (g && g.coordinates) walk(g.coordinates); return f.__bb = [x0,y0,x1,y1]; }
@@ -474,7 +482,7 @@ async function ensurePaleo() {
     }
     paleoPaths = paths;
     const j2 = await fetch('data/landbridges.geojson?v=2').then(r => r.json());   // Ice-Age exposed land (filled polygons)
-    paleoLand = j2.features.map(f => { const ring = (f.geometry && f.geometry.coordinates) ? f.geometry.coordinates[0] : []; let sx = 0, sy = 0; for (const c of ring) { sx += c[0]; sy += c[1]; } const n = ring.length || 1; return { type: 'Feature', __land: true, properties: f.properties, geometry: f.geometry, labLat: sy / n, labLng: sx / n }; });
+    paleoLand = j2.features.map(f => { const ring = (f.geometry && f.geometry.coordinates) ? f.geometry.coordinates[0] : []; let sx = 0, sy = 0; for (const c of ring) { sx += c[0]; sy += c[1]; } const n = ring.length || 1; return { type: 'Feature', __land: true, properties: f.properties, geometry: fixWinding(f.geometry), labLat: sy / n, labLng: sx / n }; });
   } catch (e) { paleoPaths = paleoPaths || []; paleoLand = paleoLand || []; }
   paleoLoading = false; syncPaleo();
 }
