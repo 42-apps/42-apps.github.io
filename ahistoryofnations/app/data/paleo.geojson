@@ -1,0 +1,25 @@
+{ "type": "FeatureCollection",
+  "note": "Approximate, indicative reconstructions of lost/shifted rivers and former lakes, hand-traced from published studies. Each feature carries fromYear/toYear (the era it existed) for time-enabled display. NOT survey-accurate.",
+  "features": [
+  { "type": "Feature", "properties": { "name": "Sarasvati (Ghaggar-Hakra)", "kind": "river", "fromYear": -3000, "toYear": -1500, "note": "The great river of the Harappan civilisation; dried as the monsoon weakened and tributaries shifted.", "source": "ISRO BHUVAN palaeochannel mapping; Saraswati river-system studies" },
+    "geometry": { "type": "LineString", "coordinates": [[77.0,30.5],[75.8,29.8],[74.5,29.2],[73.2,28.6],[72.0,28.0],[71.0,27.3],[70.6,26.2],[70.7,25.2],[70.2,24.3],[69.8,23.9]] } },
+  { "type": "Feature", "properties": { "name": "Tamanrasset (Green Sahara river)", "kind": "river", "fromYear": -3000, "toYear": -2000, "note": "A Ganges-sized river that crossed a green Sahara to the Atlantic; dried as the African Humid Period ended ~5,000 yrs ago.", "source": "Skonieczny et al. 2015, Nature Communications" },
+    "geometry": { "type": "LineString", "coordinates": [[5.5,23.2],[2.5,22.2],[-1.0,21.6],[-5.0,21.1],[-9.0,20.8],[-12.5,20.5],[-15.8,20.2]] } },
+  { "type": "Feature", "properties": { "name": "Nile — Ahramat branch", "kind": "river", "fromYear": -3000, "toYear": -800, "note": "A long-lost arm of the Nile that flowed past ~31 pyramids (Giza to Lisht); silted up by ~1000 BC.", "source": "Ghoneim et al. 2024, Communications Earth & Environment" },
+    "geometry": { "type": "LineString", "coordinates": [[31.13,30.02],[31.18,29.92],[31.21,29.84],[31.22,29.75],[31.22,29.64],[31.22,29.55],[31.21,29.47]] } },
+  { "type": "Feature", "properties": { "name": "Yellow River — southern course", "kind": "river", "fromYear": 1128, "toYear": 1855, "note": "For ~700 years after the 1128 avulsion the Huang He flowed SOUTH, merging with the Huai into the Yellow Sea — not the Bohai.", "source": "Chinese historical records; Yellow River avulsion studies" },
+    "geometry": { "type": "LineString", "coordinates": [[114.3,34.8],[115.6,34.5],[116.9,34.2],[118.1,34.0],[119.2,34.0],[120.3,34.1]] } },
+  { "type": "Feature", "properties": { "name": "Amu Darya — Uzboy channel", "kind": "river", "fromYear": -500, "toYear": 1600, "note": "The Oxus periodically spilled west down the Uzboy channel to the Caspian Sea until ~1600 AD.", "source": "Uzboy palaeohydrology" },
+    "geometry": { "type": "LineString", "coordinates": [[58.6,42.1],[57.0,41.6],[55.6,41.0],[54.4,40.5],[53.4,40.0]] } },
+  { "type": "Feature", "properties": { "name": "Nile — Pelusiac branch", "kind": "river", "fromYear": -1000, "toYear": 1100, "note": "The easternmost ancient Nile distributary, guarding Egypt's frontier at Pelusium; silted in the medieval period.", "source": "Nile delta palaeogeography" },
+    "geometry": { "type": "LineString", "coordinates": [[31.15,30.42],[31.5,30.65],[31.9,30.85],[32.3,31.0],[32.55,31.06]] } },
+  { "type": "Feature", "properties": { "name": "Lake Mega-Chad", "kind": "lake", "fromYear": -3000, "toYear": -1500, "note": "Once one of the world's largest lakes (~Caspian-sized); shrank to today's small Lake Chad as the Sahara dried.", "source": "Palaeolake Mega-Chad studies (Armitage et al.)" },
+    "geometry": { "type": "Polygon", "coordinates": [[[12.5,17.5],[16.0,17.8],[18.5,15.5],[18.8,12.5],[17.0,10.0],[14.0,9.5],[11.5,11.5],[11.8,14.5],[12.5,17.5]]] } },
+  { "type": "Feature", "properties": { "name": "Lop Nur", "kind": "lake", "fromYear": -3000, "toYear": 1950, "note": "Terminal lake of the Tarim basin; wandered and shrank, finally drying in the 20th century.", "source": "Lop Nur palaeohydrology" },
+    "geometry": { "type": "Polygon", "coordinates": [[[89.4,40.9],[90.8,40.9],[91.3,40.2],[90.6,39.6],[89.5,39.9],[89.2,40.4],[89.4,40.9]]] } },
+  { "type": "Feature", "properties": { "name": "Lake Moeris (Fayum)", "kind": "lake", "fromYear": -3000, "toYear": 100, "note": "A great freshwater lake in the Fayum, central to ancient Egyptian life; shrank to today's Birket Qarun.", "source": "Fayum / Lake Moeris studies" },
+    "geometry": { "type": "Polygon", "coordinates": [[[30.35,29.32],[30.95,29.35],[31.05,29.55],[30.7,29.62],[30.35,29.52],[30.35,29.32]]] } },
+  { "type": "Feature", "properties": { "name": "Aral Sea (former extent)", "kind": "lake", "fromYear": -3000, "toYear": 1960, "note": "The world's 4th-largest lake until Soviet irrigation drained it from the 1960s onward.", "source": "Aral Sea desiccation record" },
+    "geometry": { "type": "Polygon", "coordinates": [[[58.2,46.8],[61.5,46.6],[61.8,45.0],[60.5,43.6],[58.6,43.8],[58.0,45.3],[58.2,46.8]]] } }
+  ]
+}

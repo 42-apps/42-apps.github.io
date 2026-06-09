@@ -45,6 +45,7 @@
         <button class="mi" id="miFull"><span class="mi-ic">⛶</span><span class="mi-tx">Fullscreen</span></button>
         <button class="mi" id="miGhost"><span class="mi-ic">🗺️</span><span class="mi-tx">Today's borders</span><span class="mi-state">On</span></button>
         <button class="mi" id="miRivers"><span class="mi-ic">🌊</span><span class="mi-tx">Rivers</span><span class="mi-state">Off</span></button>
+        <button class="mi" id="miPaleo"><span class="mi-ic">🏜️</span><span class="mi-tx">Lost rivers &amp; lakes</span><span class="mi-state">Off</span></button>
         <div class="mi-sep"></div>
         <div class="mi-label">My nations</div>
         <button class="mi" id="miBeen"><span class="mi-ic">✅</span><span class="mi-tx">Been</span><span class="mi-state" id="cntBeen">0</span></button>
@@ -158,7 +159,10 @@
       use <b>Drop a pin</b> to search a town via <b>OpenStreetMap</b> and watch which realm ruled it over time.
       These are the only external requests the app makes, and only when you ask for them.</p>
       <p class="about-cav"><b>Rivers</b> (menu toggle) shows present-day courses — major rivers barely shift
-      over millennia, and reveal why so many early kingdoms clustered along water (the Nile, Tigris–Euphrates, Indus…).</p>
+      over millennia, and reveal why so many early kingdoms clustered along water (the Nile, Tigris–Euphrates, Indus…).
+      <b>Lost rivers &amp; lakes</b> overlays approximate, dated reconstructions of vanished waters — the Sarasvati,
+      the Green-Sahara rivers, a lost Nile branch by the pyramids, the Aral Sea — each shown only in the era it existed.
+      These are indicative tracings from published studies, not survey-accurate.</p>
       <p class="about-src">Historical borders: <b>Cliopatria</b> / Seshat Global History Databank
       (CC BY 4.0, github.com/Seshat-Global-History-Databank/cliopatria). Present-day borders:
       Natural Earth (public domain). Globe: globe.gl. A companion to World Languages Explorer
@@ -168,6 +172,6 @@
 
   <script src="lib/globe.gl.min.js"></script>
   <script src="lib/topojson-client.min.js"></script>
-  <script src="nations.js?v=19"></script>
+  <script src="nations.js?v=20"></script>
 </body>
 </html>
