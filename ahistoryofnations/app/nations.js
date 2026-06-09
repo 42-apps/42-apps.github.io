@@ -493,8 +493,13 @@ function updateWaterLayer() {
   if (!globe) return;
   const pal = activePaleo();
   const paths = []; if (riversOn && riverPaths) for (const p of riverPaths) paths.push(p); for (const p of pal) paths.push(p);
-  const labels = []; if (riversOn && riverLabels) for (const l of riverLabels) labels.push(l); for (const p of pal) labels.push({ lat: p.labLat, lng: p.labLng, text: p.name, __paleo: true });
-  for (const L of activePaleoLand()) labels.push({ lat: L.labLat, lng: L.labLng, text: L.properties.name, __paleo: true });
+  // labels — decluttered (skip any within ~4° of one already placed) so coincident features don't stack/garble
+  const labels = [];
+  const tryAdd = c => { for (const l of labels) { const dy = l.lat - c.lat, dx = (l.lng - c.lng) * Math.cos(c.lat * Math.PI / 180); if (dx * dx + dy * dy < 16) return; } labels.push(c); };
+  for (const L of activePaleoLand()) tryAdd({ lat: L.labLat, lng: L.labLng, text: L.properties.name, __paleo: true });   // land bridges first
+  for (const p of pal) if (p.kind === 'lake') tryAdd({ lat: p.labLat, lng: p.labLng, text: p.name, __paleo: true });      // then lakes
+  for (const p of pal) if (p.kind !== 'lake') tryAdd({ lat: p.labLat, lng: p.labLng, text: p.name, __paleo: true });      // then rivers
+  if (riversOn && riverLabels) for (const l of riverLabels) tryAdd(l);                                                    // then modern major rivers
   globe.pathsData(paths); globe.labelsData(labels);
 }
 async function setRivers(on) { riversOn = on; syncRivers(); if (on) await ensureRivers(); updateWaterLayer(); syncRivers(); }
