@@ -161,3 +161,41 @@ body{ background:radial-gradient(1200px 820px at 70% -10%,#16335a 0%,#0a1830 45%
 #mineStat{display:flex; gap:14px; font-size:12px; margin:2px 0 9px; padding-bottom:9px; border-bottom:1px solid var(--line)}
 #mineStat .ms-b{color:#2ecc71; font-weight:700} #mineStat .ms-w{color:#ff4f9a; font-weight:700}
 .pn-mine{font-size:11px; flex:none; width:15px; text-align:center}
+
+/* ---- Drop-a-pin: time-travel a place ---- */
+#pinCard{position:fixed; top:62px; left:14px; z-index:26; width:248px; max-height:46vh; overflow:auto; padding:11px 13px; border-radius:14px;
+  background:var(--panel); border:1px solid var(--line); backdrop-filter:blur(8px); box-shadow:0 10px 34px rgba(0,0,0,.45)}
+.pin-head{display:flex; align-items:center; gap:6px; font-weight:700; font-size:13px}
+.pin-head span:first-of-type{flex:1}
+.pin-clear{font-size:11px; font-weight:600; color:var(--muted); cursor:pointer}
+.pin-clear:hover{color:#ff6b6b}
+#pinList{display:flex; flex-direction:column; gap:2px; margin-top:7px}
+.pin-row{display:flex; align-items:center; gap:7px; padding:5px 6px; border-radius:8px; cursor:pointer}
+.pin-row:hover{background:rgba(255,255,255,.07)}
+.pin-nm{font-size:12.5px; font-weight:600; color:#eaf1fb; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:96px; flex:none}
+.pin-pol{flex:1; font-size:11.5px; color:var(--accent); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; text-align:right}
+.pin-pol .pin-none{color:var(--muted); font-style:italic}
+.pin-x{flex:none; width:16px; text-align:center; color:var(--muted); font-weight:700; cursor:pointer}
+.pin-x:hover{color:#ff6b6b}
+.pin-foot{margin-top:8px; padding-top:7px; border-top:1px solid var(--line); font-size:10.5px; color:var(--muted)}
+.pin-foot b{color:var(--txt)}
+
+/* pin search modal */
+#pinModal{position:fixed; inset:0; z-index:60; display:flex; align-items:center; justify-content:center;
+  background:rgba(3,7,15,.7); backdrop-filter:blur(3px)}
+.pin-modal-box{position:relative; width:min(460px,93vw); padding:24px 26px; border-radius:16px;
+  background:#0c1a30; border:1px solid var(--line); box-shadow:0 24px 70px rgba(0,0,0,.6)}
+.pin-modal-box h2{margin:0 0 8px; font-size:21px}
+.pin-modal-sub{margin:0 0 16px; font-size:13.5px; color:#cdd8ea; line-height:1.5}
+#pinSearch{width:100%; height:42px; padding:0 14px; border-radius:11px; font-size:15px;
+  background:rgba(20,32,56,.92); color:var(--txt); border:1px solid var(--line); outline:none}
+#pinSearch:focus{border-color:#3d8bff}
+#pinSearch::placeholder{color:var(--muted)}
+#pinResults{margin-top:10px; max-height:300px; overflow:auto; display:flex; flex-direction:column; gap:2px}
+.pin-res{padding:9px 11px; border-radius:9px; cursor:pointer; border:1px solid transparent}
+.pin-res:hover{background:rgba(255,255,255,.07); border-color:var(--line)}
+.pr-nm{font-size:14px; font-weight:600; color:#eaf1fb}
+.pr-ty{font-size:11px; font-weight:500; color:var(--accent); text-transform:capitalize; margin-left:6px}
+.pr-dn{font-size:11.5px; color:var(--muted); margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.pin-load,.pin-none-r{padding:12px 6px; color:var(--muted); font-size:13px; font-style:italic}
+.pin-attr{margin-top:12px; font-size:10.5px; color:var(--muted)}

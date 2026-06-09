@@ -26,9 +26,9 @@
       <p class="updated">A History of Nations · Chrome extension &amp; web app</p>
 
       <p><strong>Short version: nothing personal ever leaves your browser.</strong> A History of Nations
-        collects no data, requires no sign-in, and has no accounts, analytics or trackers. The only
-        network request it ever makes is an <em>optional</em> Wikipedia summary, fetched when you open a
-        historical place — and only then (see “Wikipedia summaries” below).</p>
+        collects no data, requires no sign-in, and has no accounts, analytics or trackers. The only network
+        requests it ever makes are <em>optional lookups you trigger yourself</em>: a Wikipedia summary when
+        you open a historical place, and an OpenStreetMap place search when you use “Drop a pin” (see below).</p>
 
       <h2>What we collect</h2>
       <p>Nothing. The app does not collect, store, transmit, or sell any personal information, usage
@@ -41,9 +41,10 @@
 
       <h2>Local storage</h2>
       <p>The only things stored on your device are small entries in your browser's <code>localStorage</code>:
-        a flag recording that you've seen the one-time welcome (<code>hon_seen_v1</code>), and your optional
-        "been / want to go" country tags (<code>hon_mine_v1</code>). These never leave your device and can be
-        cleared at any time from the menu or by clearing your browser data.</p>
+        a flag recording that you've seen the one-time welcome (<code>hon_seen_v1</code>), your optional
+        "been / want to go" country tags (<code>hon_mine_v1</code>), and any places you pin
+        (<code>hon_pins_v1</code>). These never leave your device and can be cleared at any time from the menu
+        or by clearing your browser data.</p>
 
       <h2>Wikipedia summaries</h2>
       <p>When you click a historical place, the app fetches a short summary of that place from
@@ -54,8 +55,17 @@
         <a href="https://foundation.wikimedia.org/wiki/Policy:Privacy_policy" target="_blank" rel="noopener">Wikimedia
         privacy policy</a>. Summaries are reused from Wikipedia under CC&nbsp;BY-SA.</p>
 
+      <h2>Place search (“Drop a pin”)</h2>
+      <p>When you search for a town or village in the “Drop a pin” box, the text you type is sent to
+        <strong>OpenStreetMap’s Nominatim</strong> geocoding service to find its coordinates. Only your
+        search text is sent — no personal information — and only while you are actively searching. The pins
+        you save are stored locally in your browser (<code>hon_pins_v1</code>) and never uploaded. Place data
+        is © OpenStreetMap contributors; see the
+        <a href="https://osmfoundation.org/wiki/Privacy_Policy" target="_blank" rel="noopener">OSM Foundation
+        privacy policy</a>.</p>
+
       <h2>Third parties</h2>
-      <p>Aside from the optional Wikipedia summaries described above, none. The visualization is rendered
+      <p>Aside from the optional Wikipedia summaries and OpenStreetMap place search described above, none. The visualization is rendered
         entirely on your device using bundled, open-source libraries (globe.gl / three.js and
         topojson-client). No data is shared with anyone, and there are no analytics or advertising SDKs.</p>
 
