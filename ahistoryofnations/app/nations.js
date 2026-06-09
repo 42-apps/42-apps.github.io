@@ -593,27 +593,39 @@ function addPin(p) {
 }
 function openPinModal() { pinModal.classList.remove('hidden'); pinSearch.value = ''; pinResults.innerHTML = ''; pinResData = []; setTimeout(() => pinSearch.focus(), 40); }
 function closePinModal() { pinModal.classList.add('hidden'); }
+function pinFetchJSON(url) {
+  const ctrl = new AbortController(), t = setTimeout(() => ctrl.abort(), 8000);
+  return fetch(url, { signal: ctrl.signal }).then(r => { clearTimeout(t); if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); });
+}
+// geocode with a fallback: OpenStreetMap Nominatim, then Photon (different host → survives a Nominatim-specific block/ad-filter)
+async function geocode(q) {
+  const enc = encodeURIComponent(q);
+  try {
+    const r = await pinFetchJSON('https://nominatim.openstreetmap.org/search?format=jsonv2&limit=6&q=' + enc);
+    if (Array.isArray(r) && r.length) return r.map(x => ({ name: x.name || (x.display_name || '').split(',')[0], lat: +x.lat, lng: +x.lon, type: x.type || x.addresstype || '', detail: (x.display_name || '').split(',').slice(1).join(',').trim() }));
+  } catch (e) {}
+  try {
+    const r = await pinFetchJSON('https://photon.komoot.io/api/?limit=6&q=' + enc);
+    if (r && r.features && r.features.length) return r.features.map(f => { const p = f.properties || {}, c = (f.geometry || {}).coordinates || [0, 0]; return { name: p.name || p.city || q, lat: c[1], lng: c[0], type: p.osm_value || p.type || '', detail: [p.city, p.state, p.country].filter(Boolean).join(', ') }; });
+  } catch (e) {}
+  return null;   // both unreachable
+}
 async function runPinSearch() {
   const q = pinSearch.value.trim();
   if (q.length < 2) { pinResults.innerHTML = ''; return; }
   pinResults.innerHTML = '<div class="pin-load">Searching…</div>';
-  try {
-    const r = await fetch('https://nominatim.openstreetmap.org/search?format=jsonv2&limit=6&q=' + encodeURIComponent(q), { headers: { 'Accept': 'application/json' } }).then(r => r.json());
-    pinResData = Array.isArray(r) ? r : [];
-    if (!pinResData.length) { pinResults.innerHTML = '<div class="pin-none-r">No place found — try adding the country.</div>'; return; }
-    pinResults.innerHTML = pinResData.map((x, i) => {
-      const nm = x.name || (x.display_name || '').split(',')[0];
-      const rest = (x.display_name || '').split(',').slice(1).join(',').trim();
-      return `<div class="pin-res" data-i="${i}"><div class="pr-nm">${escHtml(nm)}<span class="pr-ty">${escHtml(x.type || x.addresstype || '')}</span></div><div class="pr-dn">${escHtml(rest)}</div></div>`;
-    }).join('');
-  } catch (e) { pinResults.innerHTML = '<div class="pin-none-r">Search failed — check your connection.</div>'; }
+  const res = await geocode(q);
+  if (res === null) { pinResData = []; pinResults.innerHTML = '<div class="pin-none-r">Couldn’t reach the place search. An ad-blocker, privacy extension, or your network may be blocking it — try disabling blockers, or another browser.</div>'; return; }
+  pinResData = res;
+  if (!res.length) { pinResults.innerHTML = '<div class="pin-none-r">No place found — try adding the country.</div>'; return; }
+  pinResults.innerHTML = res.map((x, i) => `<div class="pin-res" data-i="${i}"><div class="pr-nm">${escHtml(x.name)}<span class="pr-ty">${escHtml(x.type)}</span></div><div class="pr-dn">${escHtml(x.detail)}</div></div>`).join('');
 }
 pinSearch.addEventListener('input', () => { clearTimeout(pinTimer); pinTimer = setTimeout(runPinSearch, 650); });
 pinSearch.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); clearTimeout(pinTimer); runPinSearch(); } });
 pinResults.addEventListener('click', e => {
   const el = e.target.closest('.pin-res'); if (!el) return;
   const x = pinResData[+el.dataset.i]; if (!x) return;
-  addPin({ name: x.name || (x.display_name || '').split(',')[0], lat: +x.lat, lng: +x.lon });
+  addPin({ name: x.name, lat: x.lat, lng: x.lng });
   closePinModal();
 });
 document.getElementById('pinList').addEventListener('click', e => {
