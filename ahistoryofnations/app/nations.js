@@ -143,8 +143,11 @@ function initGlobe(geo) {
     .labelColor(() => 'rgba(150,205,245,0.92)')
     .labelSize(0.5).labelDotRadius(0.12).labelResolution(2).labelAltitude(0.014);
   const c = globe.controls(); c.autoRotate = true; c.autoRotateSpeed = 0.35; c.enableDamping = true;
+  c.zoomSpeed = 1.4; c.rotateSpeed = 0.9; c.zoomToCursor = true;   // snappier zoom/rotate (default zoomSpeed was 0.35)
   globe.pointOfView({ lat: 20, lng: 10, altitude: 2.3 });
   sizeGlobe();
+  // cap render resolution on hi-DPI laptop screens — big FPS win, barely perceptible
+  try { globe.renderer().setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5)); } catch (e) {}
   render();
 }
 function refreshGlobe() { if (globe) globe.polygonCapColor(capColor).polygonAltitude(altOf); }
