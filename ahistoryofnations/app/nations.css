@@ -68,7 +68,8 @@ body{ background:radial-gradient(1200px 820px at 70% -10%,#16335a 0%,#0a1830 45%
 .pn-l{flex:1; color:#d4deee; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
 
 /* detail card */
-#detailCard{position:fixed; right:14px; top:70px; z-index:35; width:270px; padding:16px 16px 14px; border-radius:14px;
+#detailCard{position:fixed; right:14px; top:70px; z-index:35; width:300px; max-height:calc(100vh - 86px); overflow-y:auto;
+  padding:16px 16px 14px; border-radius:14px;
   background:var(--panel); border:1px solid var(--line); backdrop-filter:blur(9px); box-shadow:0 12px 40px rgba(0,0,0,.5);}
 #detailClose{position:absolute; top:8px; right:9px; width:24px; height:24px; border:none; border-radius:7px;
   background:transparent; color:var(--muted); font-size:18px; cursor:pointer}
@@ -81,6 +82,14 @@ body{ background:radial-gradient(1200px 820px at 70% -10%,#16335a 0%,#0a1830 45%
 #detailBody b{color:#fff}
 .db-row{display:flex; justify-content:space-between; gap:10px; border-top:1px solid var(--line); padding:5px 0}
 .db-row:first-child{border-top:none}
+/* historical Wikipedia summary */
+.detail-desc{margin-top:12px; padding-top:12px; border-top:1px solid var(--line); font-size:12.5px; color:#cdd8ea; line-height:1.62}
+.detail-desc p{margin:0 0 9px}
+.dd-load{color:var(--muted); font-style:italic}
+.dd-none{color:var(--muted); font-size:12px}
+.dd-more{display:inline-block; color:var(--accent); font-weight:600; font-size:12.5px}
+.dd-more:hover{text-decoration:underline}
+.dd-attr{margin-top:9px; font-size:10.5px; color:var(--muted)}
 
 /* time bar */
 #timebar{position:fixed; left:0; right:0; bottom:0; z-index:30; padding:9px 0 12px;
