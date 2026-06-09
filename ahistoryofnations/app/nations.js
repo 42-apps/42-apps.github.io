@@ -81,7 +81,7 @@ function fixWinding(geom) {
   const rings = geom.coordinates.map((ring, i) => { const cw = ringSignedArea(ring) < 0; return ((i === 0) !== cw) ? ring.slice().reverse() : ring; });
   return { type: 'Polygon', coordinates: rings };
 }
-function refreshPins() { if (globe) globe.pointsData(pins.slice()); }
+function refreshPins() { if (globe) { globe.pointsData(pins.slice()); rebuildLabels(); } }
 // bounding box per feature (cached) — to pre-filter the full-history point test
 function featBB(f) { if (f.__bb) return f.__bb; let x0=181,y0=91,x1=-181,y1=-91; const walk = c => { if (typeof c[0] === 'number') { if(c[0]<x0)x0=c[0]; if(c[0]>x1)x1=c[0]; if(c[1]<y0)y0=c[1]; if(c[1]>y1)y1=c[1]; } else for (let i=0;i<c.length;i++) walk(c[i]); }; const g = f.geometry; if (g && g.coordinates) walk(g.coordinates); return f.__bb = [x0,y0,x1,y1]; }
 // every polity that ever contained this point, merged into chronological ranges
@@ -152,9 +152,14 @@ function initGlobe(geo) {
     .pathLabel(d => (d.__paleo ? '🏛 ' : '🌊 ') + d.name + (d.__paleo ? ' — lost' : ''))
     .pathTransitionDuration(0)
     .labelsData([])
-    .labelLat(d => d.lat).labelLng(d => d.lng).labelText(d => d.text)
-    .labelColor(d => d.__paleo ? 'rgba(240,205,120,0.96)' : 'rgba(150,205,245,0.92)')
-    .labelSize(0.5).labelDotRadius(0.12).labelResolution(2).labelAltitude(0.015);
+    .labelLat(d => d.lat).labelLng(d => d.lng)
+    .labelText(d => d.__pinhead ? '' : d.text)
+    .labelColor(d => d.__pinhead ? '#ff3b30' : (d.__paleo ? 'rgba(240,205,120,0.96)' : 'rgba(150,205,245,0.92)'))
+    .labelSize(0.5)
+    .labelDotRadius(d => d.__pinhead ? 0.42 : 0.12)
+    .labelAltitude(d => d.__pinhead ? 0.1 : 0.015)
+    .labelResolution(6)
+    .onLabelClick(d => { if (d.__pinhead) { const p = pins.find(x => x.lat === d.lat && x.lng === d.lng); if (p) { flyToPin(p); showPinHistory(p); } } });
   const c = globe.controls(); c.autoRotate = true; c.autoRotateSpeed = 0.35; c.enableDamping = true; c.dampingFactor = 0.18; c.zoomToCursor = true;
   // globe.gl re-sets zoomSpeed to a low altitude-scaled value on init (~0.33 = sluggish ~1.7%/notch).
   // Re-assert a snappy value now, shortly after init, and on every controls change so it sticks.
@@ -202,7 +207,7 @@ function render() {
   buildList(active);
   updateMineUI();
   updatePinCard();
-  if (paleoOn) updateWaterLayer();          // time-enabled paleo features change with the year
+  updateWaterLayer();                       // refresh paleo paths/labels + red pin heads (all year-aware)
 }
 
 /* ----------------------------- hover / detail ----------------------------- */
@@ -493,18 +498,25 @@ async function ensurePaleo() {
 }
 function activePaleo() { if (!paleoOn || !paleoPaths) return []; const y = curYear(); return paleoPaths.filter(p => p.fromYear <= y && y <= p.toYear); }
 function activePaleoLand() { if (!paleoOn || !paleoLand) return []; const y = curYear(); return paleoLand.filter(f => f.properties.fromYear <= y && y <= f.properties.toYear); }
-function updateWaterLayer() {
+function rebuildLabels() {
   if (!globe) return;
-  const pal = activePaleo();
-  const paths = []; if (riversOn && riverPaths) for (const p of riverPaths) paths.push(p); for (const p of pal) paths.push(p);
   // labels — decluttered (skip any within ~4° of one already placed) so coincident features don't stack/garble
   const labels = [];
-  const tryAdd = c => { for (const l of labels) { const dy = l.lat - c.lat, dx = (l.lng - c.lng) * Math.cos(c.lat * Math.PI / 180); if (dx * dx + dy * dy < 16) return; } labels.push(c); };
+  const tryAdd = c => { for (const l of labels) { if (l.__pinhead) continue; const dy = l.lat - c.lat, dx = (l.lng - c.lng) * Math.cos(c.lat * Math.PI / 180); if (dx * dx + dy * dy < 16) return; } labels.push(c); };
+  const pal = activePaleo();
   for (const L of activePaleoLand()) tryAdd({ lat: L.labLat, lng: L.labLng, text: L.properties.name, __paleo: true });   // land bridges first
   for (const p of pal) if (p.kind === 'lake') tryAdd({ lat: p.labLat, lng: p.labLng, text: p.name, __paleo: true });      // then lakes
   for (const p of pal) if (p.kind !== 'lake') tryAdd({ lat: p.labLat, lng: p.labLng, text: p.name, __paleo: true });      // then rivers
   if (riversOn && riverLabels) for (const l of riverLabels) tryAdd(l);                                                    // then modern major rivers
-  globe.pathsData(paths); globe.labelsData(labels);
+  for (const p of pins) labels.push({ lat: p.lat, lng: p.lng, text: '', __pinhead: true });                              // red round pin heads (always shown)
+  globe.labelsData(labels);
+}
+function updateWaterLayer() {
+  if (!globe) return;
+  const pal = activePaleo();
+  const paths = []; if (riversOn && riverPaths) for (const p of riverPaths) paths.push(p); for (const p of pal) paths.push(p);
+  globe.pathsData(paths);
+  rebuildLabels();
 }
 async function setRivers(on) { riversOn = on; syncRivers(); if (on) await ensureRivers(); updateWaterLayer(); syncRivers(); }
 async function setPaleo(on) { paleoOn = on; syncPaleo(); if (on) await ensurePaleo(); render(); updateWaterLayer(); syncPaleo(); }
