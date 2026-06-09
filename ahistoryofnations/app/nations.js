@@ -136,6 +136,8 @@ function initGlobe(geo) {
     .polygonsTransitionDuration(0)
     .onPolygonHover(onHover)
     .onPolygonClick(onClick)
+    .onGlobeRightClick(c => { if (c && c.lat != null) showSpotHistory(c.lat, c.lng); })
+    .onPolygonRightClick((poly, ev, c) => { if (c && c.lat != null) showSpotHistory(c.lat, c.lng); })
     .pointsData(pins.slice())
     .pointLat(d => d.lat).pointLng(d => d.lng)
     .pointColor(() => '#ffd24a')
@@ -233,6 +235,7 @@ elViz.addEventListener('mousemove', e => {
   if (tooltip.classList.contains('hidden')) return;
   const r = elViz.getBoundingClientRect(); tooltip.style.left = (e.clientX - r.left) + 'px'; tooltip.style.top = (e.clientY - r.top) + 'px';
 });
+elViz.addEventListener('contextmenu', e => e.preventDefault());   // right-click shows the "who ruled here" popup instead of the browser menu
 const detailCard = document.getElementById('detailCard');
 function showDetail(f) {
   const p = f.properties, key = featKey(f);
@@ -301,13 +304,12 @@ function renderDesc(data, key) {
 function closeDetail() { detailCard.classList.add('hidden'); state.selected = null; refreshGlobe(); markListActive(null); }
 document.getElementById('detailClose').addEventListener('click', closeDetail);
 
-// pin history: who ruled this exact spot, through time (full Cliopatria sweep + today)
-function showPinHistory(p) {
-  const hist = p.__hist || (p.__hist = pinHistory(p.lng, p.lat));
-  document.getElementById('detailFlag').textContent = '📍';
-  document.getElementById('detailName').textContent = p.name;
-  document.getElementById('detailType').textContent = 'Pin · ' + p.lat.toFixed(3) + '°, ' + p.lng.toFixed(3) + '°';
-  const modern = neCountries.find(f => pointInFeature(p.lng, p.lat, f));
+// "who ruled this exact spot, through time" — shared by saved pins (📍) and right-click preview (🔎)
+function renderSpotHistory(name, lat, lng, flag, typeLabel, hist) {
+  document.getElementById('detailFlag').textContent = flag;
+  document.getElementById('detailName').textContent = name;
+  document.getElementById('detailType').textContent = typeLabel + ' · ' + lat.toFixed(2) + '°, ' + lng.toFixed(2) + '°';
+  const modern = neCountries.find(f => pointInFeature(lng, lat, f));
   let rows = hist.map(h => `<div class="ph-row" data-from="${h.from}" data-to="${h.to}"><span class="ph-nm">${escHtml(h.name)}</span><span class="ph-yr">${fmtYr(h.from)} – ${fmtYr(h.to === TODAY ? 2024 : h.to)}</span></div>`).join('');
   if (modern) rows += `<div class="ph-row" data-from="${TODAY}" data-to="${TODAY}"><span class="ph-nm">${escHtml(featName(modern))}</span><span class="ph-yr">today</span></div>`;
   document.getElementById('detailBody').innerHTML = '<div class="ph-intro">Who ruled this spot, through time</div>' + (rows || '<div class="dd-none">Not inside any mapped state in our data.</div>');
@@ -315,6 +317,8 @@ function showPinHistory(p) {
   state.selected = null; refreshGlobe(); markListActive(null);
   detailCard.classList.remove('hidden'); detailCard.scrollTop = 0;
 }
+function showPinHistory(p) { renderSpotHistory(p.name, p.lat, p.lng, '📍', 'Pin', p.__hist || (p.__hist = pinHistory(p.lng, p.lat))); }
+function showSpotHistory(lat, lng) { renderSpotHistory('This spot', lat, lng, '🔎', 'Right-clicked', pinHistory(lng, lat)); }
 function jumpToEra(from, to) {
   const mid = (from + to) / 2; const inR = [];
   for (let i = 0; i < STOPS.length; i++) if (STOPS[i] >= from && STOPS[i] <= to) inR.push(i);
@@ -598,7 +602,7 @@ function updatePinCard() {
     return `<div class="pin-row" data-i="${i}"><span class="pin-nm" title="${escHtml(p.name)}">${escHtml(p.name)}</span><span class="pin-pol">${polHtml}</span><span class="pin-x" data-x="${i}" title="Remove">×</span></div>`;
   }).join('');
 }
-function flyToPin(p) { spinOn = false; syncSpin(); stopPlay(); if (globe) { globe.controls().autoRotate = false; globe.pointOfView({ lat: p.lat, lng: p.lng, altitude: 1.4 }, 900); } }
+function flyToPin(p) { spinOn = false; syncSpin(); stopPlay(); if (globe) { globe.controls().autoRotate = false; globe.pointOfView({ lat: p.lat, lng: p.lng, altitude: 0.55 }, 900); } }
 function addPin(p) {
   if (!pins.some(q => Math.abs(q.lat - p.lat) < 1e-6 && Math.abs(q.lng - p.lng) < 1e-6)) pins.push(p);
   savePins(); refreshPins(); updatePinCard(); flyToPin(p); showPinHistory(p);
@@ -659,6 +663,7 @@ document.addEventListener('keydown', e => {
     aboutOverlay.classList.add('hidden'); if (tagMode) setTagMode(tagMode); else if (!detailCard.classList.contains('hidden')) closeDetail(); }
   else if (e.key === 'ArrowLeft') { yearIdx = Math.max(0, yearIdx - 1); stopPlay(); render(); }
   else if (e.key === 'ArrowRight') { yearIdx = Math.min(STOPS.length - 1, yearIdx + 1); stopPlay(); render(); }
+  else if (e.key === ' ' || e.code === 'Space') { e.preventDefault(); spinOn = !spinOn; if (globe && !playing) globe.controls().autoRotate = spinOn; syncSpin(); }   // spacebar: start/stop spin
 });
 
 /* --------------------------------- boot --------------------------------- */
