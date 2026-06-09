@@ -72,6 +72,19 @@ function pointInRing(x, y, ring) { let inside = false; for (let i = 0, j = ring.
 function pointInFeature(lng, lat, f) { const g = f.geometry; if (!g) return false; const polys = g.type === 'Polygon' ? [g.coordinates] : g.type === 'MultiPolygon' ? g.coordinates : []; for (const poly of polys) { if (!poly.length || !pointInRing(lng, lat, poly[0])) continue; let inHole = false; for (let h = 1; h < poly.length; h++) if (pointInRing(lng, lat, poly[h])) { inHole = true; break; } if (!inHole) return true; } return false; }
 function polityAt(lng, lat) { const fs = activeFeatures(); for (const f of fs) if (pointInFeature(lng, lat, f)) return f; return null; }
 function refreshPins() { if (globe) globe.pointsData(pins.slice()); }
+// bounding box per feature (cached) — to pre-filter the full-history point test
+function featBB(f) { if (f.__bb) return f.__bb; let x0=181,y0=91,x1=-181,y1=-91; const walk = c => { if (typeof c[0] === 'number') { if(c[0]<x0)x0=c[0]; if(c[0]>x1)x1=c[0]; if(c[1]<y0)y0=c[1]; if(c[1]>y1)y1=c[1]; } else for (let i=0;i<c.length;i++) walk(c[i]); }; const g = f.geometry; if (g && g.coordinates) walk(g.coordinates); return f.__bb = [x0,y0,x1,y1]; }
+// every polity that ever contained this point, merged into chronological ranges
+function pinHistory(lng, lat) {
+  if (!histAll) return [];
+  const hits = [];
+  for (const f of histAll.features) { const p = f.properties; if (p.Type === 'RELATION') continue; const b = featBB(f); if (lng<b[0]||lng>b[2]||lat<b[1]||lat>b[3]) continue; if (pointInFeature(lng, lat, f)) hits.push({ name: featName(f), from: p.FromYear, to: p.ToYear }); }
+  const byName = {}; hits.forEach(h => { (byName[h.name] = byName[h.name] || []).push(h); });
+  const merged = [];
+  Object.keys(byName).forEach(name => { const arr = byName[name].sort((a,b)=>a.from-b.from); let cur = { name, from: arr[0].from, to: arr[0].to }; for (let i=1;i<arr.length;i++){ const h=arr[i]; if (h.from <= cur.to + 5) cur.to = Math.max(cur.to, h.to); else { merged.push(cur); cur = { name, from: h.from, to: h.to }; } } merged.push(cur); });
+  merged.sort((a,b)=> a.from-b.from || a.to-b.to);
+  return merged;
+}
 
 /* ----------------------------- the active set ----------------------------- */
 function activeFeatures() {
@@ -115,9 +128,10 @@ function initGlobe(geo) {
     .pointsData(pins.slice())
     .pointLat(d => d.lat).pointLng(d => d.lng)
     .pointColor(() => '#ffd24a')
-    .pointAltitude(0.04).pointRadius(0.6).pointResolution(8)
+    .pointAltitude(0.1).pointRadius(0.06).pointResolution(12)
     .pointsMerge(false)
-    .pointLabel(d => d.name);
+    .pointLabel(d => '📍 ' + d.name)
+    .onPointClick(p => { flyToPin(p); showPinHistory(p); });
   const c = globe.controls(); c.autoRotate = true; c.autoRotateSpeed = 0.35; c.enableDamping = true;
   globe.pointOfView({ lat: 20, lng: 10, altitude: 2.3 });
   sizeGlobe();
@@ -241,6 +255,30 @@ function renderDesc(data, key) {
 }
 function closeDetail() { detailCard.classList.add('hidden'); state.selected = null; refreshGlobe(); markListActive(null); }
 document.getElementById('detailClose').addEventListener('click', closeDetail);
+
+// pin history: who ruled this exact spot, through time (full Cliopatria sweep + today)
+function showPinHistory(p) {
+  const hist = p.__hist || (p.__hist = pinHistory(p.lng, p.lat));
+  document.getElementById('detailFlag').textContent = '📍';
+  document.getElementById('detailName').textContent = p.name;
+  document.getElementById('detailType').textContent = 'Pin · ' + p.lat.toFixed(3) + '°, ' + p.lng.toFixed(3) + '°';
+  const modern = neCountries.find(f => pointInFeature(p.lng, p.lat, f));
+  let rows = hist.map(h => `<div class="ph-row" data-from="${h.from}" data-to="${h.to}"><span class="ph-nm">${escHtml(h.name)}</span><span class="ph-yr">${fmtYr(h.from)} – ${fmtYr(h.to === TODAY ? 2024 : h.to)}</span></div>`).join('');
+  if (modern) rows += `<div class="ph-row" data-from="${TODAY}" data-to="${TODAY}"><span class="ph-nm">${escHtml(featName(modern))}</span><span class="ph-yr">today</span></div>`;
+  document.getElementById('detailBody').innerHTML = '<div class="ph-intro">Who ruled this spot, through time</div>' + (rows || '<div class="dd-none">Not inside any mapped state in our data.</div>');
+  document.getElementById('detailDesc').classList.add('hidden');
+  state.selected = null; refreshGlobe(); markListActive(null);
+  detailCard.classList.remove('hidden'); detailCard.scrollTop = 0;
+}
+function jumpToEra(from, to) {
+  const mid = (from + to) / 2; const inR = [];
+  for (let i = 0; i < STOPS.length; i++) if (STOPS[i] >= from && STOPS[i] <= to) inR.push(i);
+  let idx;
+  if (inR.length) idx = inR.reduce((b, i) => Math.abs(STOPS[i] - mid) < Math.abs(STOPS[b] - mid) ? i : b, inR[0]);
+  else { idx = 0; let bd = Infinity; for (let i = 0; i < STOPS.length; i++) { const d = Math.abs(STOPS[i] - mid); if (d < bd) { bd = d; idx = i; } } }
+  yearIdx = idx; stopPlay(); render();
+}
+detailCard.addEventListener('click', e => { const r = e.target.closest('.ph-row'); if (r) jumpToEra(+r.dataset.from, +r.dataset.to); });
 function onClick(f) {
   if (!f || f.__ghost) return;
   if (isToday() && tagMode) { toggleMine(featKey(f)); return; }
@@ -433,7 +471,7 @@ function updatePinCard() {
 function flyToPin(p) { spinOn = false; syncSpin(); stopPlay(); if (globe) { globe.controls().autoRotate = false; globe.pointOfView({ lat: p.lat, lng: p.lng, altitude: 1.4 }, 900); } }
 function addPin(p) {
   if (!pins.some(q => Math.abs(q.lat - p.lat) < 1e-6 && Math.abs(q.lng - p.lng) < 1e-6)) pins.push(p);
-  savePins(); refreshPins(); updatePinCard(); flyToPin(p);
+  savePins(); refreshPins(); updatePinCard(); flyToPin(p); showPinHistory(p);
 }
 function openPinModal() { pinModal.classList.remove('hidden'); pinSearch.value = ''; pinResults.innerHTML = ''; pinResData = []; setTimeout(() => pinSearch.focus(), 40); }
 function closePinModal() { pinModal.classList.add('hidden'); }
@@ -463,7 +501,7 @@ pinResults.addEventListener('click', e => {
 document.getElementById('pinList').addEventListener('click', e => {
   const x = e.target.closest('.pin-x');
   if (x) { pins.splice(+x.dataset.x, 1); savePins(); refreshPins(); updatePinCard(); return; }
-  const row = e.target.closest('.pin-row'); if (row && pins[+row.dataset.i]) flyToPin(pins[+row.dataset.i]);
+  const row = e.target.closest('.pin-row'); if (row && pins[+row.dataset.i]) { const p = pins[+row.dataset.i]; flyToPin(p); showPinHistory(p); }
 });
 document.getElementById('pinClear').addEventListener('click', () => { if (pins.length) { pins.length = 0; savePins(); refreshPins(); updatePinCard(); } });
 document.getElementById('miPin').addEventListener('click', () => { menu.classList.add('hidden'); openPinModal(); });
