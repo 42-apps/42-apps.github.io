@@ -398,7 +398,7 @@ const eraJumpsEl = document.getElementById('eraJumps');
 eraJumpsEl.innerHTML = ERA_JUMPS.map(e => { const i = STOPS.indexOf(e.y);
   return `<button class="era-chip" data-idx="${i}" title="Jump to ${fmtYr(e.y)}">${e.label}</button>`; }).join('');
 eraJumpsEl.addEventListener('click', e => { const c = e.target.closest('.era-chip'); if (!c) return; yearIdx = +c.dataset.idx; stopPlay(); render(); });
-function markEraJump() { document.querySelectorAll('#eraJumps .era-chip').forEach(c => c.classList.toggle('on', +c.dataset.idx === yearIdx)); }
+function markEraJump() { document.querySelectorAll('#eraJumps .era-chip').forEach(c => { const on = +c.dataset.idx === yearIdx; c.classList.toggle('on', on); if (on) c.scrollIntoView({ block: 'nearest', inline: 'nearest' }); }); }
 
 let playing = false, playTimer = null, playDir = 1;
 const playFwd = document.getElementById('playFwd'), playBack = document.getElementById('playBack');
