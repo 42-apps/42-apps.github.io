@@ -131,7 +131,17 @@ function initGlobe(geo) {
     .pointAltitude(0.1).pointRadius(0.06).pointResolution(12)
     .pointsMerge(false)
     .pointLabel(d => '📍 ' + d.name)
-    .onPointClick(p => { flyToPin(p); showPinHistory(p); });
+    .onPointClick(p => { flyToPin(p); showPinHistory(p); })
+    .pathsData([])
+    .pathPoints(d => d.coords).pathPointLat(p => p[1]).pathPointLng(p => p[0]).pathPointAlt(() => 0.013)
+    .pathColor(() => 'rgba(96,172,236,0.8)')
+    .pathStroke(0.7)
+    .pathLabel(d => '🌊 ' + d.name)
+    .pathTransitionDuration(0)
+    .labelsData([])
+    .labelLat(d => d.lat).labelLng(d => d.lng).labelText(d => d.text)
+    .labelColor(() => 'rgba(150,205,245,0.92)')
+    .labelSize(0.5).labelDotRadius(0.12).labelResolution(2).labelAltitude(0.014);
   const c = globe.controls(); c.autoRotate = true; c.autoRotateSpeed = 0.35; c.enableDamping = true;
   globe.pointOfView({ lat: 20, lng: 10, altitude: 2.3 });
   sizeGlobe();
@@ -392,6 +402,39 @@ const miGhost = document.getElementById('miGhost');
 function syncGhost() { const s = miGhost.querySelector('.mi-state'); if (s) s.textContent = ghostToday ? 'On' : 'Off'; miGhost.classList.toggle('on', ghostToday); }
 miGhost.addEventListener('click', () => { ghostToday = !ghostToday; syncGhost(); render(); });
 syncGhost();
+
+/* ---- Rivers layer (lazy-loaded; present-day courses, ~constant over history) ---- */
+let riversOn = false, riverPaths = null, riverLabels = null, riversLoading = false;
+const miRivers = document.getElementById('miRivers');
+function syncRivers() { const s = miRivers.querySelector('.mi-state'); if (s) s.textContent = riversLoading ? '…' : (riversOn ? 'On' : 'Off'); miRivers.classList.toggle('on', riversOn); }
+async function ensureRivers() {
+  if (riverPaths) return riverPaths;
+  if (riversLoading) return null;
+  riversLoading = true; syncRivers();
+  try {
+    const j = await fetch('data/rivers.geojson?v=1').then(r => r.json());
+    const paths = [];
+    for (const f of j.features) {
+      const nm = f.properties.name || '', sr = f.properties.sr, g = f.geometry; if (!g) continue;
+      const lines = g.type === 'LineString' ? [g.coordinates] : g.type === 'MultiLineString' ? g.coordinates : [];
+      for (const line of lines) if (line.length > 1) paths.push({ name: nm, sr, coords: line });
+    }
+    riverPaths = paths;
+    // labels for the biggest rivers only (dedupe by name → midpoint of its longest segment)
+    const best = {};
+    for (const p of paths) { if (p.sr > 1 || !p.name) continue; if (!best[p.name] || p.coords.length > best[p.name].len) { const m = p.coords[Math.floor(p.coords.length / 2)]; best[p.name] = { len: p.coords.length, lat: m[1], lng: m[0], text: p.name }; } }
+    riverLabels = Object.values(best).map(b => ({ lat: b.lat, lng: b.lng, text: b.text }));
+  } catch (e) { riverPaths = []; riverLabels = []; }
+  riversLoading = false; syncRivers();
+  return riverPaths;
+}
+async function setRivers(on) {
+  riversOn = on; syncRivers();
+  if (on) { await ensureRivers(); if (globe && riversOn) { globe.pathsData(riverPaths); globe.labelsData(riverLabels || []); } }
+  else if (globe) { globe.pathsData([]); globe.labelsData([]); }
+  syncRivers();
+}
+miRivers.addEventListener('click', () => setRivers(!riversOn));
 const aboutOverlay = document.getElementById('aboutOverlay');
 document.getElementById('miAbout').addEventListener('click', () => { menu.classList.add('hidden'); aboutOverlay.classList.remove('hidden'); });
 document.getElementById('aboutClose').addEventListener('click', () => aboutOverlay.classList.add('hidden'));
