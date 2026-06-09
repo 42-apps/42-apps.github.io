@@ -163,6 +163,14 @@ body{ background:radial-gradient(1200px 820px at 70% -10%,#16335a 0%,#0a1830 45%
 .pn-mine{font-size:11px; flex:none; width:15px; text-align:center}
 
 /* ---- Drop-a-pin: time-travel a place ---- */
+.globe-pin{font-size:24px; line-height:1; cursor:pointer; user-select:none; filter:drop-shadow(0 2px 3px rgba(0,0,0,.65)); transition:transform .12s; transform-origin:50% 100%}
+.globe-pin:hover{transform:scale(1.28)}
+/* pin history (in detail card) */
+.ph-intro{font-size:10.5px; letter-spacing:.07em; text-transform:uppercase; color:var(--muted); margin-bottom:8px}
+.ph-row{display:flex; justify-content:space-between; gap:10px; align-items:baseline; padding:6px 7px; border-radius:7px; cursor:pointer; border-top:1px solid var(--line)}
+.ph-row:hover{background:rgba(255,255,255,.08)}
+.ph-nm{font-size:12.5px; color:#eaf1fb; font-weight:600}
+.ph-yr{font-size:11.5px; color:var(--accent); font-variant-numeric:tabular-nums; white-space:nowrap}
 #pinCard{position:fixed; top:62px; left:14px; z-index:26; width:248px; max-height:46vh; overflow:auto; padding:11px 13px; border-radius:14px;
   background:var(--panel); border:1px solid var(--line); backdrop-filter:blur(8px); box-shadow:0 10px 34px rgba(0,0,0,.45)}
 .pin-head{display:flex; align-items:center; gap:6px; font-weight:700; font-size:13px}
