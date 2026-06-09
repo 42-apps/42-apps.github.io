@@ -193,8 +193,8 @@ function render() {
     const sov = active.filter(f => ['Sovereign country', 'Country'].includes(f.properties.TYPE)).length;
     split.innerHTML = `<b>${sov}</b> sovereign states · <b>${active.length - sov}</b> territories`;
   } else if (active.length === 0) {
-    sub.textContent = 'before recorded states';
-    split.innerHTML = `<span style="color:var(--muted)">No mapped states yet — turn on “Lost rivers &amp; coasts” for Ice-Age geography</span>`;
+    sub.textContent = 'no states yet';
+    split.innerHTML = `<span style="color:var(--muted)">Before recorded states — the first appear <b style="color:var(--accent)">~3000&nbsp;BC</b>. Turn on “Lost rivers &amp; coasts” for Ice-Age geography.</span>`;
   } else {
     sub.textContent = 'polities & empires';
     split.innerHTML = `mapped in <b>${fmtYr(curYear())}</b> &middot; <span style="color:var(--muted)">borders are estimated, esp. deep past</span>`;
@@ -389,6 +389,7 @@ document.getElementById('nowBtn').addEventListener('click', () => { yearIdx = ST
 /* notable-era quick-jumps — leap the timeline to a famous moment */
 const ERA_JUMPS = [
   { y: -12000, label: 'Ice Age'  },
+  { y: -3000, label: 'First states' },
   { y: -2000, label: 'Bronze Age' },
   { y: -500,  label: 'Classical'  },
   { y: 100,   label: 'Roman peak' },
@@ -644,6 +645,9 @@ Promise.all([
   fetch('data/cliopatria.topojson?v=1').then(r => r.json()),
 ]).then(([geo, topo]) => {
   try { histAll = topojson.feature(topo, topo.objects.cliopatria_polities_only); } catch (e) { console.error('topojson convert failed', e); histAll = { features: [] }; }
+  // mark where the first states appear on the timeline track (gold divider between prehistory & recorded history)
+  try { const fsi = STOPS.findIndex(y => histAll.features.some(f => f.properties.Type !== 'RELATION' && f.properties.FromYear <= y && y <= f.properties.ToYear));
+    if (fsi > 0) document.getElementById('timeSlider').style.setProperty('--sp', (fsi / (STOPS.length - 1) * 100).toFixed(2) + '%'); } catch (e) {}
   initGlobe(geo);
 }).catch(err => {
   console.error('data load failed', err);
