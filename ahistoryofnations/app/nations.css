@@ -94,7 +94,7 @@ body{ background:radial-gradient(1200px 820px at 70% -10%,#16335a 0%,#0a1830 45%
 /* time bar */
 #timebar{position:fixed; left:0; right:0; bottom:0; z-index:30; padding:9px 0 12px;
   background:linear-gradient(0deg,rgba(6,14,28,.95),rgba(6,14,28,0)); display:flex; flex-direction:column; align-items:center; gap:6px;}
-.era-jumps{display:flex; gap:6px; max-width:min(680px,92vw); overflow-x:auto; padding:1px 4px 3px; scrollbar-width:none}
+.era-jumps{display:flex; gap:6px; max-width:min(960px,96vw); overflow-x:auto; padding:1px 4px 4px; scrollbar-width:none}
 .era-jumps::-webkit-scrollbar{display:none}
 .era-chip{flex:none; padding:4px 10px; border-radius:13px; font-size:11px; font-weight:600; white-space:nowrap; cursor:pointer;
   background:rgba(255,255,255,.06); color:var(--muted); border:1px solid var(--line); transition:background .12s,color .12s}
