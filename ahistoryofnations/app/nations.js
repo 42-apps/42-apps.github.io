@@ -156,8 +156,11 @@ function initGlobe(geo) {
     .labelLat(d => d.lat).labelLng(d => d.lng).labelText(d => d.text)
     .labelColor(d => d.__paleo ? 'rgba(240,205,120,0.96)' : 'rgba(150,205,245,0.92)')
     .labelSize(0.5).labelDotRadius(0.12).labelResolution(2).labelAltitude(0.015);
-  const c = globe.controls(); c.autoRotate = true; c.autoRotateSpeed = 0.35; c.enableDamping = true;
-  c.zoomSpeed = 1.4; c.rotateSpeed = 0.9; c.zoomToCursor = true;   // snappier zoom/rotate (default zoomSpeed was 0.35)
+  const c = globe.controls(); c.autoRotate = true; c.autoRotateSpeed = 0.35; c.enableDamping = true; c.dampingFactor = 0.18; c.zoomToCursor = true;
+  // globe.gl re-sets zoomSpeed to a low altitude-scaled value on init (~0.33 = sluggish ~1.7%/notch).
+  // Re-assert a snappy value now, shortly after init, and on every controls change so it sticks.
+  const setZoomSpeed = () => { c.zoomSpeed = 2.6; };
+  setZoomSpeed(); setTimeout(setZoomSpeed, 300); c.addEventListener('change', setZoomSpeed);
   globe.pointOfView({ lat: 20, lng: 10, altitude: 2.3 });
   sizeGlobe();
   // cap render resolution on hi-DPI screens (+ Performance mode goes further)
