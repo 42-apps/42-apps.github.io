@@ -9,7 +9,7 @@ body{ background:radial-gradient(1200px 820px at 70% -10%,#16335a 0%,#0a1830 45%
 .hidden{display:none !important}
 
 /* header */
-#topbar{position:fixed; top:0; left:0; right:0; height:54px; z-index:30; display:flex; align-items:center;
+#topbar{position:fixed; top:0; left:0; right:0; height:54px; z-index:45; display:flex; align-items:center;
   justify-content:space-between; padding:0 16px; background:linear-gradient(180deg,rgba(6,14,28,.92),rgba(6,14,28,0)); }
 .brand{display:flex; align-items:center; gap:11px}
 .logo{width:44px; height:44px; filter:drop-shadow(0 2px 6px rgba(0,0,0,.55))}
