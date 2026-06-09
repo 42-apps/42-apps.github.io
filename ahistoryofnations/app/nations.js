@@ -62,6 +62,17 @@ let tagMode = null;
 function loadMine() { try { const o = JSON.parse(localStorage.getItem(MINE_KEY) || '{}'); (o.been||[]).forEach(x => mine.been.add(x)); (o.want||[]).forEach(x => mine.want.add(x)); } catch (e) {} }
 function saveMine() { try { localStorage.setItem(MINE_KEY, JSON.stringify({ been: [...mine.been], want: [...mine.want] })); } catch (e) {} }
 
+/* ---- Drop-a-pin: time-travel a place (persisted) ---- */
+const PINS_KEY = 'hon_pins_v1';
+const pins = [];
+function loadPins() { try { const a = JSON.parse(localStorage.getItem(PINS_KEY) || '[]'); if (Array.isArray(a)) a.forEach(p => { if (p && typeof p.lat === 'number' && typeof p.lng === 'number') pins.push({ name: String(p.name || 'Pin'), lat: p.lat, lng: p.lng }); }); } catch (e) {} }
+function savePins() { try { localStorage.setItem(PINS_KEY, JSON.stringify(pins)); } catch (e) {} }
+// ray-casting point-in-polygon → "which polity ruled this exact spot in this year?"
+function pointInRing(x, y, ring) { let inside = false; for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) { const xi = ring[i][0], yi = ring[i][1], xj = ring[j][0], yj = ring[j][1]; if (((yi > y) !== (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi)) inside = !inside; } return inside; }
+function pointInFeature(lng, lat, f) { const g = f.geometry; if (!g) return false; const polys = g.type === 'Polygon' ? [g.coordinates] : g.type === 'MultiPolygon' ? g.coordinates : []; for (const poly of polys) { if (!poly.length || !pointInRing(lng, lat, poly[0])) continue; let inHole = false; for (let h = 1; h < poly.length; h++) if (pointInRing(lng, lat, poly[h])) { inHole = true; break; } if (!inHole) return true; } return false; }
+function polityAt(lng, lat) { const fs = activeFeatures(); for (const f of fs) if (pointInFeature(lng, lat, f)) return f; return null; }
+function refreshPins() { if (globe) globe.pointsData(pins.slice()); }
+
 /* ----------------------------- the active set ----------------------------- */
 function activeFeatures() {
   if (isToday()) return neCountries;
@@ -100,7 +111,13 @@ function initGlobe(geo) {
     .polygonAltitude(altOf)
     .polygonsTransitionDuration(0)
     .onPolygonHover(onHover)
-    .onPolygonClick(onClick);
+    .onPolygonClick(onClick)
+    .pointsData(pins.slice())
+    .pointLat(d => d.lat).pointLng(d => d.lng)
+    .pointColor(() => '#ffd24a')
+    .pointAltitude(0.04).pointRadius(0.6).pointResolution(8)
+    .pointsMerge(false)
+    .pointLabel(d => d.name);
   const c = globe.controls(); c.autoRotate = true; c.autoRotateSpeed = 0.35; c.enableDamping = true;
   globe.pointOfView({ lat: 20, lng: 10, altitude: 2.3 });
   sizeGlobe();
@@ -137,6 +154,7 @@ function render() {
   }
   buildList(active);
   updateMineUI();
+  updatePinCard();
 }
 
 /* ----------------------------- hover / detail ----------------------------- */
@@ -296,16 +314,31 @@ eraJumpsEl.innerHTML = ERA_JUMPS.map(e => { const i = STOPS.indexOf(e.y);
 eraJumpsEl.addEventListener('click', e => { const c = e.target.closest('.era-chip'); if (!c) return; yearIdx = +c.dataset.idx; stopPlay(); render(); });
 function markEraJump() { document.querySelectorAll('#eraJumps .era-chip').forEach(c => c.classList.toggle('on', +c.dataset.idx === yearIdx)); }
 
-let playing = false, playTimer = null;
-const playBtn = document.getElementById('playBtn');
-function stopPlay() { playing = false; if (playTimer) { clearInterval(playTimer); playTimer = null; } playBtn.textContent = '▶'; playBtn.classList.remove('on'); if (globe) globe.controls().autoRotate = spinOn; }
-function startPlay() {
-  if (yearIdx >= STOPS.length - 1) yearIdx = 0;
-  playing = true; playBtn.textContent = '⏸'; playBtn.classList.add('on');
-  if (globe) globe.controls().autoRotate = false;
-  playTimer = setInterval(() => { if (yearIdx >= STOPS.length - 1) { stopPlay(); return; } yearIdx++; render(); }, 1100);
+let playing = false, playTimer = null, playDir = 1;
+const playFwd = document.getElementById('playFwd'), playBack = document.getElementById('playBack');
+function syncPlayBtns() {
+  playFwd.textContent = (playing && playDir > 0) ? '⏸' : '▶';
+  playBack.textContent = (playing && playDir < 0) ? '⏸' : '◀';
+  playFwd.classList.toggle('on', playing && playDir > 0);
+  playBack.classList.toggle('on', playing && playDir < 0);
 }
-playBtn.addEventListener('click', () => { playing ? stopPlay() : startPlay(); });
+function stopPlay() { playing = false; if (playTimer) { clearInterval(playTimer); playTimer = null; } syncPlayBtns(); if (globe && !tagMode) globe.controls().autoRotate = spinOn; }
+function startPlay(dir) {
+  if (playing && playDir === dir) { stopPlay(); return; }     // same button again = pause
+  playDir = dir; playing = true;
+  if (dir > 0 && yearIdx >= STOPS.length - 1) yearIdx = 0;     // wrap to start when playing forward from the end
+  if (dir < 0 && yearIdx <= 0) yearIdx = STOPS.length - 1;     // wrap to end when playing backward from the start
+  syncPlayBtns();
+  if (globe) globe.controls().autoRotate = false;
+  if (playTimer) clearInterval(playTimer);
+  playTimer = setInterval(() => {
+    const next = yearIdx + playDir;
+    if (next < 0 || next > STOPS.length - 1) { stopPlay(); return; }
+    yearIdx = next; render();
+  }, 1100);
+}
+playFwd.addEventListener('click', () => startPlay(1));
+playBack.addEventListener('click', () => startPlay(-1));
 
 /* ------------------------------- menu ------------------------------- */
 const menu = document.getElementById('menu'), menuBtn = document.getElementById('menuBtn');
@@ -383,10 +416,66 @@ document.getElementById('miClearMine').addEventListener('click', () => {
   mine.been.clear(); mine.want.clear(); saveMine(); refreshGlobe(); updateMineUI();
 });
 
+/* ------------------------------- Drop a pin ------------------------------- */
+const pinCard = document.getElementById('pinCard'), pinModal = document.getElementById('pinModal');
+const pinSearch = document.getElementById('pinSearch'), pinResults = document.getElementById('pinResults');
+let pinResData = [], pinTimer = null;
+function updatePinCard() {
+  if (!pins.length) { pinCard.classList.add('hidden'); return; }
+  pinCard.classList.remove('hidden');
+  document.getElementById('pinYear').textContent = fmtYr(curYear());
+  document.getElementById('pinList').innerHTML = pins.map((p, i) => {
+    const pol = polityAt(p.lng, p.lat);
+    const polHtml = pol ? escHtml(featName(pol)) : '<span class="pin-none">no mapped state</span>';
+    return `<div class="pin-row" data-i="${i}"><span class="pin-nm" title="${escHtml(p.name)}">${escHtml(p.name)}</span><span class="pin-pol">${polHtml}</span><span class="pin-x" data-x="${i}" title="Remove">×</span></div>`;
+  }).join('');
+}
+function flyToPin(p) { spinOn = false; syncSpin(); stopPlay(); if (globe) { globe.controls().autoRotate = false; globe.pointOfView({ lat: p.lat, lng: p.lng, altitude: 1.4 }, 900); } }
+function addPin(p) {
+  if (!pins.some(q => Math.abs(q.lat - p.lat) < 1e-6 && Math.abs(q.lng - p.lng) < 1e-6)) pins.push(p);
+  savePins(); refreshPins(); updatePinCard(); flyToPin(p);
+}
+function openPinModal() { pinModal.classList.remove('hidden'); pinSearch.value = ''; pinResults.innerHTML = ''; pinResData = []; setTimeout(() => pinSearch.focus(), 40); }
+function closePinModal() { pinModal.classList.add('hidden'); }
+async function runPinSearch() {
+  const q = pinSearch.value.trim();
+  if (q.length < 2) { pinResults.innerHTML = ''; return; }
+  pinResults.innerHTML = '<div class="pin-load">Searching…</div>';
+  try {
+    const r = await fetch('https://nominatim.openstreetmap.org/search?format=jsonv2&limit=6&q=' + encodeURIComponent(q), { headers: { 'Accept': 'application/json' } }).then(r => r.json());
+    pinResData = Array.isArray(r) ? r : [];
+    if (!pinResData.length) { pinResults.innerHTML = '<div class="pin-none-r">No place found — try adding the country.</div>'; return; }
+    pinResults.innerHTML = pinResData.map((x, i) => {
+      const nm = x.name || (x.display_name || '').split(',')[0];
+      const rest = (x.display_name || '').split(',').slice(1).join(',').trim();
+      return `<div class="pin-res" data-i="${i}"><div class="pr-nm">${escHtml(nm)}<span class="pr-ty">${escHtml(x.type || x.addresstype || '')}</span></div><div class="pr-dn">${escHtml(rest)}</div></div>`;
+    }).join('');
+  } catch (e) { pinResults.innerHTML = '<div class="pin-none-r">Search failed — check your connection.</div>'; }
+}
+pinSearch.addEventListener('input', () => { clearTimeout(pinTimer); pinTimer = setTimeout(runPinSearch, 650); });
+pinSearch.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); clearTimeout(pinTimer); runPinSearch(); } });
+pinResults.addEventListener('click', e => {
+  const el = e.target.closest('.pin-res'); if (!el) return;
+  const x = pinResData[+el.dataset.i]; if (!x) return;
+  addPin({ name: x.name || (x.display_name || '').split(',')[0], lat: +x.lat, lng: +x.lon });
+  closePinModal();
+});
+document.getElementById('pinList').addEventListener('click', e => {
+  const x = e.target.closest('.pin-x');
+  if (x) { pins.splice(+x.dataset.x, 1); savePins(); refreshPins(); updatePinCard(); return; }
+  const row = e.target.closest('.pin-row'); if (row && pins[+row.dataset.i]) flyToPin(pins[+row.dataset.i]);
+});
+document.getElementById('pinClear').addEventListener('click', () => { if (pins.length) { pins.length = 0; savePins(); refreshPins(); updatePinCard(); } });
+document.getElementById('miPin').addEventListener('click', () => { menu.classList.add('hidden'); openPinModal(); });
+document.getElementById('miClearPins').addEventListener('click', () => { menu.classList.add('hidden'); if (pins.length && confirm('Remove all pins?')) { pins.length = 0; savePins(); refreshPins(); updatePinCard(); } });
+document.getElementById('pinModalClose').addEventListener('click', closePinModal);
+pinModal.addEventListener('click', e => { if (e.target === pinModal) closePinModal(); });
+
 document.addEventListener('keydown', e => {
   if (e.target && e.target.tagName === 'INPUT') return;
   if (e.key === 'Escape') { menu.classList.add('hidden');
     if (!welcomeOverlay.classList.contains('hidden')) { hideWelcome(); return; }
+    if (!pinModal.classList.contains('hidden')) { closePinModal(); return; }
     aboutOverlay.classList.add('hidden'); if (tagMode) setTagMode(tagMode); else if (!detailCard.classList.contains('hidden')) closeDetail(); }
   else if (e.key === 'ArrowLeft') { yearIdx = Math.max(0, yearIdx - 1); stopPlay(); render(); }
   else if (e.key === 'ArrowRight') { yearIdx = Math.min(STOPS.length - 1, yearIdx + 1); stopPlay(); render(); }
@@ -394,6 +483,7 @@ document.addEventListener('keydown', e => {
 
 /* --------------------------------- boot --------------------------------- */
 loadMine();
+loadPins();
 Promise.all([
   fetch('data/countries.geojson?v=2').then(r => r.json()),
   fetch('data/cliopatria.topojson?v=1').then(r => r.json()),
