@@ -1,0 +1,21 @@
+{ "type": "FeatureCollection",
+  "note": "Approximate Ice-Age land bridges / exposed continental shelves, hand-traced. Shown as exposed land while sea level was low; each drowns by its toYear. Indicative, not survey-accurate. Derived from Holocene sea-level / paleocoastline literature (CRC806; PaleoMIST).",
+  "features": [
+  { "type": "Feature", "properties": { "name": "Doggerland", "fromYear": -14000, "toYear": -6200, "note": "A vast lowland linking Britain to mainland Europe, rich in Mesolithic life; drowned by rising seas and the Storegga tsunami (~6200 BC)." },
+    "geometry": { "type": "Polygon", "coordinates": [[[0.5,51.3],[4.0,51.5],[7.5,53.3],[8.5,55.5],[6.0,57.5],[1.5,58.0],[-1.0,56.0],[-0.5,53.0],[0.5,51.3]]] } },
+  { "type": "Feature", "properties": { "name": "Beringia", "fromYear": -14000, "toYear": -9000, "note": "The Bering land bridge between Siberia and Alaska — the route by which people first reached the Americas; drowned ~11,000 years ago." },
+    "geometry": { "type": "Polygon", "coordinates": [[[169.0,62.0],[179.8,60.5],[179.8,70.0],[173.0,69.5],[168.5,66.0],[169.0,62.0]]] } },
+  { "type": "Feature", "properties": { "name": "Beringia (Alaskan shelf)", "fromYear": -14000, "toYear": -9000, "note": "The eastern half of the Bering land bridge, on the Alaskan side of today's strait." },
+    "geometry": { "type": "Polygon", "coordinates": [[[-179.8,60.5],[-168.0,61.5],[-164.0,66.0],[-167.0,69.5],[-179.8,70.0],[-179.8,60.5]]] } },
+  { "type": "Feature", "properties": { "name": "Sundaland", "fromYear": -14000, "toYear": -8000, "note": "An exposed shelf joining Malaya, Sumatra, Java and Borneo into one landmass; flooded as the ice age ended." },
+    "geometry": { "type": "Polygon", "coordinates": [[[99.0,7.0],[104.0,6.0],[110.0,3.0],[114.0,1.0],[116.0,-3.0],[112.0,-6.0],[106.0,-6.0],[101.0,-2.0],[99.0,2.0],[99.0,7.0]]] } },
+  { "type": "Feature", "properties": { "name": "Sahul (Arafura plain)", "fromYear": -14000, "toYear": -8000, "note": "Exposed shelf linking Australia and New Guinea across what is now the Arafura Sea and Torres Strait." },
+    "geometry": { "type": "Polygon", "coordinates": [[[131.0,-3.0],[141.0,-2.0],[146.0,-7.0],[145.0,-12.0],[138.0,-13.0],[132.0,-11.0],[129.0,-8.0],[131.0,-3.0]]] } },
+  { "type": "Feature", "properties": { "name": "Persian Gulf plain", "fromYear": -14000, "toYear": -6000, "note": "The Gulf floor was a fertile river valley (the lower Tigris–Euphrates) before the sea flooded in ~8,000 years ago." },
+    "geometry": { "type": "Polygon", "coordinates": [[[48.0,30.0],[51.0,29.5],[54.5,27.0],[56.5,25.0],[54.0,24.0],[50.0,25.5],[48.0,28.0],[48.0,30.0]]] } },
+  { "type": "Feature", "properties": { "name": "Adriatic plain", "fromYear": -14000, "toYear": -9000, "note": "The northern Adriatic was a broad plain — an extension of the Po valley — when seas were lower." },
+    "geometry": { "type": "Polygon", "coordinates": [[[12.3,45.5],[15.0,45.0],[16.0,43.5],[14.5,43.0],[12.5,44.0],[12.3,45.5]]] } },
+  { "type": "Feature", "properties": { "name": "Adam's Bridge land (India–Sri Lanka)", "fromYear": -14000, "toYear": -5000, "note": "A land connection between India and Sri Lanka across the Palk Strait, now a chain of shoals." },
+    "geometry": { "type": "Polygon", "coordinates": [[[79.0,10.0],[80.0,9.8],[80.2,9.0],[79.5,8.8],[79.0,9.3],[79.0,10.0]]] } }
+  ]
+}

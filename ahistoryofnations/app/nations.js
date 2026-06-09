@@ -10,7 +10,7 @@
 
 const TODAY = 2026;
 // Stepped timeline — coarse in antiquity, finer toward the present; last stop = Today (NE).
-const STOPS = [-3000,-2500,-2000,-1500,-1200,-1000,-800,-600,-500,-400,-300,-200,-100,1,100,200,300,400,500,600,700,800,900,1000,1100,1200,1300,1400,1500,1600,1700,1750,1800,1850,1900,1914,1939,1960,1980,2000,2024,TODAY];
+const STOPS = [-14000,-12000,-10000,-9000,-8000,-7000,-6000,-5000,-4000,-3000,-2500,-2000,-1500,-1200,-1000,-800,-600,-500,-400,-300,-200,-100,1,100,200,300,400,500,600,700,800,900,1000,1100,1200,1300,1400,1500,1600,1700,1750,1800,1850,1900,1914,1939,1960,1980,2000,2024,TODAY];
 let yearIdx = STOPS.length - 1;                 // open on Today
 const curYear = () => STOPS[yearIdx];
 const isToday = () => curYear() >= 2025;
@@ -26,7 +26,8 @@ function eraName(y) {
   if (y >= -550)   return 'Classical antiquity';
   if (y >= -1200)  return 'The Iron Age';
   if (y >= -3300)  return 'The Bronze Age';
-  return 'Prehistory';
+  if (y >= -9700)  return 'After the Ice (Neolithic)';
+  return 'Last Ice Age';
 }
 
 const A3_TO_A2 = { FRA: 'FR', NOR: 'NO', CYN: 'CY', SOL: 'SO' };
@@ -97,6 +98,7 @@ function activeFeatures() {
 
 function capColor(f) {
   if (f.__ghost) return 'rgba(0,0,0,0)';      // transparent underlay — only its faint outline shows
+  if (f.__land) return 'rgba(196,174,120,0.52)';   // Ice-Age exposed land (tan)
   const key = featKey(f);
   const sel = state.selected && key === state.selected, hov = state.hovered && key === state.hovered;
   if (isToday()) {
@@ -108,7 +110,7 @@ function capColor(f) {
   // history: when the today-overlay is on, make polities a touch more translucent so modern borders read through
   return hexA(featColor(f), (sel ? 0.99 : hov ? 0.95 : 0.82) * (ghostToday ? 0.72 : 1));
 }
-const altOf = f => { if (f.__ghost) return 0; const key = featKey(f); return state.selected === key ? 0.06 : state.hovered === key ? 0.04 : 0.01; };
+const altOf = f => { if (f.__ghost) return 0; if (f.__land) return 0.004; const key = featKey(f); return state.selected === key ? 0.06 : state.hovered === key ? 0.04 : 0.01; };
 
 function initGlobe(geo) {
   neCountries = geo.features.filter(f => (f.properties.ADMIN || f.properties.NAME) !== 'Antarctica');
@@ -119,8 +121,8 @@ function initGlobe(geo) {
     .showAtmosphere(true).atmosphereColor('#8fb7ff').atmosphereAltitude(0.16)
     .polygonsData(activeFeatures())
     .polygonCapColor(capColor)
-    .polygonSideColor(f => f.__ghost ? 'rgba(0,0,0,0)' : 'rgba(10,16,30,0.5)')
-    .polygonStrokeColor(f => f.__ghost ? 'rgba(208,223,247,0.42)' : 'rgba(8,12,24,0.65)')
+    .polygonSideColor(f => f.__ghost ? 'rgba(0,0,0,0)' : f.__land ? 'rgba(120,100,55,0.35)' : 'rgba(10,16,30,0.5)')
+    .polygonStrokeColor(f => f.__ghost ? 'rgba(208,223,247,0.42)' : f.__land ? 'rgba(216,196,142,0.7)' : 'rgba(8,12,24,0.65)')
     .polygonAltitude(altOf)
     .polygonsTransitionDuration(0)
     .onPolygonHover(onHover)
@@ -166,7 +168,8 @@ function render() {
   if (state.selected) closeDetail();                       // selection may not exist in the new year
   const active = activeFeatures();
   // overlay today's borders faintly underneath, in history mode only (ghosts first = drawn beneath)
-  const polys = (!isToday() && ghostToday) ? ghostFeatures.concat(active) : active;
+  let polys = (!isToday() && ghostToday) ? ghostFeatures.concat(active) : active.slice();
+  polys = polys.concat(activePaleoLand());   // Ice-Age land bridges (when 'Lost rivers & coasts' is on)
   if (globe) globe.polygonsData(polys);
   refreshGlobe();
   // panel count + sub-label
@@ -177,6 +180,9 @@ function render() {
     sub.textContent = 'nations & territories';
     const sov = active.filter(f => ['Sovereign country', 'Country'].includes(f.properties.TYPE)).length;
     split.innerHTML = `<b>${sov}</b> sovereign states · <b>${active.length - sov}</b> territories`;
+  } else if (active.length === 0) {
+    sub.textContent = 'before recorded states';
+    split.innerHTML = `<span style="color:var(--muted)">No mapped states yet — turn on “Lost rivers &amp; coasts” for Ice-Age geography</span>`;
   } else {
     sub.textContent = 'polities & empires';
     split.innerHTML = `mapped in <b>${fmtYr(curYear())}</b> &middot; <span style="color:var(--muted)">borders are estimated, esp. deep past</span>`;
@@ -190,6 +196,12 @@ function render() {
 /* ----------------------------- hover / detail ----------------------------- */
 function onHover(f) {
   if (f && f.__ghost) f = null;                // the faint today-overlay is non-interactive
+  if (f && f.__land) {                         // Ice-Age exposed land
+    state.hovered = null; refreshGlobe();
+    if (globe) globe.controls().autoRotate = false;
+    tooltip.innerHTML = `<div class="tt-name">🏝 ${f.properties.name}</div><div class="tt-sub">exposed land · drowned by ${fmtYr(f.properties.toYear)}</div>`;
+    tooltip.classList.remove('hidden'); return;
+  }
   state.hovered = f ? featKey(f) : null;
   refreshGlobe();
   if (globe) globe.controls().autoRotate = !f && spinOn && !playing;
@@ -295,10 +307,21 @@ function jumpToEra(from, to) {
   yearIdx = idx; stopPlay(); render();
 }
 detailCard.addEventListener('click', e => { const r = e.target.closest('.ph-row'); if (r) jumpToEra(+r.dataset.from, +r.dataset.to); });
+function showLandDetail(f) {
+  const p = f.properties;
+  document.getElementById('detailFlag').textContent = '🏝';
+  document.getElementById('detailName').textContent = p.name;
+  document.getElementById('detailType').textContent = 'Ice-Age land · drowned by ' + fmtYr(p.toYear);
+  document.getElementById('detailBody').innerHTML = '<div class="ph-intro">Exposed when seas were lower</div>' +
+    '<div style="font-size:12.5px;color:#cdd8ea;line-height:1.6">' + escHtml(p.note || '') + '</div>';
+  document.getElementById('detailDesc').classList.add('hidden');
+  state.selected = null; refreshGlobe(); markListActive(null);
+  detailCard.classList.remove('hidden'); detailCard.scrollTop = 0;
+}
 function onClick(f) {
   if (!f || f.__ghost) return;
   if (isToday() && tagMode) { toggleMine(featKey(f)); return; }
-  showDetail(f);
+  if (f.__land) showLandDetail(f); else showDetail(f);
   const b = f.bbox || bboxOf(f);
   const lng = (b[0] + b[2]) / 2, lat = (b[1] + b[3]) / 2;
   spinOn = false; syncSpin();
@@ -353,6 +376,7 @@ document.getElementById('nextEra').addEventListener('click', () => { yearIdx = M
 document.getElementById('nowBtn').addEventListener('click', () => { yearIdx = STOPS.length - 1; stopPlay(); render(); document.getElementById('miReset').click(); });
 /* notable-era quick-jumps — leap the timeline to a famous moment */
 const ERA_JUMPS = [
+  { y: -12000, label: 'Ice Age'  },
   { y: -2000, label: 'Bronze Age' },
   { y: -500,  label: 'Classical'  },
   { y: 100,   label: 'Roman peak' },
@@ -411,7 +435,7 @@ syncGhost();
 
 /* ---- Water layers: modern Rivers + time-enabled "Lost rivers & lakes" (both lazy) ---- */
 let riversOn = false, riverPaths = null, riverLabels = null, riversLoading = false;
-let paleoOn = false, paleoPaths = null, paleoLoading = false;
+let paleoOn = false, paleoPaths = null, paleoLand = null, paleoLoading = false;
 const miRivers = document.getElementById('miRivers'), miPaleo = document.getElementById('miPaleo');
 function syncRivers() { const s = miRivers.querySelector('.mi-state'); if (s) s.textContent = riversLoading ? '…' : (riversOn ? 'On' : 'Off'); miRivers.classList.toggle('on', riversOn); }
 function syncPaleo() { const s = miPaleo.querySelector('.mi-state'); if (s) s.textContent = paleoLoading ? '…' : (paleoOn ? 'On' : 'Off'); miPaleo.classList.toggle('on', paleoOn); }
@@ -449,19 +473,23 @@ async function ensurePaleo() {
       paths.push({ __paleo: true, name: p.name, kind: p.kind, fromYear: p.fromYear, toYear: p.toYear, coords: line, labLat, labLng });
     }
     paleoPaths = paths;
-  } catch (e) { paleoPaths = []; }
+    const j2 = await fetch('data/landbridges.geojson?v=1').then(r => r.json());   // Ice-Age exposed land (filled polygons)
+    paleoLand = j2.features.map(f => { const ring = (f.geometry && f.geometry.coordinates) ? f.geometry.coordinates[0] : []; let sx = 0, sy = 0; for (const c of ring) { sx += c[0]; sy += c[1]; } const n = ring.length || 1; return { type: 'Feature', __land: true, properties: f.properties, geometry: f.geometry, labLat: sy / n, labLng: sx / n }; });
+  } catch (e) { paleoPaths = paleoPaths || []; paleoLand = paleoLand || []; }
   paleoLoading = false; syncPaleo();
 }
 function activePaleo() { if (!paleoOn || !paleoPaths) return []; const y = curYear(); return paleoPaths.filter(p => p.fromYear <= y && y <= p.toYear); }
+function activePaleoLand() { if (!paleoOn || !paleoLand) return []; const y = curYear(); return paleoLand.filter(f => f.properties.fromYear <= y && y <= f.properties.toYear); }
 function updateWaterLayer() {
   if (!globe) return;
   const pal = activePaleo();
   const paths = []; if (riversOn && riverPaths) for (const p of riverPaths) paths.push(p); for (const p of pal) paths.push(p);
   const labels = []; if (riversOn && riverLabels) for (const l of riverLabels) labels.push(l); for (const p of pal) labels.push({ lat: p.labLat, lng: p.labLng, text: p.name, __paleo: true });
+  for (const L of activePaleoLand()) labels.push({ lat: L.labLat, lng: L.labLng, text: L.properties.name, __paleo: true });
   globe.pathsData(paths); globe.labelsData(labels);
 }
 async function setRivers(on) { riversOn = on; syncRivers(); if (on) await ensureRivers(); updateWaterLayer(); syncRivers(); }
-async function setPaleo(on) { paleoOn = on; syncPaleo(); if (on) await ensurePaleo(); updateWaterLayer(); syncPaleo(); }
+async function setPaleo(on) { paleoOn = on; syncPaleo(); if (on) await ensurePaleo(); render(); updateWaterLayer(); syncPaleo(); }
 miRivers.addEventListener('click', () => setRivers(!riversOn));
 miPaleo.addEventListener('click', () => setPaleo(!paleoOn));
 const aboutOverlay = document.getElementById('aboutOverlay');
