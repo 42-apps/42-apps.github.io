@@ -136,7 +136,8 @@ function initGlobe(geo) {
     .pathPoints(d => d.coords).pathPointLat(p => p[1]).pathPointLng(p => p[0]).pathPointAlt(() => 0.014)
     .pathColor(d => d.__paleo ? 'rgba(240,205,120,0.95)' : 'rgba(96,172,236,0.8)')
     .pathStroke(d => d.__paleo ? 1.1 : 0.7)
-    .pathDashLength(d => d.__paleo ? 0.045 : 1).pathDashGap(d => d.__paleo ? 0.025 : 0)
+    .pathDashLength(d => d.__paleo ? 0.05 : 1).pathDashGap(d => d.__paleo ? 0.03 : 0)
+    .pathDashAnimateTime(d => d.__paleo ? 5000 : 0)   // lost rivers gently "flow" — water once ran here
     .pathLabel(d => (d.__paleo ? '🏛 ' : '🌊 ') + d.name + (d.__paleo ? ' — lost' : ''))
     .pathTransitionDuration(0)
     .labelsData([])
