@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Network Quality Monitor</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+<main id="app" data-state="unknown">
+
+  <header class="bar">
+    <div class="brand">
+      <svg class="logo" viewBox="0 0 24 24" aria-hidden="true">
+        <rect x="3" y="13" width="5" height="8" rx="1.6"/>
+        <rect x="9.5" y="8.5" width="5" height="12.5" rx="1.6"/>
+        <rect x="16" y="3.5" width="5" height="17.5" rx="1.6"/>
+      </svg>
+      <div class="brand-text">
+        <strong>Network Quality Monitor</strong>
+        <span id="endpointNote">warming up…</span>
+      </div>
+    </div>
+    <span id="demoPill" class="pill" hidden>demo</span>
+    <button id="btnGear" class="icon-btn" title="Settings" aria-label="Settings">
+      <svg viewBox="0 0 24 24"><path d="M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Zm9 3.5c0-.6-.05-1.2-.16-1.77l2.06-1.6-2-3.46-2.43.98a9 9 0 0 0-3.06-1.77L13 2h-4l-.41 2.58a9 9 0 0 0-3.06 1.77l-2.43-.98-2 3.46 2.06 1.6A9.2 9.2 0 0 0 3 12c0 .6.05 1.2.16 1.77L1.1 15.37l2 3.46 2.43-.98a9 9 0 0 0 3.06 1.77L9 22h4l.41-2.58a9 9 0 0 0 3.06-1.77l2.43.98 2-3.46-2.06-1.6c.11-.57.16-1.17.16-1.77Z" transform="scale(0.86) translate(2,2)"/></svg>
+    </button>
+  </header>
+
+  <section class="hero">
+    <button id="heroFace" class="face" title="Click to run a check">
+      <span class="ring"></span>
+      <span id="emoji">🤔</span>
+    </button>
+    <h1 id="verdict">Measuring…</h1>
+    <p id="verdictSub">Taking the first readings.</p>
+    <div class="mos" title="Estimated call quality (MOS, ITU-T E-model). 4.5 is the ceiling for a perfect line.">
+      <span class="stars"><span class="base">★★★★★</span><span id="starsFill" class="fill">★★★★★</span></span>
+      <span id="mosNum">– / 5</span>
+    </div>
+  </section>
+
+  <section class="chips">
+    <div class="chip" title="Median round-trip time to the edge. Good ≤ 200 ms.">
+      <span class="dot" id="dotRtt"></span><b id="valRtt">—</b><label>latency</label>
+    </div>
+    <div class="chip" title="Variation between round trips — the call-killer. Good ≤ 30 ms.">
+      <span class="dot" id="dotJit"></span><b id="valJit">—</b><label>jitter</label>
+    </div>
+    <div class="chip" title="Probes lost or stalled (smoothed over recent checks). Good ≤ 2%.">
+      <span class="dot" id="dotLoss"></span><b id="valLoss">—</b><label>loss</label>
+    </div>
+  </section>
+
+  <section class="panel">
+    <canvas id="spark" width="308" height="72"></canvas>
+    <div id="strip" class="strip"></div>
+    <div class="legendRow"><span id="sparkNote">latency, live</span><span>recent checks →</span></div>
+  </section>
+
+  <footer class="bar foot">
+    <span id="lastChecked">—</span>
+    <button id="btnTest" class="btn">Test now</button>
+  </footer>
+
+  <details class="help">
+    <summary>What counts as good?</summary>
+    <table>
+      <tr><th></th><th class="g">good</th><th class="f">fair</th><th class="b">bad</th></tr>
+      <tr><td>Latency</td><td class="g">≤ 200 ms</td><td class="f">≤ 450 ms</td><td class="b">more</td></tr>
+      <tr><td>Jitter</td><td class="g">≤ 30 ms</td><td class="f">≤ 60 ms</td><td class="b">more</td></tr>
+      <tr><td>Loss</td><td class="g">≤ 2.2%</td><td class="f">≤ 6%</td><td class="b">more</td></tr>
+      <tr><td>MOS</td><td class="g">≥ 4.0</td><td class="f">≥ 3.6</td><td class="b">less</td></tr>
+    </table>
+    <p>Status = the worst of the four. Probes are tiny HTTPS round-trips to Google / Cloudflare edges — including Google DNS at 8.8.8.8.</p>
+  </details>
+
+  <aside id="settings" class="settings" aria-hidden="true">
+    <header class="bar">
+      <button id="btnBack" class="icon-btn" title="Back" aria-label="Back">←</button>
+      <strong>Settings</strong>
+      <span></span>
+    </header>
+
+    <div class="srow">
+      <label for="selInterval">Check every</label>
+      <select id="selInterval">
+        <option value="30">30 seconds</option>
+        <option value="60">1 minute</option>
+        <option value="120">2 minutes</option>
+        <option value="300">5 minutes</option>
+      </select>
+    </div>
+
+    <div class="srow">
+      <label for="selEndpoint">Probe target</label>
+      <select id="selEndpoint">
+        <option value="auto">Auto (recommended)</option>
+        <option value="google">Google edge (gstatic)</option>
+        <option value="gdns">Google DNS (8.8.8.8)</option>
+        <option value="cloudflare">Cloudflare edge</option>
+      </select>
+    </div>
+
+    <div class="srow switch-row">
+      <label for="tglMonitor">Monitoring</label>
+      <label class="switch"><input type="checkbox" id="tglMonitor" checked><span></span></label>
+    </div>
+    <div class="srow switch-row">
+      <label for="tglNotify">Alert when quality drops</label>
+      <label class="switch"><input type="checkbox" id="tglNotify" checked><span></span></label>
+    </div>
+    <div class="srow switch-row">
+      <label for="tglRecover">Alert on recovery</label>
+      <label class="switch"><input type="checkbox" id="tglRecover" checked><span></span></label>
+    </div>
+    <div class="srow switch-row">
+      <label for="tglBadge">Show latency on icon badge</label>
+      <label class="switch"><input type="checkbox" id="tglBadge" checked><span></span></label>
+    </div>
+
+    <p class="about">NQM v1.0 · Everything stays on your machine — no analytics, no servers of ours. Probes carry no personal data.</p>
+  </aside>
+
+</main>
+<script type="module" src="popup.js"></script>
+</body>
+</html>

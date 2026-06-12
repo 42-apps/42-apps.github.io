@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>NQM — Network Quality Monitor for Chrome</title>
+<meta name="description" content="Is your network ready for a VoIP call? NQM watches latency, jitter and packet loss from your Chrome toolbar — green for go, yellow for wobbly, red for robot voice — with a live dashboard and degradation alerts." />
+<link rel="icon" href="icons/icon128.png" />
+<style>
+  :root{--bg:#02030a;--bg2:#0a1530;--fg:#e6ecff;--muted:#93a0c5;--acc:#2fd07a;--line:rgba(255,255,255,.1);
+    --green:#22c55e;--yellow:#f59e0b;--red:#ef4444;--grey:#64748b;}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'SF Pro Display',-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;
+    color:var(--fg);background:radial-gradient(ellipse at 50% -10%,#0a1530,#02030a 70%);line-height:1.6;-webkit-font-smoothing:antialiased}
+  a{color:var(--acc);text-decoration:none}a:hover{text-decoration:underline}
+  .wrap{max-width:1040px;margin:0 auto;padding:0 22px}
+  header{display:flex;align-items:center;justify-content:space-between;padding:20px 0;flex-wrap:wrap;gap:10px}
+  .brand{display:flex;align-items:center;gap:12px}
+  .brand img{width:40px;height:40px;border-radius:10px}
+  .brand .t{font-size:19px;font-weight:700;letter-spacing:2px}.brand .t span{color:var(--acc)}
+  nav a{margin-left:20px;font-size:14px;color:var(--muted)}
+  .hero{text-align:center;padding:50px 0 30px}
+  .hero h1{font-size:46px;font-weight:800;line-height:1.15;letter-spacing:-.5px}
+  .hero h1 span{color:var(--acc)}
+  .hero p{font-size:18px;color:var(--muted);max-width:700px;margin:18px auto 0}
+  .cta{display:flex;gap:14px;justify-content:center;margin-top:30px;flex-wrap:wrap}
+  .btn{display:inline-block;background:var(--acc);color:#04121a;font-weight:700;padding:13px 24px;border-radius:11px;font-size:15px;border:none;cursor:pointer;text-align:center}
+  .btn.ghost{background:rgba(255,255,255,.05);color:var(--fg);border:1px solid var(--line)}
+  .legend{display:flex;gap:18px;justify-content:center;margin:22px 0 0;font-size:13px;color:var(--muted);flex-wrap:wrap}
+  .dot{display:inline-block;width:12px;height:12px;border-radius:50%;vertical-align:-1px;margin-right:6px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;margin:36px 0}
+  .card{background:rgba(8,14,33,.7);border:1px solid var(--line);border-radius:14px;padding:20px}
+  .card .ic{font-size:24px}.card h3{font-size:16px;margin:8px 0 6px}.card p{font-size:13.5px;color:var(--muted)}
+  h2{font-size:28px;font-weight:700;margin:54px 0 6px;text-align:center}
+  .sub{text-align:center;color:var(--muted);margin-bottom:8px}
+  .demoBox{display:flex;justify-content:center;margin:30px 0 8px}
+  .demoBox iframe{width:342px;height:560px;border:1px solid var(--line);border-radius:18px;background:#0b1220;box-shadow:0 30px 80px rgba(0,0,0,.5)}
+  .hint{text-align:center;color:var(--muted);font-size:13px;margin-bottom:10px}
+  table{width:100%;max-width:640px;margin:20px auto;border-collapse:collapse;font-size:14px}
+  th,td{padding:9px 12px;text-align:left;border-bottom:1px solid var(--line)}
+  th{color:var(--muted);font-weight:600;font-size:12.5px;text-transform:uppercase;letter-spacing:.8px}
+  .g{color:#4ade80}.y{color:#fbbf24}.r{color:#f87171}
+  .how{max-width:760px;margin:0 auto;color:var(--muted);font-size:15px}
+  .how b{color:var(--fg)}
+  code{background:rgba(255,255,255,.07);padding:2px 6px;border-radius:5px;font-size:13px}
+  footer{border-top:1px solid var(--line);margin-top:50px;padding:26px 0 50px;color:var(--muted);font-size:13px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+  ol{margin:10px 0 0 20px;color:var(--muted);font-size:14px}ol li{margin:4px 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand"><img src="icons/icon128.png" alt="" /><div class="t">N<span>·</span>Q<span>·</span>M</div></div>
+    <nav>
+      <a href="/">&larr; 42&middot;apps</a>
+      <a href="#demo">Live demo</a>
+      <a href="#how">How it works</a>
+      <a href="#get">Get it</a>
+      <a href="privacy.html">Privacy</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <h1>Know your network is call-ready,<br><span>at a glance.</span></h1>
+    <p><b>Network Quality Monitor</b> lives in your Chrome toolbar and quietly checks latency, jitter and
+       packet loss every 30 seconds — the three things that actually make or break a VoIP call.
+       The icon tells you everything before you hit "Join".</p>
+    <div class="cta">
+      <a class="btn" href="#get">Get NQM</a>
+      <a class="btn ghost" href="#demo">Try the live demo ↓</a>
+    </div>
+    <div class="legend">
+      <span><span class="dot" style="background:var(--green)"></span>Good — dial away</span>
+      <span><span class="dot" style="background:var(--yellow)"></span>Usable, with hiccups</span>
+      <span><span class="dot" style="background:var(--red)"></span>Rough — robot voice</span>
+      <span><span class="dot" style="background:var(--grey)"></span>Offline</span>
+    </div>
+  </section>
+
+  <h2 id="demo">Try it right here</h2>
+  <p class="sub">This is the real popup running on simulated data — <b>click the face</b> to cycle
+     good → wobbly → rough → offline.</p>
+  <div class="demoBox">
+    <iframe src="demo/popup/popup.html" title="NQM live demo" loading="lazy"></iframe>
+  </div>
+  <p class="hint">In the real extension this updates live from your actual connection.</p>
+
+  <div class="grid">
+    <div class="card"><div class="ic">🚦</div><h3>Traffic-light toolbar icon</h3><p>Green, amber, red or grey — redrawn live, with signal bars so the state reads even without colour, plus an optional latency badge in ms.</p></div>
+    <div class="card"><div class="ic">📈</div><h3>The metrics that matter</h3><p>Latency, jitter and packet loss from 16-probe HTTPS micro-bursts to Google &amp; Cloudflare edges — including Google DNS at literally 8.8.8.8.</p></div>
+    <div class="card"><div class="ic">⭐</div><h3>Real call-quality score</h3><p>A MOS estimate (ITU-T G.107 E-model) turns the raw numbers into a single 1–4.5★ "can I call?" verdict.</p></div>
+    <div class="card"><div class="ic">🔔</div><h3>Smart alerts</h3><p>Notifies when quality drops and when it recovers — with hysteresis and cooldowns so a single blip never spams you.</p></div>
+    <div class="card"><div class="ic">📊</div><h3>Live dashboard</h3><p>Emoji status face, metric chips, a live latency sparkline and an uptime-style colour strip of recent checks.</p></div>
+    <div class="card"><div class="ic">🔒</div><h3>Private by design</h3><p>No accounts, no analytics, no servers of ours. Probes are empty requests; ~24&nbsp;h of history stays in your browser.</p></div>
+  </div>
+
+  <h2 id="how">How it works</h2>
+  <p class="how">
+    Browsers can't send raw ICMP pings, so NQM times <b>tiny HTTPS round-trips</b> instead — which is closer
+    to how your real call traffic behaves anyway. Every 30&nbsp;s (configurable) it fires a micro-burst of
+    16 probes, 160&nbsp;ms apart, at an anycast connectivity endpoint
+    (<code>gstatic.com/generate_204</code> by default — the same endpoint Android uses — with Cloudflare and
+    Google DNS at <code>8.8.8.8</code> as alternatives). A warm-up request absorbs the TLS handshake, then:
+    <b>latency</b> is the burst's median round trip, <b>jitter</b> is the mean swing between consecutive
+    round trips, <b>loss</b> counts probes that error or stall, smoothed over three bursts, and <b>MOS</b>
+    converts all three into a call-quality score. Your status is the <b>worst</b> of the four:
+  </p>
+  <table>
+    <tr><th></th><th class="g">good</th><th class="y">fair</th><th class="r">bad</th></tr>
+    <tr><td>Latency (round trip)</td><td class="g">≤ 200 ms</td><td class="y">≤ 450 ms</td><td class="r">more</td></tr>
+    <tr><td>Jitter</td><td class="g">≤ 30 ms</td><td class="y">≤ 60 ms</td><td class="r">more</td></tr>
+    <tr><td>Packet loss</td><td class="g">≤ 2.2%</td><td class="y">≤ 6%</td><td class="r">more</td></tr>
+    <tr><td>MOS call score</td><td class="g">≥ 4.0</td><td class="y">≥ 3.6</td><td class="r">less</td></tr>
+  </table>
+  <p class="how" style="text-align:center">
+    Why no bandwidth test? A voice call needs ~100&nbsp;kbps — any line that passes the latency check has the
+    throughput. Constant speed-testing would saturate your connection and corrupt the very numbers that matter.
+  </p>
+
+  <h2 id="get">Get NQM</h2>
+  <p class="sub">Two ways today, one more coming.</p>
+  <div class="grid">
+    <div class="card">
+      <div class="ic">🧩</div><h3>Chrome Web Store</h3>
+      <p>The one-click way, with automatic updates. The listing is being prepared — <b>coming soon</b>. This page will link to it the moment it's live.</p>
+    </div>
+    <div class="card">
+      <div class="ic">⬇️</div><h3>Manual install</h3>
+      <p><a href="nqm.zip">Download nqm.zip</a> and unzip it. Open <code>chrome://extensions</code>, switch on
+         <b>Developer mode</b> (top right), click <b>Load unpacked</b> and pick the unzipped folder. Pin NQM to the toolbar.</p>
+    </div>
+    <div class="card">
+      <div class="ic">🎮</div><h3>Just looking?</h3>
+      <p>The <a href="#demo">live demo above</a> is the actual popup UI on simulated data — poke around, open the
+         settings gear, click the face.</p>
+    </div>
+  </div>
+
+  <footer>
+    <span>© 2026 NQM · 42-apps</span>
+    <span><a href="#demo">Demo</a> · <a href="nqm.zip">Download</a> · <a href="privacy.html">Privacy</a></span>
+  </footer>
+</div>
+</body>
+</html>
