@@ -61,8 +61,9 @@
     <li><b>alarms</b> — schedule the periodic background checks.</li>
     <li><b>storage</b> — keep settings and local history.</li>
     <li><b>notifications</b> — alert you when call quality degrades or recovers (can be switched off).</li>
-    <li><b>Host permissions</b> for the five endpoints above — solely to send the timing probes. NQM cannot
-        and does not read your browsing, tabs or page content.</li>
+    <li><b>No site access.</b> The timing probes are sent as <code>no-cors</code> requests, so NQM needs
+        <b>no host permissions at all</b> — it cannot read your browsing, tabs, or any page content. The only
+        permission you're asked to grant at install is "Display notifications".</li>
   </ul>
 
   <h2>Data sharing</h2>
