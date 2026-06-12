@@ -393,6 +393,14 @@ function demoBackend() {
   }
   const toCompact = (s) => ({ t: s.t, s: s.state, r: s.rtt, j: s.jitter, l: s.lossBurst, m: s.mos });
 
+  // Optional URL controls (demo/preview only — ignored in the real extension):
+  //   ?demo=good|fair|bad|offline  force the state · ?view=trends open the trend
+  //   overlay · ?shot=1 hide the DEMO pill (for clean store screenshots).
+  const params = new URLSearchParams(location.search);
+  const forced = params.get('demo');
+  if (['good', 'fair', 'bad', 'offline'].includes(forced)) regime = forced;
+  if (params.get('shot') === '1') els.demoPill.hidden = true;
+
   return {
     async init() {
       const now = Date.now();
@@ -419,6 +427,7 @@ function demoBackend() {
         regime = order[(order.indexOf(regime) + 1) % order.length];
         acceptSnapshot(fakeSnap(regime, Date.now()));
       });
+      if (params.get('view') === 'trends') openTrends();
     },
     async getHistory() { return demoFull; }, // saved 30 s record only (matches the real extension)
     async saveSettings(next) { settings = next; render(); },
