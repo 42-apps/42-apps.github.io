@@ -52,15 +52,19 @@
     </div>
   </section>
 
-  <section class="panel">
+  <section class="panel" id="panel" title="Click to see the longer trend">
+    <div class="panelHead">
+      <span id="sparkNote">latency · live</span>
+      <span id="sparkExpand">⤢ trend</span>
+    </div>
     <canvas id="spark" width="308" height="72"></canvas>
     <div id="strip" class="strip"></div>
-    <div class="legendRow"><span id="sparkNote">latency, live</span><span>recent checks →</span></div>
+    <div class="legendRow"><span id="sparkSpan">last 30s</span><span id="sparkCadence">1s per point</span></div>
   </section>
 
   <footer class="bar foot">
-    <span id="lastChecked">—</span>
-    <button id="btnTest" class="btn">Test now</button>
+    <span id="liveStatus" class="liveStatus"><span class="livedot"></span><span id="liveText">live · every 1s</span></span>
+    <button id="btnTrends" class="btn">View trends →</button>
   </footer>
 
   <details class="help">
@@ -119,7 +123,32 @@
       <label class="switch"><input type="checkbox" id="tglBadge" checked><span></span></label>
     </div>
 
-    <p class="about">NQM v1.0 · Everything stays on your machine — no analytics, no servers of ours. Probes carry no personal data.</p>
+    <p class="about">NQM v1.1 · Everything stays on your machine — no analytics, no servers of ours. Probes carry no personal data.</p>
+  </aside>
+
+  <aside id="trends" class="settings" aria-hidden="true">
+    <header class="bar">
+      <button id="btnTrendsBack" class="icon-btn" title="Back" aria-label="Back">←</button>
+      <strong>Latency trend</strong>
+      <span></span>
+    </header>
+
+    <div class="ranges" id="ranges">
+      <button class="rbtn" data-min="30">30 min</button>
+      <button class="rbtn active" data-min="60">1 hour</button>
+      <button class="rbtn" data-min="360">6 hours</button>
+      <button class="rbtn" data-min="1440">24 hours</button>
+    </div>
+
+    <div class="trendWrap">
+      <canvas id="trendChart" width="308" height="150"></canvas>
+      <p id="trendEmpty" class="trendEmpty" hidden>Not enough history yet — leave NQM running and the longer trend fills in here.</p>
+    </div>
+    <div class="legendRow"><span id="trendSpan">—</span><span id="trendCadence">a point every 30s</span></div>
+
+    <div class="tstats" id="tstats"></div>
+
+    <p class="about">The live view above streams every second; this trend is the saved record (a point every 30 seconds, up to 24 hours).</p>
   </aside>
 
 </main>
