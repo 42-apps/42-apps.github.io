@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>NQM — Privacy Policy</title>
+<link rel="icon" href="icons/icon128.png" />
+<style>
+  :root{--fg:#e6ecff;--muted:#93a0c5;--acc:#2fd07a;--line:rgba(255,255,255,.1)}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'SF Pro Display',-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;
+    color:var(--fg);background:radial-gradient(ellipse at 50% -10%,#0a1530,#02030a 70%);line-height:1.65;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:760px;margin:0 auto;padding:30px 22px 70px}
+  a{color:var(--acc)} .brand{display:flex;align-items:center;gap:12px;margin-bottom:30px}
+  .brand img{width:36px;height:36px;border-radius:9px}.brand .t{font-size:18px;font-weight:700;letter-spacing:2px}.brand .t span{color:var(--acc)}
+  h1{font-size:30px;margin-bottom:6px}.upd{color:var(--muted);font-size:13px;margin-bottom:24px}
+  h2{font-size:18px;margin:26px 0 8px;color:var(--acc)}
+  p,li{color:#cdd6f4;font-size:15px}ul{margin:6px 0 0 22px}li{margin:5px 0}
+  code{background:rgba(255,255,255,.07);padding:2px 6px;border-radius:5px;font-size:13px}
+  .back{display:inline-block;margin-bottom:20px;color:var(--muted);font-size:14px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand"><img src="icons/icon128.png" alt="" /><div class="t">N<span>·</span>Q<span>·</span>M</div></div>
+  <a class="back" href="index.html">← Back to NQM</a>
+  <h1>Privacy Policy</h1>
+  <div class="upd">Last updated: 11 June 2026</div>
+
+  <p><b>Network Quality Monitor (NQM)</b> is designed to be completely private. Its single purpose is to
+     measure your internet connection's quality, locally, for you.</p>
+
+  <h2>What we collect</h2>
+  <p><b>Nothing.</b> NQM does not collect, store, transmit, sell or share any personal information or usage
+     data. There are no accounts, no analytics, no advertising, no third-party trackers and no servers of ours.</p>
+
+  <h2>Network requests it makes (and why)</h2>
+  <p>Measuring a connection requires using it. NQM periodically sends small, <b>empty HTTPS GET requests</b>
+     and times the round trip. They go to standard public connectivity-check endpoints:</p>
+  <ul>
+    <li><code>www.gstatic.com/generate_204</code> and <code>www.google.com/generate_204</code> (Google)</li>
+    <li><code>cp.cloudflare.com/generate_204</code> (Cloudflare)</li>
+    <li><code>8.8.8.8/resolve</code> / <code>dns.google/resolve</code> — a DNS-over-HTTPS lookup of
+        <code>g.co</code> (Google Public DNS)</li>
+  </ul>
+  <p>These requests carry <b>no personal data and no cookies</b> (credentials are explicitly omitted) — just a
+     cache-busting number. Responses are discarded; only the elapsed time is used. As with loading any web
+     page, the operators (Google, Cloudflare) observe an ordinary anonymous HTTPS request from your IP
+     address, governed by their own privacy policies. You can choose the probe target in settings.</p>
+
+  <h2>What's stored on your device</h2>
+  <ul>
+    <li>Your settings (check interval, probe target, alert toggles).</li>
+    <li>About 24 hours of measurement history (timestamps, latency, jitter, loss, score).</li>
+  </ul>
+  <p>Both live in <code>chrome.storage.local</code> in your browser, never leave your device, and are deleted
+     when you remove the extension.</p>
+
+  <h2>Permissions explained</h2>
+  <ul>
+    <li><b>alarms</b> — schedule the periodic background checks.</li>
+    <li><b>storage</b> — keep settings and local history.</li>
+    <li><b>notifications</b> — alert you when call quality degrades or recovers (can be switched off).</li>
+    <li><b>Host permissions</b> for the five endpoints above — solely to send the timing probes. NQM cannot
+        and does not read your browsing, tabs or page content.</li>
+  </ul>
+
+  <h2>Data sharing</h2>
+  <p>Because no data is collected, <b>no data is ever shared</b> with anyone.</p>
+
+  <h2>Children's privacy</h2>
+  <p>NQM collects no data from anyone, including children.</p>
+
+  <h2>Changes &amp; contact</h2>
+  <p>Any future changes will be published on this page. For questions, use the support contact on the
+     Chrome Web Store listing.</p>
+</div>
+</body>
+</html>
