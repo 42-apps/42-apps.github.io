@@ -64,7 +64,8 @@
     <h1>Know your network is call-ready,<br><span>at a glance.</span></h1>
     <p><b>Network Quality Monitor</b> lives in your Chrome toolbar and quietly checks latency, jitter and
        packet loss every 30 seconds — the three things that actually make or break a VoIP call.
-       The icon tells you everything before you hit "Join".</p>
+       The icon tells you everything before you hit "Join", and opening it streams a
+       <b>live, once-a-second</b> view of your connection.</p>
     <div class="cta">
       <a class="btn" href="#get">Get NQM</a>
       <a class="btn ghost" href="#demo">Try the live demo ↓</a>
@@ -79,18 +80,18 @@
 
   <h2 id="demo">Try it right here</h2>
   <p class="sub">This is the real popup running on simulated data — <b>click the face</b> to cycle
-     good → wobbly → rough → offline.</p>
+     good → wobbly → rough → offline, or <b>click the chart</b> to open the longer trend.</p>
   <div class="demoBox">
     <iframe src="demo/popup/popup.html" title="NQM live demo" loading="lazy"></iframe>
   </div>
-  <p class="hint">In the real extension this updates live from your actual connection.</p>
+  <p class="hint">In the real extension the live view updates every second from your actual connection.</p>
 
   <div class="grid">
     <div class="card"><div class="ic">🚦</div><h3>Traffic-light toolbar icon</h3><p>Green, amber, red or grey — redrawn live, with signal bars so the state reads even without colour, plus an optional latency badge in ms.</p></div>
     <div class="card"><div class="ic">📈</div><h3>The metrics that matter</h3><p>Latency, jitter and packet loss from 16-probe HTTPS micro-bursts to Google &amp; Cloudflare edges — including Google DNS at literally 8.8.8.8.</p></div>
     <div class="card"><div class="ic">⭐</div><h3>Real call-quality score</h3><p>A MOS estimate (ITU-T G.107 E-model) turns the raw numbers into a single 1–4.5★ "can I call?" verdict.</p></div>
     <div class="card"><div class="ic">🔔</div><h3>Smart alerts</h3><p>Notifies when quality drops and when it recovers — with hysteresis and cooldowns so a single blip never spams you.</p></div>
-    <div class="card"><div class="ic">📊</div><h3>Live dashboard</h3><p>Emoji status face, metric chips, a live latency sparkline and an uptime-style colour strip of recent checks.</p></div>
+    <div class="card"><div class="ic">📊</div><h3>Realtime view + trends</h3><p>Open it and the sparkline streams once a second; click the chart for the longer trend over 30 min to 24 hours, with median, jitter and worst-loss stats.</p></div>
     <div class="card"><div class="ic">🔒</div><h3>Private by design</h3><p>No accounts, no analytics, no servers of ours. Probes are empty requests; ~24&nbsp;h of history stays in your browser.</p></div>
   </div>
 
