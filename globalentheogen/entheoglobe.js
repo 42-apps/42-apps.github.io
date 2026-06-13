@@ -154,8 +154,10 @@ function initGlobe(geo) {
   ctr.autoRotateSpeed = 0.45;
   ctr.enableDamping = true;
   ctr.dampingFactor = 0.12;
-  ctr.minDistance = 175;
-  ctr.maxDistance = 520;
+  ctr.minDistance = 108;     // globe radius ≈ 100 → lets you zoom right down to the surface
+  ctr.maxDistance = 600;
+  ctr.zoomSpeed = 2.0;       // snappier wheel / trackpad zoom (default 1.0 felt sluggish)
+  ctr.zoomToCursor = true;   // zoom toward the pointer, not just the centre
 
   // Marker territories (too small for 1:110m polygons) → labelled dots.
   markerData = Object.entries(window.MARKERS).map(([iso, c]) => ({ iso, lat: c[0], lng: c[1], name: nameOf(iso) }));
