@@ -57,6 +57,10 @@ main{max-width:880px;margin:0 auto;padding:16px 20px 40px}
 .is-trading .pill{border-color:var(--green);color:#bff5d8}
 .is-tradable .pill,.is-listed .pill{border-color:var(--amber)}
 .is-error .pill{border-color:var(--red);color:#ffc2cd}
+.is-extended .dot{background:var(--amber);animation:pulse 1.6s infinite}
+.is-extended .pill{border-color:var(--amber);color:#ffd27a}
+.is-closed .dot{background:var(--muted)}
+.is-closed .pill{border-color:var(--line);color:var(--muted)}
 @keyframes pulse{0%{box-shadow:0 0 0 0 currentColor;opacity:1}70%{box-shadow:0 0 0 9px transparent;opacity:.65}100%{box-shadow:0 0 0 0 transparent;opacity:1}}
 
 .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
