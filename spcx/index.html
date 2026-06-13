@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>🚀 SPCX Monitor</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='0.9em' font-size='90'%3E%F0%9F%9A%80%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="is-starting">
+  <div id="stars"></div>
+
+  <header>
+    <h1>🛰️ SPCX&nbsp;Monitor</h1>
+    <div class="sub">Watching <b id="sym">SPCX</b> on Alpaca · alerts to <b id="emailTo">martin@vedicsociety.org</b></div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="scene">
+        <div class="rocket" id="rocket">🚀<div class="flame" id="flame"></div></div>
+        <div class="pad"></div>
+      </div>
+      <div class="statuswrap">
+        <div class="pill"><span class="dot"></span><span id="pillText">Booting…</span></div>
+        <div class="detail" id="detail">Connecting to Alpaca…</div>
+        <div class="bigprice" id="bigprice"></div>
+      </div>
+    </section>
+
+    <section class="grid">
+      <div class="card"><div class="k">Phase</div><div class="v" id="g_phase">—</div></div>
+      <div class="card"><div class="k">Last price</div><div class="v" id="g_price">—</div></div>
+      <div class="card"><div class="k">First trade seen</div><div class="v" id="g_trade">—</div></div>
+      <div class="card"><div class="k">Exchange</div><div class="v" id="g_exch">—</div></div>
+      <div class="card"><div class="k">Asset name</div><div class="v" id="g_name">—</div></div>
+      <div class="card"><div class="k">Last checked</div><div class="v" id="g_check">—</div></div>
+    </section>
+
+    <section class="live" id="live" hidden>
+      <div class="haltbanner" id="haltBanner" hidden></div>
+      <div class="liveTop">
+        <div>
+          <div class="livePrice" id="livePrice">$—</div>
+          <div class="liveChg" id="liveChg"><span id="liveChgTxt"></span><span class="priceage" id="priceAge" hidden></span><span class="hodflash" id="hodFlash" hidden></span></div>
+        </div>
+        <div class="liveQuote">
+          <div class="qbox bid"><span class="qlbl">BID</span><span class="qval" id="qBid">—</span><span class="qsz" id="qBidSz"></span></div>
+          <div class="qbox ask"><span class="qlbl">ASK</span><span class="qval" id="qAsk">—</span><span class="qsz" id="qAskSz"></span></div>
+          <span class="spread" id="qSpread"></span>
+        </div>
+      </div>
+
+      <div class="rangewrap">
+        <div class="rangebar" id="rangebar">
+          <i class="vwapMark" id="rVwap"></i>
+          <i class="priceMark" id="rMark"></i>
+        </div>
+        <div class="rangelabels"><span id="rLo">L —</span><span id="rVwapLbl">VWAP —</span><span id="rHi">H —</span></div>
+      </div>
+
+      <div class="livestats">
+        <div class="lcard"><div class="k">Open</div><div class="v" id="sOpen">—</div></div>
+        <div class="lcard"><div class="k">High</div><div class="v" id="sHigh">—</div></div>
+        <div class="lcard"><div class="k">Low</div><div class="v" id="sLow">—</div></div>
+        <div class="lcard"><div class="k">VWAP</div><div class="v" id="sVwap">—</div></div>
+        <div class="lcard"><div class="k">Volume (IEX)</div><div class="v" id="sVol">—</div></div>
+        <div class="lcard"><div class="k">Vol / min</div><div class="v" id="sVelo">—</div></div>
+        <div class="lcard"><div class="k">Spread</div><div class="v" id="sSpread">—</div></div>
+        <div class="lcard" id="sIpoCard" hidden><div class="k">vs IPO ref</div><div class="v" id="sIpo">—</div></div>
+      </div>
+
+      <div class="orderflow">
+        <div class="charthead"><span>Order flow — buy vs sell <em>(since <span id="ofSince">—</span>, approx)</em></span><span id="ofDelta"></span></div>
+        <div class="ofbar"><span class="ofbuy" id="ofBuy"></span><span class="ofsell" id="ofSell"></span></div>
+        <div class="oflabels"><span id="ofBuyLbl">Buy —</span><span id="ofSellLbl">Sell —</span></div>
+        <div class="of5row"><span>Last 5 min</span><span id="of5Delta"></span></div>
+        <div class="ofbar ofbar5"><span class="ofbuy" id="of5Buy"></span><span class="ofsell" id="of5Sell"></span></div>
+        <div class="oflabels"><span id="of5BuyLbl"></span><span id="of5SellLbl"></span></div>
+      </div>
+
+      <div class="livestats analytics">
+        <div class="lcard"><div class="k">Turnover ($)</div><div class="v" id="sTurnover">—</div></div>
+        <div class="lcard"><div class="k">Trades</div><div class="v" id="sTrades">—</div></div>
+        <div class="lcard"><div class="k">Avg trade</div><div class="v" id="sAvgTrade">—</div></div>
+        <div class="lcard"><div class="k">Δ from VWAP</div><div class="v" id="sDistVwap">—</div></div>
+        <div class="lcard"><div class="k">Open range (5m)</div><div class="v" id="sOpenRange">—</div></div>
+        <div class="lcard"><div class="k">Day range $</div><div class="v" id="sRangeD">—</div></div>
+        <div class="lcard"><div class="k">Realized vol /min</div><div class="v" id="sRvol">—</div></div>
+        <div class="lcard"><div class="k">% from open</div><div class="v" id="sPctOpen">—</div></div>
+        <div class="lcard"><div class="k">Vol heat (×avg/min)</div><div class="v" id="sVolHeat">—</div></div>
+        <div class="lcard"><div class="k">Mkt cap (live)</div><div class="v" id="sMktLive">—</div></div>
+        <div class="lcard"><div class="k">Float traded (IEX)</div><div class="v" id="sFloatTraded">—</div></div>
+        <div class="lcard"><div class="k">Next milestone</div><div class="v" id="sNextMs">—</div></div>
+      </div>
+
+      <div class="chartcard">
+        <div class="charthead"><span>Price · 1-min bars</span><span id="chartspan"></span></div>
+        <svg id="chart" viewBox="0 0 720 240"></svg>
+      </div>
+
+      <div class="tapecard">
+        <div class="charthead"><span>Trade tape · most recent</span><span id="tapeRate"></span></div>
+        <ul class="tape" id="tape"></ul>
+      </div>
+
+      <div class="tapecard">
+        <div class="charthead"><span>Large prints · ≥ <span id="lpThresh">—</span> sh</span></div>
+        <ul class="tape" id="bigprints"></ul>
+      </div>
+
+      <div class="iexnote">All session stats derive from Alpaca's IEX feed (~2–3% of the consolidated tape) — directionally useful, absolutely understated.</div>
+    </section>
+
+    <section class="intel" id="intel" hidden>
+      <div class="panel">
+        <div class="charthead"><span>Company &amp; float</span><span class="muted2" id="companySrc"></span></div>
+        <div class="livestats">
+          <div class="lcard"><div class="k">Shares out</div><div class="v" id="cShares">—</div></div>
+          <div class="lcard"><div class="k">Float</div><div class="v" id="cFloat">—</div></div>
+          <div class="lcard"><div class="k">% float</div><div class="v" id="cFloatPct">—</div></div>
+          <div class="lcard"><div class="k">Market cap</div><div class="v" id="cMktCap">—</div></div>
+          <div class="lcard"><div class="k">Employees</div><div class="v" id="cEmp">—</div></div>
+          <div class="lcard"><div class="k">Listed</div><div class="v" id="cListed">—</div></div>
+          <div class="lcard"><div class="k">Industry</div><div class="v" id="cIndustry">—</div></div>
+        </div>
+        <div class="note" id="companyNote"></div>
+      </div>
+      <div class="panel">
+        <div class="charthead"><span>News</span><span class="muted2"><span id="newsMood"></span> · Alpaca news</span></div>
+        <ul class="newslist" id="news"><li class="muted">Loading headlines…</li></ul>
+      </div>
+    </section>
+
+    <section class="controls">
+      <button id="btnNotif">🔔 Enable desktop notifications</button>
+      <button id="btnTest">✅ Send test alert</button>
+      <button id="btnCopy">📋 Copy snapshot</button>
+      <button id="btnAudio">🔇 Tape audio</button>
+      <span class="emailstate" id="emailState"></span>
+      <span class="logstate" id="logState"></span>
+    </section>
+
+    <canvas id="shareCanvas" width="900" height="620" style="display:none"></canvas>
+
+    <section class="logwrap">
+      <h2>Event log</h2>
+      <ul id="log"><li class="muted">No events yet — monitor is standing by.</li></ul>
+    </section>
+  </main>
+
+  <div class="overlay" id="overlay" hidden>
+    <div class="modal" id="modal">
+      <div class="modalIcon" id="modalIcon">🚀</div>
+      <h2 id="modalTitle">Alert</h2>
+      <p id="modalBody"></p>
+      <button id="modalClose">Got it</button>
+    </div>
+  </div>
+
+  <footer><span id="footNote">Runs locally on your Mac · read-only market data</span> · <span id="srvTime"></span></footer>
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
