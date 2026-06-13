@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>G.E.M. — Global Entheogen Map</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="stylesheet" href="entheoglobe.css" />
+</head>
+<body>
+  <div id="app">
+
+    <!-- ============================ HEADER ============================ -->
+    <header>
+      <div class="brand">
+        <div class="logo"><img src="icons/icon48.png" alt="G.E.M." /></div>
+        <div class="brand-text">
+          <div class="title">G<span class="accent">.</span>E<span class="accent">.</span>M<span class="accent">.</span></div>
+          <div class="subtitle">Global Entheogen Map</div>
+        </div>
+      </div>
+
+      <div class="readout">
+        <div class="readout-label" id="readoutType">🌍 Overview</div>
+        <div class="readout-sub" id="readoutSub">Combined openness · hover a country</div>
+      </div>
+
+      <div class="actions">
+        <button id="spinBtn" title="Toggle auto-rotation">❙❙ Spin</button>
+        <button id="resetBtn" title="Reset view">⟳ Reset</button>
+        <button id="fsBtn" title="Fullscreen">⛶ Full</button>
+        <button id="aboutBtn" title="About, data sources &amp; disclaimer">ⓘ About</button>
+      </div>
+    </header>
+
+    <!-- ============================= MAIN ============================= -->
+    <main>
+      <!-- Control panel -->
+      <aside class="panel">
+        <!-- Search -->
+        <section class="ctrl search-ctrl">
+          <input id="countrySearch" class="country-search" type="text" list="countryList"
+                 placeholder="🔍  Find a country or territory…" autocomplete="off" />
+          <datalist id="countryList"></datalist>
+        </section>
+
+        <!-- Substance -->
+        <section class="ctrl">
+          <div class="ctrl-head"><span class="ctrl-title">Substance</span></div>
+          <div class="sub-grid" id="subGrid"><!-- buttons injected --></div>
+          <p class="sub-desc" id="subDesc"></p>
+          <div class="explainer" id="subClinical"></div>
+          <button class="mol-btn" id="molBtn">🧬 Molecule &amp; brain effects</button>
+        </section>
+
+        <!-- Medical-access lens -->
+        <section class="ctrl med-ctrl">
+          <label class="toggle-row" for="medToggle">
+            <span class="ctrl-title">⚕ Medical-access lens</span>
+            <span class="switch"><input type="checkbox" id="medToggle" /><span class="track"></span></span>
+          </label>
+          <p class="med-hint">Spotlight the countries where the selected substance is <b>legally obtainable for medical or clinical use</b> — and dim everywhere else. The map for <b>patients &amp; researchers</b>.</p>
+        </section>
+
+        <!-- Research organizations -->
+        <section class="ctrl med-ctrl">
+          <label class="toggle-row" for="orgToggle">
+            <span class="ctrl-title">🔬 Research orgs</span>
+            <span class="switch"><input type="checkbox" id="orgToggle" /><span class="track"></span></span>
+          </label>
+          <p class="med-hint">Pin the institutes &amp; foundations driving clinical psychedelic research &amp; policy reform — <b>Beckley, MAPS, Johns Hopkins, Imperial, Heffter…</b></p>
+        </section>
+
+        <!-- Legend -->
+        <section class="ctrl">
+          <div class="ctrl-head"><span class="ctrl-title">Legal status</span></div>
+          <div class="legend" id="legend"><!-- injected --></div>
+        </section>
+
+        <p class="disclaimer">Approximate, hand-compiled status (reviewed ≈2026). Drug law is nuanced and changes fast — this is <b>orientation only, not legal advice</b>. Verify locally. Tap <b>ⓘ About</b> for sources &amp; the full disclaimer.</p>
+      </aside>
+
+      <!-- Globe -->
+      <div id="globeViz"></div>
+
+      <!-- Country detail card -->
+      <div id="detailCard" class="detail-card hidden">
+        <button class="detail-close" id="detailClose">✕</button>
+        <div class="detail-flag" id="detailFlag">🏳️</div>
+        <div class="detail-name" id="detailName">—</div>
+        <div class="detail-grade" id="detailGrade"></div>
+        <div class="detail-note hidden" id="detailNote"></div>
+        <div class="detail-sub hidden" id="detailSub"></div>
+        <div class="detail-rows-head">All substances</div>
+        <div class="detail-rows" id="detailRows"></div>
+      </div>
+
+      <!-- Hover tooltip -->
+      <div id="tooltip" class="tooltip hidden"></div>
+    </main>
+
+    <!-- ===================== About / disclaimer modal ===================== -->
+    <div id="aboutOverlay" class="overlay hidden">
+      <div class="modal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
+        <button class="modal-close" id="aboutClose" aria-label="Close">✕</button>
+        <div class="modal-brand">
+          <img src="icons/icon48.png" alt="" class="modal-logo" />
+          <div>
+            <div class="modal-title" id="aboutTitle">G.E.M.</div>
+            <div class="modal-sub">Global Entheogen Map</div>
+          </div>
+        </div>
+
+        <p class="modal-lead">An interactive 3D globe of where the world's clinically-relevant psychedelics &amp;
+          entheogens stand legally. Pick a substance and every country is painted on a 6-level scale from
+          <b>legal</b> to <b>death-penalty</b> — with a <b>Medical-access lens</b> built for the question that
+          matters most: <i>where can patients and researchers actually obtain it?</i></p>
+
+        <div class="modal-warn">
+          ⚠️ <b>Not legal, medical or travel advice.</b> Drug law is genuinely complex — national vs state law,
+          possession vs supply vs cultivation, religious/indigenous exemptions, and the gap between the statute
+          books and real enforcement. These statuses are an approximate, hand-compiled <b>snapshot</b> that may be
+          incomplete or out of date. <b>Never</b> rely on it for any decision — especially in severe-penalty
+          countries, where the risks are life-changing. Always verify with a qualified local source.
+        </div>
+
+        <h3 class="modal-h">How to read the colours</h3>
+        <p class="modal-p">Each substance is graded on one scale, ordered by <b>access</b>:
+          <b style="color:#2fd07a">Legal</b> → <b style="color:#19b3a6">Medical</b> →
+          <b style="color:#f4c145">Decriminalized</b> → <b style="color:#ef8b3c">Tolerated</b> →
+          <b style="color:#ef4d52">Illegal</b> → <b style="color:#d9486b">Severe / death-penalty</b> (the
+          near-black landmasses, outlined in red). <b>Overview</b> averages all substances into one
+          “how open is this country” read.</p>
+
+        <h3 class="modal-h">Molecule &amp; brain explorer</h3>
+        <p class="modal-p">The <b>🧬 Molecule &amp; brain effects</b> button opens a spinnable <b>3D model</b> of each
+          substance (real PubChem structures) alongside a <b>schematic of its primary receptor target and
+          the brain regions it affects</b>. The brain panel is a simplified educational illustration of
+          mechanism — <b>not</b> a literal neural simulation.</p>
+
+        <h3 class="modal-h">Where the data comes from</h3>
+        <p class="modal-p">Statuses were hand-assembled and <b>web-verified</b> (≈2025/26) against public references:</p>
+        <ul class="modal-list" id="aboutSources"></ul>
+
+        <h3 class="modal-h">Recent changes</h3>
+        <div class="changes-list" id="aboutChanges"></div>
+
+        <h3 class="modal-h">Privacy</h3>
+        <p class="modal-p">Runs entirely in your browser. <b>No personal data, no permissions, no network
+          requests</b> — all map &amp; law data is bundled locally.</p>
+
+        <h3 class="modal-h">Credits</h3>
+        <p class="modal-p">Country borders: <b>Natural Earth</b> (public domain). Globe rendering:
+          <b>globe.gl</b> / <b>three.js</b> (MIT). Molecular structures: <b>PubChem</b> (public domain).</p>
+
+        <p class="modal-ver" id="aboutVer">v0.2.0</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="lib/globe.gl.min.js"></script>
+  <script src="data/law-data.js"></script>
+  <script src="data/molecules.js"></script>
+  <script src="entheoglobe.js"></script>
+  <script src="molecule.js"></script>
+</body>
+</html>
