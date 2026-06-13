@@ -189,7 +189,7 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:20px}
 .priceage.stale-red{border-color:var(--red);color:#ffc2cd}
 .priceage[hidden]{display:none}
 /* public/static deploy: hide controls that need the local Node server */
-.public-mode #btnTest,.public-mode #logState,.public-mode #emailState{display:none}
+.public-mode #btnTest,.public-mode #logState,.public-mode #emailState,.public-mode #alertsTo{display:none}
 .ofbar5{display:flex;height:9px;border-radius:5px;overflow:hidden;background:#0e1430;margin:2px 0 6px}
 .ofbar5 .ofbuy,.ofbar5 .ofsell{height:100%}
 .of5row{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:6px}
