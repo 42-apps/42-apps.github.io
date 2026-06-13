@@ -1,5 +1,5 @@
-// SPCX dashboard config — set this to your deployed Cloudflare Worker URL.
-// See https://github.com/martingluckman/spcx-monitor/blob/main/web/DEPLOY.md
-// Until set, the page shows a "Worker URL not set" message. You can also test
-// instantly with ?api=<worker-url> appended to the page URL.
-window.SPCX_API = "REPLACE_WITH_WORKER_URL";
+// SPCX dashboard config — points at the deployed Cloudflare Worker (holds the
+// API keys as secrets; no keys live in this page). Source + deploy guide:
+// https://github.com/martingluckman/spcx-monitor/blob/main/web/DEPLOY.md
+// Override at runtime with ?api=<url>.
+window.SPCX_API = "https://spcx-monitor-api.martin-84d.workers.dev";
