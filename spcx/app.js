@@ -16,6 +16,8 @@ const PHASES = {
   pending_ipo: { label: '📋 Upcoming IPO — awaiting first trade', cls: 'is-pending' },
   tradable:    { label: 'Active & tradable — imminent',          cls: 'is-tradable' },
   trading:  { label: '🚀 TRADING NOW',                 cls: 'is-trading'  },
+  extended: { label: '⏰ Extended hours',              cls: 'is-extended' },
+  closed:   { label: '🌙 Market closed · last session', cls: 'is-closed'  },
   error:    { label: 'Connection error',               cls: 'is-error'    },
 };
 
@@ -34,7 +36,7 @@ function flashExtreme(txt, isLow) {
 }
 
 function updateTitle(s) {
-  if (s.phase === 'trading' && s.live && s.live.price != null) {
+  if (s.live && s.live.price != null) {
     const ch = s.live.dayOpen ? (s.live.price - s.live.dayOpen) / s.live.dayOpen * 100 : null;
     document.title = `${s.symbol} $${s.live.price.toFixed(2)}${ch != null ? ` ${ch >= 0 ? '▲' : '▼'}${Math.abs(ch).toFixed(1)}%` : ''}`;
   } else {
@@ -130,9 +132,9 @@ function render(s) {
   $('g_name').textContent = s.assetName || '—';
   $('g_check').textContent = rel(s.lastCheck);
   $('bigprice').textContent = (s.phase === 'trading' && s.lastPrice != null) ? `$${s.lastPrice}` : '';
-  $('rocket').classList.toggle('launched', s.phase === 'trading');
+  $('rocket').classList.toggle('launched', s.phase === 'trading' || s.phase === 'extended');
 
-  if (s.phase === 'trading' && s.live) {
+  if (s.live) {
     $('bigprice').textContent = ''; // the live panel owns the price now
     renderLive(s.live, s);
   } else {
@@ -140,8 +142,8 @@ function render(s) {
     liveLastPrice = null;
   }
 
-  if (s.phase === 'trading' && s.metrics) renderMetrics(s.metrics);
-  if (s.phase === 'trading' && s.live) renderExtras(s);
+  if (s.metrics) renderMetrics(s.metrics);
+  if (s.live) renderExtras(s);
   renderIntel(s);
   renderLogs(s.logs);
   updateTitle(s);
