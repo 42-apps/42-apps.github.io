@@ -1,0 +1,89 @@
+/* A History of Us — landing + privacy site.
+   Warm "savanna at dawn" theme, matched to the app. */
+:root{
+  --bg:#0a0603; --bg2:#1b0f07; --panel:#1e150c; --line:#3a2614;
+  --tx:#f3e9da; --tx-dim:#c8b89e; --tx-mut:#8f7e64;
+  --accent:#ecb24a; --accent2:#e7822f; --accent3:#cf9f35;
+  --radius:16px; --maxw:1080px;
+  --font:'Segoe UI',system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;font-family:var(--font);color:var(--tx);line-height:1.6;
+  background:radial-gradient(125% 95% at 50% -10%,#7a4a1f 0%,#39220f 42%,#150c06 78%,var(--bg) 100%);
+  background-attachment:fixed;-webkit-font-smoothing:antialiased;
+}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+.wrap.narrow{max-width:760px}
+
+/* header */
+header.site{position:sticky;top:0;z-index:10;backdrop-filter:blur(10px);
+  background:rgba(12,7,3,.74);border-bottom:1px solid var(--line)}
+header.site .wrap{display:flex;align-items:center;gap:14px;height:64px}
+.brand{display:flex;align-items:center;gap:11px;font-weight:800;letter-spacing:.2px;color:var(--tx)}
+.brand img{width:34px;height:34px;border-radius:9px;display:block}
+.brand span{font-size:16px}
+header.site nav{margin-left:auto;display:flex;gap:22px;font-size:14px}
+header.site nav a{color:var(--tx-dim)}
+header.site nav a:hover{color:var(--tx);text-decoration:none}
+
+/* hero */
+.hero{text-align:center;padding:80px 0 56px}
+.hero .logo{width:112px;height:112px;border-radius:26px;box-shadow:0 12px 40px rgba(0,0,0,.55);margin-bottom:22px}
+.kick{font-size:12px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+.hero h1{font-size:clamp(34px,6vw,58px);line-height:1.05;margin:0 0 16px;letter-spacing:-.5px}
+.hero h1 .grad{background:linear-gradient(90deg,var(--accent),var(--accent2));
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p.lede{font-size:clamp(16px,2.4vw,20px);color:var(--tx-dim);max-width:700px;margin:0 auto 30px}
+.cta{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:9px;padding:13px 26px;border-radius:12px;
+  font-weight:700;font-size:15px;border:1px solid transparent;cursor:pointer;transition:.16s}
+.btn-primary{background:linear-gradient(180deg,#f6dd86,var(--accent3));color:#1a1304}
+.btn-primary:hover{filter:brightness(1.06);text-decoration:none;transform:translateY(-1px)}
+.btn-ghost{background:rgba(255,235,200,.05);border-color:var(--line);color:var(--tx)}
+.btn-ghost:hover{background:rgba(255,235,200,.1);text-decoration:none}
+.cta-note{margin-top:14px;font-size:13px;color:var(--tx-mut)}
+
+/* timeline strip */
+.tl{display:flex;align-items:center;gap:0;max-width:780px;margin:46px auto 0;
+  border-top:2px solid var(--line);position:relative}
+.tl span{flex:1;position:relative;font-size:12px;color:var(--tx-mut);text-align:center;padding-top:16px}
+.tl span::before{content:"";position:absolute;top:-7px;left:50%;transform:translateX(-50%);
+  width:11px;height:11px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px rgba(236,178,74,.16)}
+
+/* sections */
+section.block{padding:56px 0}
+section.block h2{font-size:clamp(24px,4vw,34px);text-align:center;margin:0 0 8px}
+section.block .sub{text-align:center;color:var(--tx-dim);max-width:660px;margin:0 auto 40px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:18px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:24px}
+.card .ic{font-size:26px;margin-bottom:10px}
+.card h3{margin:0 0 6px;font-size:17px}
+.card p{margin:0;color:var(--tx-dim);font-size:14.5px}
+.card em{color:var(--accent);font-style:normal}
+
+/* stats */
+.stats{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-top:8px}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 30px;text-align:center;min-width:160px}
+.stat b{display:block;font-size:30px;background:linear-gradient(90deg,var(--accent),var(--accent2));
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+.stat span{color:var(--tx-dim);font-size:14px}
+
+/* doc / privacy page */
+.doc{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+  padding:38px clamp(22px,4vw,52px);margin:40px auto 64px;max-width:820px}
+.doc h1{margin-top:0}
+.doc h2{margin-top:32px;font-size:20px}
+.doc .updated{color:var(--tx-mut);font-size:14px;margin-top:-8px}
+.doc code{background:rgba(255,235,200,.07);padding:1px 6px;border-radius:5px;font-size:13px}
+
+/* footer */
+footer.site{border-top:1px solid var(--line);padding:34px 0;color:var(--tx-mut);font-size:14px}
+footer.site .wrap{display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between}
+footer.site nav{display:flex;gap:20px}
+footer.site a{color:var(--tx-dim)}
+.credit{display:block;margin-top:10px;font-size:12px;color:var(--tx-mut);max-width:700px}
