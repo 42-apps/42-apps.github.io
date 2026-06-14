@@ -151,6 +151,16 @@ main { position: relative; overflow: hidden; }
 .drow .ddot { width: 9px; height: 9px; border-radius: 50%; flex: none; }
 .nodata-msg { color: var(--muted); font-size: 11.5px; line-height: 1.5; }
 
+.detail-conf { margin-top: 11px; font-size: 10px; color: var(--muted); display: flex; align-items: center; gap: 6px; }
+.detail-conf .conf-dot { width: 8px; height: 8px; border-radius: 50%; flex: none; box-shadow: 0 0 5px rgba(0,0,0,.4); }
+.detail-conf b { text-transform: capitalize; }
+.detail-sources { margin-top: 9px; border-top: 1px solid var(--line); padding-top: 8px; display: flex; flex-direction: column; gap: 3px; max-height: 116px; overflow-y: auto; }
+.detail-sources.hidden { display: none; }
+.detail-sources .src-head { font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 1px; }
+.detail-sources a { font-size: 10px; color: var(--accent); text-decoration: none; line-height: 1.4; word-break: break-word; }
+.detail-sources a:hover { text-decoration: underline; }
+.detail-sources span { font-size: 10px; color: var(--muted); line-height: 1.4; }
+
 /* ---------------- Tooltip ---------------- */
 .tooltip {
   position: absolute; z-index: 7; pointer-events: none; width: 228px;
