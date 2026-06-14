@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Early Modern Human Explorer · A History of Us</title>
+<meta name="description" content="Watch modern humans spread from one African cradle to the whole Earth — on an interactive 3D globe. Migration routes, genetics, archaeological sites and the Ice-Age world, from 300,000 years ago to today.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Crect width='256' height='256' rx='58' fill='%23120a06'/%3E%3Ccircle cx='120' cy='134' r='62' fill='%23b9742f'/%3E%3Cpath d='M70 86 A86 86 0 1 1 176 196' fill='none' stroke='%23f6dd86' stroke-width='9' stroke-linecap='round'/%3E%3Ccircle cx='176' cy='196' r='8' fill='%23f6dd86'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="app.css?v=3">
+</head>
+<body>
+  <!-- ===== Header ===== -->
+  <header id="topbar">
+    <div class="brand">
+      <svg class="logo" viewBox="0 0 256 256" aria-hidden="true">
+        <defs>
+          <radialGradient id="huBg" cx="50%" cy="28%" r="90%"><stop offset="0%" stop-color="#3a2412"/><stop offset="60%" stop-color="#1b0f07"/><stop offset="100%" stop-color="#0a0603"/></radialGradient>
+          <radialGradient id="huGl" cx="40%" cy="34%" r="78%"><stop offset="0%" stop-color="#e9a85a"/><stop offset="55%" stop-color="#b9742f"/><stop offset="100%" stop-color="#6e3f17"/></radialGradient>
+          <linearGradient id="huAu" x1="0" y1="1" x2="1" y2="0"><stop offset="0%" stop-color="#f6dd86"/><stop offset="100%" stop-color="#e7a23a"/></linearGradient>
+        </defs>
+        <rect width="256" height="256" rx="58" fill="url(#huBg)"/>
+        <circle cx="118" cy="136" r="60" fill="url(#huGl)"/>
+        <g fill="none" stroke="#ffe9c8" stroke-opacity="0.34" stroke-width="2">
+          <ellipse cx="118" cy="136" rx="30" ry="60"/><ellipse cx="118" cy="136" rx="60" ry="30"/>
+          <line x1="58" y1="136" x2="178" y2="136"/>
+        </g>
+        <path d="M96 178 C70 150 78 86 132 70 C186 54 206 96 196 70" fill="none" stroke="url(#huAu)" stroke-width="8.5" stroke-linecap="round" stroke-dasharray="2 13"/>
+        <circle cx="96" cy="178" r="6.5" fill="#f6dd86"/>
+        <circle cx="196" cy="72" r="8" fill="url(#huAu)" stroke="#1b0f07" stroke-width="2"/>
+      </svg>
+      <div class="brand-txt">
+        <span class="brand-kicker">A History of Us</span>
+        <span class="brand-name">Early Modern Human Explorer</span>
+        <span class="brand-sub">Out of Africa, across the Earth</span>
+      </div>
+    </div>
+    <div class="tools">
+      <div id="searchWrap">
+        <input id="search" type="text" placeholder="Search a place, people or site…" autocomplete="off" spellcheck="false" aria-label="Search">
+        <div id="searchResults" class="hidden"></div>
+      </div>
+      <button id="menuBtn" title="Menu" aria-label="Menu">☰</button>
+      <div id="menu" class="hidden">
+        <button class="mi" id="miReset"><span class="mi-ic">⤢</span><span class="mi-tx">Reset view</span></button>
+        <button class="mi" id="miSpin"><span class="mi-ic">⟳</span><span class="mi-tx">Auto-rotate</span><span class="mi-state">On</span></button>
+        <button class="mi" id="miFull"><span class="mi-ic">⛶</span><span class="mi-tx">Fullscreen</span></button>
+        <div class="mi-sep"></div>
+        <button class="mi" id="miTour"><span class="mi-ic">🎬</span><span class="mi-tx">Guided tour</span></button>
+        <button class="mi" id="miShare"><span class="mi-ic">🔗</span><span class="mi-tx">Copy link to this view</span></button>
+        <div class="mi-sep"></div>
+        <button class="mi" id="miArcs"><span class="mi-ic">➜</span><span class="mi-tx">Migration routes</span><span class="mi-state">On</span></button>
+        <button class="mi" id="miSites"><span class="mi-ic">🧭</span><span class="mi-tx">Sites &amp; discoveries</span><span class="mi-state">On</span></button>
+        <button class="mi" id="miArchaic"><span class="mi-ic">🧍</span><span class="mi-tx">Other humans</span><span class="mi-state">On</span></button>
+        <button class="mi" id="miClimate"><span class="mi-ic">❄️</span><span class="mi-tx">Climate &amp; ice sheets</span><span class="mi-state">On</span></button>
+        <button class="mi" id="miPaleo"><span class="mi-ic">🌊</span><span class="mi-tx">Coasts &amp; land bridges</span><span class="mi-state">On</span></button>
+        <button class="mi" id="miLegend"><span class="mi-ic">🎨</span><span class="mi-tx">Colour key</span></button>
+        <div class="mi-sep"></div>
+        <button class="mi" id="miHelp"><span class="mi-ic">❔</span><span class="mi-tx">How it works</span></button>
+        <button class="mi" id="miAbout"><span class="mi-ic">ℹ</span><span class="mi-tx">About &amp; sources</span></button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== Globe ===== -->
+  <div id="globeViz"></div>
+  <div id="tooltip" class="hidden"></div>
+  <div id="tourCaption" class="hidden"></div>
+  <div id="toast"></div>
+
+  <!-- ===== Population + era + peoples panel ===== -->
+  <div id="panel">
+    <div class="pn-head"><span id="pnCount">—</span> <span class="pn-sub">people on Earth (est.)</span></div>
+    <div id="pnHead" class="pn-headline">—</div>
+    <div class="pn-year">In <b id="pnYear">—</b> · <span id="pnStat"></span></div>
+    <div id="pnList"></div>
+  </div>
+
+  <!-- ===== Detail card ===== -->
+  <div id="detailCard" class="hidden">
+    <button id="detailClose" title="Close">×</button>
+    <div class="detail-head"><span id="detailFlag" class="detail-flag">📍</span>
+      <div><div id="detailName" class="detail-name">—</div>
+      <div id="detailType" class="detail-type"></div></div>
+    </div>
+    <div id="detailBody"></div>
+    <div id="detailDesc" class="detail-desc hidden"></div>
+  </div>
+
+  <!-- ===== Lineage legend ===== -->
+  <div id="legend" class="collapsed">
+    <button class="lg-head" id="legendToggle" title="Show / hide the colour key"><span>🧬 Colour key</span><span class="lg-caret">▸</span></button>
+    <div id="legendStrip" class="lg-strip" title="Genetic lineages — click to expand"></div>
+    <div id="legendBody"></div>
+  </div>
+
+  <!-- ===== Time bar ===== -->
+  <div id="timebar">
+    <div id="chips" class="chips" aria-label="Jump to a chapter of the story"></div>
+    <div class="readout"><span id="eraLabel" class="era-label">—</span><span id="eraCal" class="era-cal"></span><span id="eraName" class="era-name"></span><span id="climateBadge" class="climate-badge hidden"></span></div>
+    <div class="slider-row">
+      <button id="prevEra" class="step" title="Step earlier (←)">‹</button>
+      <button id="nextEra" class="step" title="Step later (→)">›</button>
+      <input id="timeSlider" type="range" min="0" max="0" value="0" step="1" aria-label="Time">
+      <button id="playBack" class="play" title="Play toward the deep past">◀</button>
+      <button id="playFwd" class="play" title="Play forward — watch us spread">▶</button>
+      <button id="tourBtn" class="tourbtn" title="Play the guided story">🎬<span class="tb-tx"> Tour</span></button>
+    </div>
+    <div class="time-ends"><span>300,000 years ago</span><span class="te-note">Drag, tap a chapter, or press ▶ to watch humanity spread</span><span>Today</span></div>
+  </div>
+
+  <!-- ===== Welcome / first run ===== -->
+  <div id="welcomeOverlay" class="hidden">
+    <div class="about-box welcome-box">
+      <div class="wel-kicker">300,000 years ago &nbsp;→&nbsp; Today</div>
+      <h2>A History of Us</h2>
+      <p class="wel-tag">We are one species, born in Africa. Watch our ancestors spread from a single
+      cradle to every corner of the Earth — and see who they were, in their bones and their genes.</p>
+      <ul class="wel-tips">
+        <li><span class="wt-ic">▶</span><span><b>Press play.</b> Time runs left→right. Regions glow with the
+          <b>genetic lineage</b> of whoever lived there; watch the colours branch and spread.</span></li>
+        <li><span class="wt-ic">➜</span><span><b>Follow the journeys.</b> Animated arcs trace each great
+          migration — out of Africa, across the seas to Australia, into the Americas, across the Pacific.</span></li>
+        <li><span class="wt-ic">🧭</span><span><b>Tap a site or region.</b> Blombos, Lake Mungo, Denisova… each
+          discovery and people opens a card with its story, DNA and living descendants.</span></li>
+        <li><span class="wt-ic">❄️</span><span><b>Climate drives it all.</b> Ice sheets spread and melt, seas
+          fall to open land bridges, and lakes dry up — the gauge shows how hot or cold it was, and why people moved.</span></li>
+      </ul>
+      <button id="welStart" class="wel-start">Begin the journey →</button>
+      <p class="wel-foot">Dates, ranges and genetics are simplified and approximate — and the deeper the
+      past, the more uncertain. See <b>About &amp; sources</b>.</p>
+    </div>
+  </div>
+
+  <!-- ===== About ===== -->
+  <div id="aboutOverlay" class="hidden">
+    <div class="about-box">
+      <button id="aboutClose" class="about-close" title="Close">×</button>
+      <h2>A History of Us</h2>
+      <p>A living atlas of the human journey. <b>Drag the timeline</b> to travel from <b>300,000 years ago</b>
+      — when <i>Homo sapiens</i> was confined to Africa — to today, and watch our ancestors people the world.
+      Each lit region is coloured by the <b>deep genetic lineage</b> of the people who lived there then;
+      animated arcs trace the <b>great migrations</b>; dots mark the <b>fossils, art and sites</b> that tell
+      the story; and the <b>Ice-Age world</b> of land bridges, vanished lakes and lower seas shifts beneath.</p>
+      <p class="about-cav"><b>Please read this:</b> deep prehistory is uncertain and fast-moving. Every date,
+      range, boundary and population here is an <b>approximation</b>, often debated, and the regions are
+      coarse "where-ish" zones, not borders. Genetics are reduced to a few <b>characteristic lineages</b>
+      (mtDNA / Y-DNA haplogroups + notable ancient-DNA samples + living descendants) — real ancestry is a
+      blend. Ice sheets, sea level and temperature are simplified sketches of the glacial cycles, and the
+      <b>other humans</b> (Neanderthals, Denisovans and their cousins) are shown as rough ranges ending at
+      approximate extinction dates. The deeper the past, the fuzzier it all becomes.</p>
+      <p class="about-cav"><b>On the "cradle":</b> we open in Africa and highlight a proposed southern-African
+      homeland (the Makgadikgadi wetland, mtDNA L0). That single-origin idea is <b>contested</b>; most
+      researchers now favour a <b>pan-African</b> origin — <i>H. sapiens</i> emerging from populations spread
+      across the whole continent (the oldest fossils, Jebel Irhoud, are in Morocco). We show both.</p>
+      <p class="about-src">Built on the science of palaeoanthropology and archaeogenetics — work by the labs of
+      Pääbo, Reich, Willerslev, Tishkoff and many others; key studies include Hublin et&nbsp;al. 2017 (Jebel
+      Irhoud), Vidal et&nbsp;al. 2022 (Omo), Clarkson et&nbsp;al. 2017 (Madjedbebe), Chan et&nbsp;al. 2019
+      (southern-African mtDNA), and the Lapita/Polynesian and steppe/Anatolian ancient-DNA literature.
+      Globe: globe.gl. Base map: Natural Earth (public domain). Palaeogeography after published
+      reconstructions. A companion to <b>A History of Nations</b> · 42-apps. Made with much curiosity — and fun.</p>
+    </div>
+  </div>
+
+  <script src="lib/globe.gl.min.js"></script>
+  <script src="journey.js?v=3"></script>
+  <script src="app.js?v=3"></script>
+</body>
+</html>
