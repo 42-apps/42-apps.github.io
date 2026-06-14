@@ -96,7 +96,14 @@ const elViz = document.getElementById('globeViz');
 const elFlat = document.getElementById('flatViz');
 const tooltip = document.getElementById('tooltip');
 
-const visible = () => C.filter(c => (state.filter === 'all' || c.type === state.filter) && c.founded <= state.year);
+const isRelated = c => c.cat === 'related';
+const communities = () => C.filter(c => !isRelated(c));
+const visible = () => C.filter(c => {
+  if (c.founded > state.year) return false;
+  if (state.filter === 'related') return isRelated(c);
+  if (isRelated(c)) return false;
+  return state.filter === 'all' || c.type === state.filter;
+});
 function sortVal(c) { return state.sort === 'pop' ? (c.pop || 0) : state.sort === 'age' ? c.yrs : state.sort === 'nat' ? (c.nat || 0) : c.score; }
 const sorted = () => visible().slice().sort((a, b) => sortVal(b) - sortVal(a) || b.score - a.score);
 function activeArcs() { if (!state.arcs || state.filter !== 'all') return []; return ARCS.filter(a => a.py <= state.year && a.cy <= state.year); }
@@ -210,7 +217,7 @@ function onPointHover(d) {
 
 /* ============================== scene paint ============================== */
 function paintScene() {
-  if (state.mode === 'globe') { if (globe) { globe.pointsData(visible()).arcsData(activeArcs()); refreshPoints(); } }
+  if (state.mode === 'globe') { if (globe) { globe.pointsData(visible()).arcsData(activeArcs()).ringsData((state.filter !== 'related' && FLAGSHIP) ? [{ lat: FLAGSHIP.lat, lng: FLAGSHIP.lon }] : []); refreshPoints(); } }
   else drawFlat();
 }
 function afterDataChange(skipRank) { paintScene(); if (!skipRank) buildRank(); updateTimeReadout(); }
@@ -220,7 +227,8 @@ function flyTo(lat, lng, alt) { spinOn = false; syncSpin(); if (globe) { globe.c
 function selectCommunity(c, doFly) {
   if (!c) return;
   // make sure it isn't hidden by an active type or time filter
-  if (state.filter !== 'all' && c.type !== state.filter) { state.filter = 'all'; buildFilters(); }
+  if (isRelated(c)) { if (state.filter !== 'related') { state.filter = 'related'; buildFilters(); } }
+  else if (state.filter === 'related' || (state.filter !== 'all' && c.type !== state.filter)) { state.filter = 'all'; buildFilters(); }
   if (c.founded > state.year) { stopPlay(); state.year = NOW; tlSlider.value = NOW; }
   state.selected = c.id;
   paintScene(); buildRank(); updateTimeReadout();
@@ -238,8 +246,9 @@ function showDetail(c) {
   document.getElementById('detailType').innerHTML = `<span class="type-dot" style="background:${typeColor(c.type)}"></span>${esc(typeLabel(c.type))}`;
   const badge = document.getElementById('detailBadge');
   if (c.badge) { badge.textContent = c.badge; badge.classList.remove('hidden'); } else badge.classList.add('hidden');
-  const p = c.parts;
-  document.getElementById('detailScore').innerHTML =
+  const p = c.parts, sc = document.getElementById('detailScore');
+  if (isRelated(c)) sc.innerHTML = `<div class="ds-note">✦ <b>Related entry</b> — a movement, organisation or traditional town, listed for reference. Not ranked among the intentional communities.</div>`;
+  else sc.innerHTML =
     `<div><div class="ds-num">${c.score}<span class="ds-of"> /100</span></div></div>` +
     `<div class="ds-bars"><div class="ds-label">Success score</div>` + bar('Size', p.size) + bar('Age', p.age) + bar('Reach', p.reach) + bar('Honours', p.honours) + `</div>`;
   document.getElementById('detailRows').innerHTML =
@@ -258,6 +267,7 @@ function showDetail(c) {
   if (c.tags && c.tags.length) { tg.innerHTML = c.tags.map(t => `<span class="tag">${esc(t)}</span>`).join(''); tg.classList.remove('hidden'); } else tg.classList.add('hidden');
   const link = document.getElementById('detailLink');
   if (c.url) { link.href = c.url; link.classList.remove('hidden'); } else link.classList.add('hidden');
+  document.getElementById('detailKibbutz').classList.toggle('hidden', c.type !== 'kibbutz');
   detailCard.classList.remove('hidden'); detailCard.scrollTop = 0;
 }
 function closeDetail() { detailCard.classList.add('hidden'); state.selected = null; paintScene(); markActive(null); }
@@ -266,29 +276,36 @@ document.getElementById('detailClose').addEventListener('click', closeDetail);
 /* ============================== Ranking panel ============================ */
 const rankList = document.getElementById('rankList');
 function buildFilters() {
-  const present = Object.keys(TYPES).filter(t => C.some(c => c.type === t));
-  const chips = [{ k: 'all', label: 'All' }].concat(present.map(t => ({ k: t, label: typeShort(t) })));
+  const present = Object.keys(TYPES).filter(t => C.some(c => !isRelated(c) && c.type === t));
+  const relN = C.filter(isRelated).length;
+  const chips = [{ k: 'all', label: 'All' }].concat(present.map(t => ({ k: t, label: typeShort(t) })))
+    .concat(relN ? [{ k: 'related', label: '✦ Related' }] : []);
   document.getElementById('rpFilters').innerHTML = chips.map(ch => {
-    const on = state.filter === ch.k, col = ch.k === 'all' ? 'var(--accent)' : typeColor(ch.k);
+    const on = state.filter === ch.k, col = ch.k === 'all' ? 'var(--accent)' : ch.k === 'related' ? 'var(--accent2)' : typeColor(ch.k);
     return `<button class="fchip${on ? ' on' : ''}" data-k="${ch.k}" ${on ? `style="background:${col};border-color:${col}"` : ''}>${esc(ch.label)}</button>`;
   }).join('');
 }
 function buildRank() {
+  const isRel = state.filter === 'related';
   const list = sorted();
   const metricWord = { score: 'score', pop: 'residents', age: 'years', nat: 'nationalities' }[state.sort];
-  document.getElementById('rpStat').innerHTML = `<b>${list.length}</b> shown · ${C.length} surveyed worldwide`;
+  document.getElementById('rpStat').innerHTML = isRel
+    ? `✦ <b>${list.length}</b> movements, networks &amp; organisations — for reference, not part of the ranking`
+    : `<b>${list.length}</b> shown · <b>${communities().length}</b> intentional communities mapped`;
   rankList.innerHTML = list.map((c, i) => {
-    const rank = i + 1, topCls = rank <= 3 ? ' top' + rank : '';
-    const mv = state.sort === 'pop' ? fmtNum(c.pop) : state.sort === 'age' ? c.yrs + ' yr' : state.sort === 'nat' ? (c.nat || '—') : c.score;
-    const sub = state.sort === 'score'
-      ? `<div class="rk-bar"><i style="width:${c.score}%;background:${typeColor(c.type)}"></i></div>`
-      : `<div class="rk-mini">${esc(metricWord === 'years' ? 'since ' + c.founded : metricWord)}</div>`;
-    return `<div class="rk-row${topCls}${c.flagship ? ' flagship' : ''}${state.selected === c.id ? ' active' : ''}" data-id="${c.id}">` +
-      `<span class="rk-rank">${rank}</span><span class="rk-flag">${c.flag}</span>` +
-      `<span class="rk-main"><span class="rk-name">${c.flagship ? '<span class="rk-star">★</span>' : ''}${esc(c.name)}</span>` +
+    const rank = i + 1, topCls = (!isRel && rank <= 3) ? ' top' + rank : '';
+    const mv = isRel ? c.founded
+      : state.sort === 'pop' ? fmtNum(c.pop) : state.sort === 'age' ? c.yrs + ' yr' : state.sort === 'nat' ? (c.nat || '—') : c.score;
+    const sub = isRel ? `<div class="rk-mini">${esc(typeShort(c.type))}</div>`
+      : state.sort === 'score'
+        ? `<div class="rk-bar"><i style="width:${c.score}%;background:${typeColor(c.type)}"></i></div>`
+        : `<div class="rk-mini">${esc(metricWord === 'years' ? 'since ' + c.founded : metricWord)}</div>`;
+    return `<div class="rk-row${topCls}${(!isRel && c.flagship) ? ' flagship' : ''}${state.selected === c.id ? ' active' : ''}" data-id="${c.id}">` +
+      `<span class="rk-rank">${isRel ? '✦' : rank}</span><span class="rk-flag">${c.flag}</span>` +
+      `<span class="rk-main"><span class="rk-name">${(!isRel && c.flagship) ? '<span class="rk-star">★</span>' : ''}${esc(c.name)}</span>` +
       `<span class="rk-meta"><span class="rk-type-dot" style="background:${typeColor(c.type)}"></span>${esc(typeShort(c.type))}<span class="dot">·</span>${esc(c.country)}</span></span>` +
       `<span class="rk-right"><span class="rk-score">${mv}</span>${sub}</span></div>`;
-  }).join('') || `<div class="pn-empty" style="color:var(--muted);font-size:12px;padding:10px">No communities founded by ${state.year} in this filter.</div>`;
+  }).join('') || `<div class="pn-empty" style="color:var(--muted);font-size:12px;padding:10px">Nothing here yet at ${state.year}.</div>`;
 }
 function markActive(id) {
   rankList.querySelectorAll('.rk-row').forEach(r => r.classList.toggle('active', r.dataset.id === id));
@@ -342,14 +359,15 @@ legend.classList.add('collapsed');
 const tlSlider = document.getElementById('tlSlider'), tlPlay = document.getElementById('tlPlay'), tlReset = document.getElementById('tlReset');
 const tlYear = document.getElementById('tlYear'), tlCount = document.getElementById('tlCount'), tlHist = document.getElementById('tlHist');
 const DECADES = []; for (let d = MIN_YEAR; d < NOW; d += 10) DECADES.push(d);
-const decCount = d => C.filter(c => c.founded >= d && c.founded < d + 10).length;
+const decCount = d => communities().filter(c => c.founded >= d && c.founded < d + 10).length;
 tlSlider.min = MIN_YEAR; tlSlider.max = NOW; tlSlider.step = 1; tlSlider.value = NOW;
 (function buildHist() { const mx = Math.max(...DECADES.map(decCount), 1); tlHist.innerHTML = DECADES.map(d => `<div class="hb" title="${decCount(d)} founded in the ${d}s" style="height:${Math.round(decCount(d) / mx * 100)}%"></div>`).join(''); })();
 function updateTimeReadout() {
   const y = state.year, today = y >= NOW;
   tlYear.textContent = today ? 'Today · 2026' : y;
-  const n = C.filter(c => c.founded <= y).length;
-  tlCount.innerHTML = today ? `all <b>${C.length}</b> communities` : `<b>${n}</b> founded by ${y}`;
+  const cm = communities();
+  const n = cm.filter(c => c.founded <= y).length;
+  tlCount.innerHTML = today ? `all <b>${cm.length}</b> communities` : `<b>${n}</b> founded by ${y}`;
   tlReset.classList.toggle('hidden', today);
   [...tlHist.children].forEach((b, i) => b.classList.toggle('on', !today && y >= DECADES[i] && y < DECADES[i] + 10));
 }
@@ -373,30 +391,74 @@ tlReset.addEventListener('click', () => { stopPlay(); state.year = NOW; tlSlider
 /* ============================== Stats overlay ============================ */
 const statsOverlay = document.getElementById('statsOverlay');
 function buildStats() {
-  const people = C.reduce((s, c) => s + (c.pop || 0), 0);
-  const countries = new Set(C.map(c => c.country)).size;
-  const oldest = C.slice().sort((a, b) => a.founded - b.founded)[0];
-  const largest = C.slice().sort((a, b) => (b.pop || 0) - (a.pop || 0))[0];
-  const intl = C.filter(c => c.nat != null).sort((a, b) => b.nat - a.nat)[0];
+  const comm = communities();
+  const people = comm.reduce((s, c) => s + (c.pop || 0), 0);
+  const countries = new Set(comm.map(c => c.country)).size;
+  const oldest = comm.slice().sort((a, b) => a.founded - b.founded)[0];
+  const largest = comm.slice().sort((a, b) => (b.pop || 0) - (a.pop || 0))[0];
+  const intl = comm.filter(c => c.nat != null).sort((a, b) => b.nat - a.nat)[0];
   const card = (n, l) => `<div class="st-card"><div class="st-num">${n}</div><div class="st-lab">${l}</div></div>`;
-  const types = Object.keys(TYPES).map(t => ({ t, n: C.filter(c => c.type === t).length })).filter(x => x.n).sort((a, b) => b.n - a.n);
+  const types = Object.keys(TYPES).map(t => ({ t, n: comm.filter(c => c.type === t).length })).filter(x => x.n).sort((a, b) => b.n - a.n);
   const tmax = Math.max(...types.map(x => x.n));
   const typeBars = types.map(x => `<div class="st-bar"><span class="nm"><i style="background:${typeColor(x.t)}"></i>${esc(typeShort(x.t))}</span><div class="tk"><i style="width:${x.n / tmax * 100}%;background:${typeColor(x.t)}"></i></div><span class="ct">${x.n}</span></div>`).join('');
   const wmax = Math.max(...DECADES.map(decCount), 1);
   const wave = DECADES.filter(d => d >= 1900).map(d => { const n = decCount(d); return `<div class="wb" title="${n} founded in the ${d}s"><b>${n || ''}</b><i style="height:${n / wmax * 64}px"></i><span>${String(d).slice(2)}s</span></div>`; }).join('');
   const pick = (k, c) => `<div class="p" data-id="${c.id}"><div class="k">${k}</div><div class="v">${c.flag} ${esc(c.name)} <small>${k === 'Oldest' ? c.founded : k === 'Largest' ? fmtNum(c.pop) : c.nat + ' nat.'}</small></div></div>`;
   document.getElementById('statsBody').innerHTML =
-    `<div class="st-grid">${card(C.length, 'communities mapped')}${card('≈ ' + (people >= 1000 ? Math.round(people / 1000) + 'k' : people), 'people living in community')}${card(countries, 'countries represented')}</div>` +
+    `<div class="st-grid">${card(comm.length, 'communities mapped')}${card('≈ ' + (people >= 1000 ? Math.round(people / 1000) + 'k' : people), 'people living in community')}${card(countries, 'countries represented')}</div>` +
     `<div class="st-h">By type</div><div class="st-bars">${typeBars}</div>` +
     `<div class="st-h">Founding waves (per decade)</div><div class="st-wave">${wave}</div>` +
     `<div class="st-h">Standouts — tap to explore</div><div class="st-pick">${pick('Oldest', oldest)}${pick('Largest', largest)}${pick('Most international', intl)}</div>`;
-  document.getElementById('statsN').textContent = C.length;
+  document.getElementById('statsN').textContent = comm.length;
 }
 document.getElementById('statsBody') && statsOverlay.addEventListener('click', e => {
   if (e.target === statsOverlay) return statsOverlay.classList.add('hidden');
   const p = e.target.closest('.st-pick .p'); if (p) { statsOverlay.classList.add('hidden'); selectCommunity(byId(p.dataset.id), true); }
 });
 document.getElementById('statsClose').addEventListener('click', () => statsOverlay.classList.add('hidden'));
+
+/* ===== Rise & fall of the kibbutz ===== */
+const kibbutzOverlay = document.getElementById('kibbutzOverlay');
+function buildKibbutz() {
+  const H = window.KIBBUTZ_HISTORY; if (!H) return;
+  const S = H.series, f = H.facts;
+  const W = 720, Hh = 300, mL = 46, mR = 46, mT = 18, mB = 38, x0 = mL, x1 = W - mR, y0 = Hh - mB, y1 = mT;
+  const sx = y => x0 + (y - 1910) / 115 * (x1 - x0);
+  const syK = v => y0 - v / 280 * (y0 - y1);
+  const syP = v => y0 - v / 210000 * (y0 - y1);
+  const P = S.map(d => { const coll = Math.round(d.kibbutzim * d.pct_collective / 100); return { x: +sx(d.year).toFixed(1), yC: +syK(coll).toFixed(1), yT: +syK(d.kibbutzim).toFixed(1), yP: +syP(d.population).toFixed(1) }; });
+  const last = P.length - 1;
+  const green = `M${P[0].x},${y0} ` + P.map(p => `L${p.x},${p.yC}`).join(' ') + ` L${P[last].x},${y0}Z`;
+  const gold = `M${P[0].x},${P[0].yT} ` + P.slice(1).map(p => `L${p.x},${p.yT}`).join(' ') + ' ' + P.slice().reverse().map(p => `L${p.x},${p.yC}`).join(' ') + 'Z';
+  const totLine = `M${P[0].x},${P[0].yT} ` + P.slice(1).map(p => `L${p.x},${p.yT}`).join(' ');
+  const popLine = `M${P[0].x},${P[0].yP} ` + P.slice(1).map(p => `L${p.x},${p.yP}`).join(' ');
+  const yGrid = [0, 70, 140, 210, 280].map(v => `<line class="kc-grid" x1="${x0}" y1="${syK(v).toFixed(1)}" x2="${x1}" y2="${syK(v).toFixed(1)}"/><text class="kc-yl" x="${x0 - 6}" y="${(syK(v) + 3).toFixed(1)}">${v}</text>`).join('');
+  const pRight = [0, 70000, 140000, 210000].map(v => `<text class="kc-yr" x="${x1 + 6}" y="${(syP(v) + 3).toFixed(1)}">${v ? v / 1000 + 'k' : '0'}</text>`).join('');
+  const xLab = [1910, 1930, 1950, 1970, 1990, 2010, 2025].map(y => `<text class="kc-xl" x="${sx(y).toFixed(1)}" y="${y0 + 15}">${y}</text>`).join('');
+  const mDots = H.milestones.map(m => `<circle cx="${sx(m.year).toFixed(1)}" cy="${y0}" r="3.4" fill="${m.kind === 'fall' ? 'var(--accent2)' : 'var(--accent)'}" stroke="#06140d" stroke-width="1"/>`).join('');
+  const svg = `<svg class="kc-svg" viewBox="0 0 ${W} ${Hh}" preserveAspectRatio="xMidYMid meet">${yGrid}` +
+    `<path d="${green}" fill="var(--accent)" fill-opacity="0.5"/>` +
+    `<path d="${gold}" fill="var(--accent2)" fill-opacity="0.4"/>` +
+    `<path d="${totLine}" fill="none" stroke="var(--accent2)" stroke-width="1.5"/>` +
+    `<path d="${popLine}" fill="none" stroke="#eaf4ec" stroke-width="2" stroke-dasharray="4 3" opacity="0.9"/>` +
+    `<text class="kc-an" x="${sx(1953).toFixed(1)}" y="${syK(120).toFixed(1)}">every kibbutz collective</text>` +
+    `<text class="kc-an" x="${sx(2016).toFixed(1)}" y="${syK(20).toFixed(1)}">~17%</text>` +
+    `${mDots}${xLab}${pRight}</svg>`;
+  const card = (n, l) => `<div class="st-card"><div class="st-num">${n}</div><div class="st-lab">${l}</div></div>`;
+  const ms = H.milestones.map(m => `<div class="km"><span class="km-yr">${m.year}</span><span class="km-dot ${m.kind}"></span><span>${esc(m.label)}</span></div>`).join('');
+  document.getElementById('kibbutzBody').innerHTML =
+    `<p class="kc-intro">For 75 years the kibbutz spread across the land — from one commune at Degania (1910) to about <b>270</b>. Then the 1985 debt crisis broke the collective model: through the 1990s–2000s most kibbutzim <b>privatized</b>, adopting differential salaries. The <b>number</b> of kibbutzim barely fell — but the share still <b>fully collective</b> dropped from ~100% to about <b>17%</b>. Strikingly, total population is now at an <b>all-time high</b> — a 21st-century revival, mostly as privatized communities.</p>` +
+    svg +
+    `<div class="kc-legend"><span><i style="background:var(--accent);opacity:.6"></i>Still collective (shitufi)</span><span><i style="background:var(--accent2);opacity:.5"></i>Privatized / renewing</span><span><i class="ln"></i>Population (right axis)</span></div>` +
+    `<div class="st-grid">${card(Math.round(f.peak_population / 1000) + 'k', 'members at the 1989 peak')}${card(f.current_kibbutzim, 'kibbutzim today')}${card(f.pct_collective_today + '%', 'still fully collective')}${card(Math.round(f.current_population / 1000) + 'k', 'residents — all-time high')}</div>` +
+    `<div class="km-h">Key moments</div><div class="km-list">${ms}</div>` +
+    `<p class="about-src">${esc(f.notes)}<br>Sources: ${esc((H.sources || []).join(' · '))}</p>`;
+}
+function openKibbutz() { menu.classList.add('hidden'); buildKibbutz(); kibbutzOverlay.classList.remove('hidden'); }
+document.getElementById('miKibbutz').addEventListener('click', openKibbutz);
+document.getElementById('kibbutzClose').addEventListener('click', () => kibbutzOverlay.classList.add('hidden'));
+document.getElementById('detailKibbutz').addEventListener('click', openKibbutz);
+kibbutzOverlay.addEventListener('click', e => { if (e.target === kibbutzOverlay) kibbutzOverlay.classList.add('hidden'); });
 
 /* ============================== Mode + menu ============================== */
 function setMode(m) {
@@ -468,14 +530,14 @@ document.getElementById('aboutClose').addEventListener('click', () => aboutOverl
 aboutOverlay.addEventListener('click', e => { if (e.target === aboutOverlay) aboutOverlay.classList.add('hidden'); });
 const SEEN = 'cedar_seen_v1';
 const welcome = document.getElementById('welcomeOverlay');
-const elWelCount = document.getElementById('welCount'); if (elWelCount) elWelCount.textContent = C.length;
+const elWelCount = document.getElementById('welCount'); if (elWelCount) elWelCount.textContent = communities().length;
 function hideWelcome() { welcome.classList.add('hidden'); try { localStorage.setItem(SEEN, '1'); } catch (e) {} }
 document.getElementById('welStart').addEventListener('click', hideWelcome);
 welcome.addEventListener('click', e => { if (e.target === welcome) hideWelcome(); });
 document.getElementById('miHelp').addEventListener('click', () => { menu.classList.add('hidden'); welcome.classList.remove('hidden'); });
 document.addEventListener('keydown', e => {
   if (e.target && e.target.tagName === 'INPUT') return;
-  if (e.key === 'Escape') { menu.classList.add('hidden'); if (!statsOverlay.classList.contains('hidden')) return statsOverlay.classList.add('hidden'); if (tourActive()) return stopTour(); if (!welcome.classList.contains('hidden')) return hideWelcome(); if (!aboutOverlay.classList.contains('hidden')) return aboutOverlay.classList.add('hidden'); if (!detailCard.classList.contains('hidden')) closeDetail(); }
+  if (e.key === 'Escape') { menu.classList.add('hidden'); if (!kibbutzOverlay.classList.contains('hidden')) return kibbutzOverlay.classList.add('hidden'); if (!statsOverlay.classList.contains('hidden')) return statsOverlay.classList.add('hidden'); if (tourActive()) return stopTour(); if (!welcome.classList.contains('hidden')) return hideWelcome(); if (!aboutOverlay.classList.contains('hidden')) return aboutOverlay.classList.add('hidden'); if (!detailCard.classList.contains('hidden')) closeDetail(); }
   else if (e.key === ' ' || e.code === 'Space') { e.preventDefault(); spinOn = !spinOn; if (globe && !state.hovered && state.mode === 'globe') globe.controls().autoRotate = spinOn; syncSpin(); }
 });
 
