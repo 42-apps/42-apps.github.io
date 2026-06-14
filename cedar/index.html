@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CEDAR Explorer · The World's Intentional Communities & Ecovillages</title>
+<meta name="description" content="An interactive 3D globe of the world's intentional communities and ecovillages — Auroville, Findhorn, Tamera, Damanhur, the kibbutzim and more — ranked by size, longevity, international reach and recognition. By CEDAR, the Centre for Ecovillage Development and Research.">
+<meta property="og:title" content="CEDAR Explorer — Intentional Communities & Ecovillages of the World">
+<meta property="og:description" content="Explore and rank the world's most successful intentional communities on an interactive globe.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Crect width='256' height='256' rx='58' fill='%23071a10'/%3E%3Ccircle cx='128' cy='132' r='66' fill='none' stroke='%234fb472' stroke-width='8'/%3E%3Cpath d='M128 60 L98 118 H116 L92 168 H164 L140 118 H158 Z' fill='%236fd58a'/%3E%3Crect x='120' y='168' width='16' height='30' fill='%23e7b24a'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="app.css?v=1">
+</head>
+<body>
+
+  <!-- ===== Header ===== -->
+  <header id="topbar">
+    <div class="brand" id="brandHome" title="Reset view">
+      <svg class="logo" viewBox="0 0 256 256" aria-hidden="true">
+        <defs>
+          <radialGradient id="cdBg" cx="50%" cy="30%" r="90%"><stop offset="0%" stop-color="#123a25"/><stop offset="60%" stop-color="#0a2316"/><stop offset="100%" stop-color="#04110a"/></radialGradient>
+          <linearGradient id="cdTree" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" stop-color="#4fb472"/><stop offset="100%" stop-color="#9be9ac"/></linearGradient>
+        </defs>
+        <rect width="256" height="256" rx="58" fill="url(#cdBg)"/>
+        <g fill="none" stroke="#7fd79a" stroke-opacity="0.32" stroke-width="2.5">
+          <circle cx="128" cy="132" r="74"/>
+          <ellipse cx="128" cy="132" rx="34" ry="74"/>
+          <line x1="54" y1="132" x2="202" y2="132"/>
+        </g>
+        <path d="M128 50 L96 116 H114 L86 162 H122 V196 H134 V162 H170 L142 116 H160 Z" fill="url(#cdTree)" stroke="#04110a" stroke-width="3" stroke-linejoin="round"/>
+        <rect x="121" y="178" width="14" height="26" rx="2" fill="#e7b24a"/>
+      </svg>
+      <div class="brand-txt">
+        <span class="brand-kicker">CEDAR · Centre for Ecovillage Development &amp; Research</span>
+        <span class="brand-name">CEDAR Explorer</span>
+        <span class="brand-sub">Intentional communities of the world</span>
+      </div>
+    </div>
+    <div class="tools">
+      <div id="searchWrap">
+        <input id="search" type="text" placeholder="Search a community or country…" autocomplete="off" spellcheck="false" aria-label="Search communities">
+        <div id="searchResults" class="hidden"></div>
+      </div>
+      <button id="menuBtn" title="Menu" aria-label="Menu">☰</button>
+      <div id="menu" class="hidden">
+        <button class="mi" id="miReset"><span class="mi-ic">⤢</span><span class="mi-tx">Reset view</span></button>
+        <button class="mi" id="miSpin"><span class="mi-ic">⟳</span><span class="mi-tx">Auto-rotate</span><span class="mi-state">On</span></button>
+        <button class="mi" id="miFull"><span class="mi-ic">⛶</span><span class="mi-tx">Fullscreen</span></button>
+        <div class="mi-sep"></div>
+        <button class="mi" id="miTour"><span class="mi-ic">🎬</span><span class="mi-tx">Guided tour</span></button>
+        <button class="mi" id="miFlagship"><span class="mi-ic">★</span><span class="mi-tx">Jump to Auroville</span></button>
+        <button class="mi" id="miShare"><span class="mi-ic">🔗</span><span class="mi-tx">Copy link to this view</span></button>
+        <div class="mi-sep"></div>
+        <button class="mi" id="miPanel"><span class="mi-ic">📊</span><span class="mi-tx">Ranking panel</span><span class="mi-state">On</span></button>
+        <button class="mi" id="miHelp"><span class="mi-ic">❔</span><span class="mi-tx">How it works</span></button>
+        <button class="mi" id="miAbout"><span class="mi-ic">ℹ</span><span class="mi-tx">About &amp; sources</span></button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== Globe ===== -->
+  <div id="globeViz"></div>
+  <div id="tooltip" class="hidden"></div>
+
+  <!-- ===== Left: world ranking ===== -->
+  <aside id="rankPanel">
+    <div class="rp-head">
+      <div class="rp-title">World ranking</div>
+      <button id="rpCollapse" title="Hide panel" aria-label="Hide panel">‹</button>
+    </div>
+    <div class="rp-sub">Ranked by <b>size · longevity · global reach · recognition</b></div>
+    <div class="rp-sort" id="rpSort">
+      <button data-sort="score" class="on">⭐ Score</button>
+      <button data-sort="pop">👥 Size</button>
+      <button data-sort="age">⏳ Age</button>
+      <button data-sort="nat">🌍 Reach</button>
+    </div>
+    <div class="rp-filters" id="rpFilters"></div>
+    <div class="rp-stat" id="rpStat"></div>
+    <div id="rankList"></div>
+    <div class="rp-foot">Tap a community to fly there ↗</div>
+  </aside>
+  <button id="rpShow" class="hidden" title="Show ranking">📊</button>
+
+  <!-- ===== Right: detail card ===== -->
+  <section id="detailCard" class="hidden">
+    <button id="detailClose" aria-label="Close">×</button>
+    <div class="detail-head">
+      <span class="detail-flag" id="detailFlag">🏳️</span>
+      <div>
+        <div class="detail-name" id="detailName"></div>
+        <div class="detail-type" id="detailType"></div>
+      </div>
+    </div>
+    <div id="detailBadge" class="hidden"></div>
+    <div class="detail-score" id="detailScore"></div>
+    <div id="detailRows"></div>
+    <div id="detailAwards" class="hidden"></div>
+    <div id="detailHi" class="hidden"></div>
+    <div id="detailDesc" class="detail-desc hidden"></div>
+    <div id="detailTags" class="hidden"></div>
+    <a id="detailLink" class="detail-link hidden" target="_blank" rel="noopener">Visit website ↗</a>
+  </section>
+
+  <!-- ===== Legend ===== -->
+  <div id="legend">
+    <button class="lg-head" id="legendToggle"><span>Community type</span><span class="lg-caret">▸</span></button>
+    <div class="lg-strip" id="legendStrip"></div>
+    <div id="legendBody"></div>
+  </div>
+
+  <!-- ===== Tour caption + toast ===== -->
+  <div id="tourCaption" class="hidden"></div>
+  <div id="toast"></div>
+
+  <!-- ===== About ===== -->
+  <div id="aboutOverlay" class="hidden">
+    <div class="about-box">
+      <button class="about-close" id="aboutClose" aria-label="Close">×</button>
+      <h2>About CEDAR Explorer</h2>
+      <p><b>CEDAR</b> — the Centre for Ecovillage Development and Research — maps the world's intentional communities and ecovillages on a living globe, so the movement can see itself whole.</p>
+      <p>Each point is a real community. Click it for when it was founded, how many people live there, how international it is, its awards and recognitions, and a link to explore it directly.</p>
+      <p>The <b>world ranking</b> scores every community from four ingredients of success: <i>size</i> (current residents), <i>longevity</i> (years going), <i>global reach</i> (documented nationalities) and <i>recognition</i> (UN, UNESCO, Right Livelihood, World Habitat, GEN and other honours). Re-sort the panel by any single measure with the buttons at the top.</p>
+      <p class="about-cav">Figures are best-available estimates drawn from Wikipedia, official community sites, the Global Ecovillage Network and the Foundation for Intentional Community. Populations marked at the movement level (e.g. the Hutterites, Bruderhof, EcoYoff) count the whole network, not one site — noted in the description. Corrections are warmly welcome.</p>
+      <p class="about-src">Built with globe.gl · part of the <a href="https://42-apps.github.io/" target="_blank" rel="noopener">42-apps</a> collection.</p>
+    </div>
+  </div>
+
+  <!-- ===== Welcome ===== -->
+  <div id="welcomeOverlay" class="hidden">
+    <div class="about-box welcome-box">
+      <span class="wel-kicker">CEDAR Explorer</span>
+      <h2>The world's intentional communities, on one globe 🌍</h2>
+      <p class="wel-tag">From Auroville to Findhorn, Tamera to the kibbutzim — explore <b id="welCount">110</b> ecovillages and intentional communities, and see which ones thrive the most.</p>
+      <ul class="wel-tips">
+        <li><span class="wt-ic">🟢</span><span>Each <b>glowing point</b> is a community — its colour is the <i>type</i>, its size reflects its <i>success score</i>.</span></li>
+        <li><span class="wt-ic">📊</span><span>The <b>world ranking</b> on the left sorts them by size, age, global reach or recognition. Tap any to fly there.</span></li>
+        <li><span class="wt-ic">★</span><span>The flagship is <b>Auroville</b> — the largest and most international community on Earth.</span></li>
+      </ul>
+      <button class="wel-start" id="welStart">Explore the globe</button>
+      <p class="wel-foot">Drag to spin · scroll to zoom · click a point for details</p>
+    </div>
+  </div>
+
+  <script src="lib/globe.gl.min.js"></script>
+  <script src="data/communities.js?v=1"></script>
+  <script src="app.js?v=1"></script>
+</body>
+</html>
