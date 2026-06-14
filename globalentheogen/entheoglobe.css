@@ -124,7 +124,7 @@ main { position: relative; overflow: hidden; }
 
 /* ---------------- Country detail card ---------------- */
 .detail-card {
-  position: absolute; top: 18px; right: 18px; width: 276px; z-index: 5;
+  position: absolute; top: 18px; right: 18px; width: clamp(330px, 31vw, 450px); z-index: 5;
   max-height: calc(100% - 36px); overflow-y: auto;
   background: var(--panel-bg); backdrop-filter: blur(14px);
   border: 1px solid var(--line); border-radius: 14px; padding: 16px;
@@ -232,8 +232,34 @@ main { position: relative; overflow: hidden; }
 
 @media (max-width: 820px) {
   .panel { width: 248px; }
-  .detail-card { width: 228px; }
+  .detail-card { width: min(90vw, 340px); }
 }
+
+/* ---------------- Rankings modal ---------------- */
+.rank-modal {
+  position: relative; width: min(700px, 100%); max-height: 88vh; display: flex; flex-direction: column;
+  background: linear-gradient(180deg, #14102e, #08061b); border: 1px solid var(--line-strong);
+  border-radius: 16px; padding: 22px 24px 18px; box-shadow: 0 30px 80px rgba(0,0,0,0.65);
+}
+.rank-head { font-size: 19px; font-weight: 700; letter-spacing: .5px; }
+.rank-sub { font-size: 11.5px; color: var(--muted); line-height: 1.5; margin: 4px 30px 12px 0; }
+.rank-table-wrap { overflow-y: auto; flex: 1; border-top: 1px solid var(--line); }
+.rank-table-wrap::-webkit-scrollbar { width: 8px; }
+.rank-table-wrap::-webkit-scrollbar-thumb { background: rgba(167,139,250,.3); border-radius: 8px; }
+.rank-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.rank-table thead th { position: sticky; top: 0; background: #0d0a22; color: var(--muted); font-size: 9px; letter-spacing: 1px; text-transform: uppercase; text-align: left; padding: 9px 6px; font-weight: 600; z-index: 1; }
+.rank-table td { padding: 6px; border-bottom: 1px solid rgba(255,255,255,.04); vertical-align: middle; }
+.rank-table tbody tr:hover td { background: rgba(167,139,250,.08); }
+.rk-rank { width: 34px; text-align: center; font-weight: 700; color: var(--muted); }
+.rk-country { font-weight: 600; white-space: nowrap; }
+.rk-flag { margin-right: 6px; }
+.rk-score { width: 150px; }
+.rk-bar { display: inline-block; height: 8px; border-radius: 5px; vertical-align: middle; min-width: 2px; }
+.rk-num { font-variant-numeric: tabular-nums; margin-left: 8px; font-weight: 700; font-size: 11.5px; }
+.rk-strip { white-space: nowrap; text-align: right; }
+.rk-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-left: 2px; }
+.rank-foot { font-size: 9.5px; color: var(--muted); line-height: 1.5; margin-top: 10px; opacity: .85; }
+@media (max-width: 620px) { .rk-strip, .rank-table th:last-child { display: none; } }
 
 /* ---------------- Molecule & brain button (panel) ---------------- */
 .mol-btn {
