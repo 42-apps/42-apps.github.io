@@ -9,7 +9,7 @@
 <meta property="og:description" content="Explore and rank the world's most successful intentional communities on an interactive globe.">
 <meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Crect width='256' height='256' rx='58' fill='%23071a10'/%3E%3Ccircle cx='128' cy='132' r='66' fill='none' stroke='%234fb472' stroke-width='8'/%3E%3Cpath d='M128 60 L98 118 H116 L92 168 H164 L140 118 H158 Z' fill='%236fd58a'/%3E%3Crect x='120' y='168' width='16' height='30' fill='%23e7b24a'/%3E%3C/svg%3E">
-<link rel="stylesheet" href="app.css?v=1">
+<link rel="stylesheet" href="app.css?v=2">
 </head>
 <body>
 
@@ -51,6 +51,9 @@
         <button class="mi" id="miFlagship"><span class="mi-ic">★</span><span class="mi-tx">Jump to Auroville</span></button>
         <button class="mi" id="miShare"><span class="mi-ic">🔗</span><span class="mi-tx">Copy link to this view</span></button>
         <div class="mi-sep"></div>
+        <button class="mi" id="miMap"><span class="mi-ic">🗺️</span><span class="mi-tx">Flat map</span><span class="mi-state">Off</span></button>
+        <button class="mi" id="miArcs"><span class="mi-ic">🔗</span><span class="mi-tx">Lineage links</span><span class="mi-state">Off</span></button>
+        <button class="mi" id="miStats"><span class="mi-ic">📈</span><span class="mi-tx">State of the movement</span></button>
         <button class="mi" id="miPanel"><span class="mi-ic">📊</span><span class="mi-tx">Ranking panel</span><span class="mi-state">On</span></button>
         <button class="mi" id="miHelp"><span class="mi-ic">❔</span><span class="mi-tx">How it works</span></button>
         <button class="mi" id="miAbout"><span class="mi-ic">ℹ</span><span class="mi-tx">About &amp; sources</span></button>
@@ -58,8 +61,9 @@
     </div>
   </header>
 
-  <!-- ===== Globe ===== -->
+  <!-- ===== Globe + flat map ===== -->
   <div id="globeViz"></div>
+  <canvas id="flatViz" class="hidden"></canvas>
   <div id="tooltip" class="hidden"></div>
 
   <!-- ===== Left: world ranking ===== -->
@@ -109,9 +113,29 @@
     <div id="legendBody"></div>
   </div>
 
+  <!-- ===== Timeline scrubber ===== -->
+  <div id="timebar">
+    <button id="tlPlay" class="tl-play" title="Watch the movement grow">▶</button>
+    <div class="tl-main">
+      <div class="tl-head"><span id="tlYear">Today · 2026</span><span id="tlCount"></span></div>
+      <div class="tl-track"><div id="tlHist" class="tl-hist"></div><input id="tlSlider" type="range"></div>
+    </div>
+    <button id="tlReset" class="tl-reset hidden" title="Show all (today)">today ⤢</button>
+  </div>
+
   <!-- ===== Tour caption + toast ===== -->
   <div id="tourCaption" class="hidden"></div>
   <div id="toast"></div>
+
+  <!-- ===== State of the movement ===== -->
+  <div id="statsOverlay" class="hidden">
+    <div class="about-box stats-box">
+      <button class="about-close" id="statsClose" aria-label="Close">×</button>
+      <h2>📈 State of the movement</h2>
+      <div id="statsBody"></div>
+      <p class="about-src">Aggregated live from the <span id="statsN">110</span> communities in this survey. Movement-level populations (Hutterites, Bruderhof, EcoYoff) count whole networks.</p>
+    </div>
+  </div>
 
   <!-- ===== About ===== -->
   <div id="aboutOverlay" class="hidden">
@@ -121,6 +145,7 @@
       <p><b>CEDAR</b> — the Centre for Ecovillage Development and Research — maps the world's intentional communities and ecovillages on a living globe, so the movement can see itself whole.</p>
       <p>Each point is a real community. Click it for when it was founded, how many people live there, how international it is, its awards and recognitions, and a link to explore it directly.</p>
       <p>The <b>world ranking</b> scores every community from four ingredients of success: <i>size</i> (current residents), <i>longevity</i> (years going), <i>global reach</i> (documented nationalities) and <i>recognition</i> (UN, UNESCO, Right Livelihood, World Habitat, GEN and other honours). Re-sort the panel by any single measure with the buttons at the top.</p>
+      <p>The <b>timeline</b> at the bottom reveals communities by founding year — press ▶ to watch the movement grow. From the <b>☰ menu</b> you can switch to a <b>flat world map</b>, draw <b>lineage links</b> between communities that seeded one another, or open <b>State of the movement</b> for the totals.</p>
       <p class="about-cav">Figures are best-available estimates drawn from Wikipedia, official community sites, the Global Ecovillage Network and the Foundation for Intentional Community. Populations marked at the movement level (e.g. the Hutterites, Bruderhof, EcoYoff) count the whole network, not one site — noted in the description. Corrections are warmly welcome.</p>
       <p class="about-src">Built with globe.gl · part of the <a href="https://42-apps.github.io/" target="_blank" rel="noopener">42-apps</a> collection.</p>
     </div>
@@ -136,6 +161,7 @@
         <li><span class="wt-ic">🟢</span><span>Each <b>glowing point</b> is a community — its colour is the <i>type</i>, its size reflects its <i>success score</i>.</span></li>
         <li><span class="wt-ic">📊</span><span>The <b>world ranking</b> on the left sorts them by size, age, global reach or recognition. Tap any to fly there.</span></li>
         <li><span class="wt-ic">★</span><span>The flagship is <b>Auroville</b> — the largest and most international community on Earth.</span></li>
+        <li><span class="wt-ic">⏳</span><span>Press <b>▶</b> on the timeline to <b>watch the movement grow</b> by founding year. The <b>☰</b> menu adds a flat map, lineage links &amp; movement stats.</span></li>
       </ul>
       <button class="wel-start" id="welStart">Explore the globe</button>
       <p class="wel-foot">Drag to spin · scroll to zoom · click a point for details</p>
@@ -143,7 +169,7 @@
   </div>
 
   <script src="lib/globe.gl.min.js"></script>
-  <script src="data/communities.js?v=1"></script>
-  <script src="app.js?v=1"></script>
+  <script src="data/communities.js?v=2"></script>
+  <script src="app.js?v=2"></script>
 </body>
 </html>
