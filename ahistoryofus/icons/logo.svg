@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <defs>
+    <radialGradient id="huBg" cx="50%" cy="28%" r="90%"><stop offset="0%" stop-color="#3a2412"/><stop offset="60%" stop-color="#1b0f07"/><stop offset="100%" stop-color="#0a0603"/></radialGradient>
+    <radialGradient id="huGl" cx="40%" cy="34%" r="78%"><stop offset="0%" stop-color="#e9a85a"/><stop offset="55%" stop-color="#b9742f"/><stop offset="100%" stop-color="#6e3f17"/></radialGradient>
+    <linearGradient id="huAu" x1="0" y1="1" x2="1" y2="0"><stop offset="0%" stop-color="#f6dd86"/><stop offset="100%" stop-color="#e7a23a"/></linearGradient>
+  </defs>
+  <rect width="256" height="256" rx="58" fill="url(#huBg)"/>
+  <circle cx="118" cy="136" r="60" fill="url(#huGl)"/>
+  <g fill="none" stroke="#ffe9c8" stroke-opacity="0.34" stroke-width="2">
+    <ellipse cx="118" cy="136" rx="30" ry="60"/><ellipse cx="118" cy="136" rx="60" ry="30"/>
+    <line x1="58" y1="136" x2="178" y2="136"/>
+  </g>
+  <path d="M96 178 C70 150 78 86 132 70 C186 54 206 96 196 70" fill="none" stroke="url(#huAu)" stroke-width="8.5" stroke-linecap="round" stroke-dasharray="2 13"/>
+  <circle cx="96" cy="178" r="6.5" fill="#f6dd86"/>
+  <circle cx="196" cy="72" r="8" fill="url(#huAu)" stroke="#1b0f07" stroke-width="2"/>
+</svg>
