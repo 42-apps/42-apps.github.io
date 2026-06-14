@@ -348,6 +348,8 @@ function showDetailFor(iso, name) {
     gradeEl.textContent = 'No data';
     rows.innerHTML = `<p class="nodata-msg">No law data on file for this territory yet.</p>`;
     noteEl.classList.add('hidden'); noteEl.innerHTML = '';
+    document.getElementById('detailConf').innerHTML = '';
+    document.getElementById('detailSources').classList.add('hidden');
     detailCard.classList.remove('hidden');
     return;
   }
@@ -372,6 +374,29 @@ function showDetailFor(iso, name) {
       `<span class="dlabel">${window.SUBSTANCES[k].emoji} ${window.SUBSTANCES[k].name}</span>` +
       `<span class="dval" style="color:${s2 === 'cap' ? '#d9486b' : cc}">${s2 && S[s2] ? S[s2].short : '—'}</span></div>`;
   }).join('');
+
+  // Web-research confidence + sources (if this country was verified in the research pass).
+  const conf = window.LAW_CONFIDENCE && window.LAW_CONFIDENCE[iso];
+  const confEl = document.getElementById('detailConf');
+  if (conf) {
+    const cc = { high: '#2fd07a', medium: '#f4c145', low: '#ef8b3c' }[conf] || NODATA_COLOR;
+    confEl.innerHTML = `<span class="conf-dot" style="background:${cc}"></span>Data confidence: <b style="color:${cc}">${conf}</b>`;
+  } else confEl.innerHTML = '';
+  const srcs = window.LAW_SOURCES && window.LAW_SOURCES[iso];
+  const srcEl = document.getElementById('detailSources');
+  if (srcs && srcs.length) {
+    srcEl.innerHTML = '<div class="src-head">Sources</div>' + srcs.map(s => {
+      const m = String(s).match(/https?:\/\/[^\s)]+/);
+      if (m) {
+        const url = m[0];
+        let label = String(s).replace(url, '').replace(/[\s(){}\[\]—·:-]+$/, '').trim();
+        if (!label) label = url.replace(/^https?:\/\/(www\.)?/, '').split('/')[0];
+        return `<a href="${url}" target="_blank" rel="noopener">${label}</a>`;
+      }
+      return `<span>${s}</span>`;
+    }).join('');
+    srcEl.classList.remove('hidden');
+  } else { srcEl.classList.add('hidden'); srcEl.innerHTML = ''; }
 
   detailCard.classList.remove('hidden');
 }
