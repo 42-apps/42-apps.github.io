@@ -6,7 +6,8 @@
    ========================================================================== */
 'use strict';
 (function () {
-  const SS = { legal: 5, med: 4, decrim: 3, tol: 2, ill: 1, cap: 0 };
+  // liberty-first: being NOT criminalized (legal/decrim) ranks above medical-only access.
+  const SS = { legal: 3, decrim: 2, med: 1, tol: 1, ill: 0, cap: -1 };
   // weights — lean toward the classic entheogens & medical relevance; down-weight
   // the weak differentiators (ketamine is medical almost everywhere; cocaine illegal almost everywhere).
   const WT = { can: 1.5, psi: 1.5, mdma: 1.2, lsd: 1.0, dmt: 1.0, mes: 0.8, ibo: 1.0, cbd: 0.5, ket: 0.7, coc: 0.3, coca: 0.5 };
@@ -28,10 +29,10 @@
       for (const k of ORDER) {
         const st = (r.st && r.st[k]) || r.def;
         sts[k] = st;
-        if (st && (st in SS)) { num += WT[k] * SS[st]; den += WT[k] * 5; }
+        if (st && (st in SS)) { num += WT[k] * SS[st]; den += WT[k] * 3; }
       }
       if (!den) continue;
-      rows.push({ iso, n: r.n, score: num / den * 100, sts });
+      rows.push({ iso, n: r.n, score: Math.max(0, num / den * 100), sts });
     }
     rows.sort((a, b) => b.score - a.score || a.n.localeCompare(b.n));
     return rows;
@@ -62,16 +63,16 @@
          <button class="modal-close" id="rankClose" aria-label="Close">✕</button>
          <div class="rank-head">🏆 Entheogen-Friendliness Ranking</div>
          <div class="rank-sub">All ${rows.length} countries scored <b>0–100</b> by legal access across 11 substances,
-           weighted toward the entheogens &amp; medical use. Higher = more accessible. Click a row to fly there.</div>
+           weighted toward the entheogens; <b>not-criminalized status counts above medical-only access</b> (liberty-first). Higher = freer. Click a row to fly there.</div>
          <div class="rank-table-wrap">
            <table class="rank-table">
              <thead><tr><th></th><th>Country</th><th>Score</th><th>Cannabis → Coca</th></tr></thead>
              <tbody>${body}</tbody>
            </table>
          </div>
-         <div class="rank-foot">Weights: cannabis &amp; psilocybin ×1.5 · MDMA ×1.2 · LSD/DMT/ibogaine ×1.0 · mescaline ×0.8 ·
-           ketamine ×0.7 · CBD/coca ×0.5 · cocaine ×0.3 (status: legal 5 → severe 0). An approximate, web-verified
-           snapshot — orientation only, <b>not legal advice</b>.</div>
+         <div class="rank-foot">Status points (liberty-first): legal 3 · decriminalized 2 · medical-only 1 · tolerated 1 · illegal 0 · severe −1.
+           Substance weights: cannabis &amp; psilocybin ×1.5 · MDMA ×1.2 · LSD/DMT/ibogaine ×1.0 · mescaline ×0.8 ·
+           ketamine ×0.7 · CBD/coca ×0.5 · cocaine ×0.3. Approximate, web-verified snapshot — <b>not legal advice</b>.</div>
        </div>`;
     document.body.appendChild(overlay);
 
