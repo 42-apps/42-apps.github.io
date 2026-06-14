@@ -9,7 +9,7 @@
 <meta property="og:description" content="Explore and rank the world's most successful intentional communities on an interactive globe.">
 <meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Crect width='256' height='256' rx='58' fill='%23071a10'/%3E%3Ccircle cx='128' cy='132' r='66' fill='none' stroke='%234fb472' stroke-width='8'/%3E%3Cpath d='M128 60 L98 118 H116 L92 168 H164 L140 118 H158 Z' fill='%236fd58a'/%3E%3Crect x='120' y='168' width='16' height='30' fill='%23e7b24a'/%3E%3C/svg%3E">
-<link rel="stylesheet" href="app.css?v=2">
+<link rel="stylesheet" href="app.css?v=5">
 </head>
 <body>
 
@@ -54,6 +54,7 @@
         <button class="mi" id="miMap"><span class="mi-ic">🗺️</span><span class="mi-tx">Flat map</span><span class="mi-state">Off</span></button>
         <button class="mi" id="miArcs"><span class="mi-ic">🔗</span><span class="mi-tx">Lineage links</span><span class="mi-state">Off</span></button>
         <button class="mi" id="miStats"><span class="mi-ic">📈</span><span class="mi-tx">State of the movement</span></button>
+        <button class="mi" id="miKibbutz"><span class="mi-ic">🌾</span><span class="mi-tx">Rise &amp; fall of the kibbutz</span></button>
         <button class="mi" id="miPanel"><span class="mi-ic">📊</span><span class="mi-tx">Ranking panel</span><span class="mi-state">On</span></button>
         <button class="mi" id="miHelp"><span class="mi-ic">❔</span><span class="mi-tx">How it works</span></button>
         <button class="mi" id="miAbout"><span class="mi-ic">ℹ</span><span class="mi-tx">About &amp; sources</span></button>
@@ -103,6 +104,7 @@
     <div id="detailHi" class="hidden"></div>
     <div id="detailDesc" class="detail-desc hidden"></div>
     <div id="detailTags" class="hidden"></div>
+    <button id="detailKibbutz" class="detail-link kib hidden">🌾 The rise &amp; fall of the kibbutz →</button>
     <a id="detailLink" class="detail-link hidden" target="_blank" rel="noopener">Visit website ↗</a>
   </section>
 
@@ -127,13 +129,22 @@
   <div id="tourCaption" class="hidden"></div>
   <div id="toast"></div>
 
+  <!-- ===== Rise & fall of the kibbutz ===== -->
+  <div id="kibbutzOverlay" class="hidden">
+    <div class="about-box kibbutz-box">
+      <button class="about-close" id="kibbutzClose" aria-label="Close">×</button>
+      <h2>🌾 The kibbutz — rise &amp; fall of a collective dream</h2>
+      <div id="kibbutzBody"></div>
+    </div>
+  </div>
+
   <!-- ===== State of the movement ===== -->
   <div id="statsOverlay" class="hidden">
     <div class="about-box stats-box">
       <button class="about-close" id="statsClose" aria-label="Close">×</button>
       <h2>📈 State of the movement</h2>
       <div id="statsBody"></div>
-      <p class="about-src">Aggregated live from the <span id="statsN">110</span> communities in this survey. Movement-level populations (Hutterites, Bruderhof, EcoYoff) count whole networks.</p>
+      <p class="about-src">Aggregated live from the <span id="statsN">100</span> intentional communities. Networks like the Hutterites &amp; Bruderhof count whole movements. Movements, organisations &amp; traditional towns are listed separately under ✦ Related.</p>
     </div>
   </div>
 
@@ -169,7 +180,7 @@
   </div>
 
   <script src="lib/globe.gl.min.js"></script>
-  <script src="data/communities.js?v=2"></script>
-  <script src="app.js?v=2"></script>
+  <script src="data/communities.js?v=5"></script>
+  <script src="app.js?v=5"></script>
 </body>
 </html>

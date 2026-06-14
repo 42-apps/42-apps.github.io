@@ -137,6 +137,8 @@ a{color:var(--accent)}
 .ds-bar span{width:34px; flex:none}
 .ds-track{flex:1; height:5px; border-radius:3px; background:rgba(150,224,170,.13); overflow:hidden}
 .ds-track i{display:block; height:100%; border-radius:3px; background:linear-gradient(90deg,var(--accent),#bff3cf)}
+.ds-note{font-size:12px; color:#e6efe8; line-height:1.5; padding:10px 12px; border-radius:12px; margin-bottom:13px; background:rgba(231,178,74,.1); border:1px solid rgba(231,178,74,.28)}
+.ds-note b{color:#fff}
 #detailRows{font-size:12.5px; color:#d6e5da; line-height:1.55}
 .db-row{display:flex; justify-content:space-between; gap:12px; border-top:1px solid var(--line); padding:6px 0}
 .db-row:first-child{border-top:none}
@@ -187,7 +189,7 @@ a{color:var(--accent)}
 #toast.show{opacity:1; transform:translateX(-50%) translateY(0)}
 
 /* about + welcome */
-#aboutOverlay,#welcomeOverlay{position:fixed; inset:0; z-index:60; display:flex; align-items:center; justify-content:center;
+#aboutOverlay,#welcomeOverlay,#statsOverlay,#kibbutzOverlay{position:fixed; inset:0; z-index:60; display:flex; align-items:center; justify-content:center;
   background:rgba(4,10,7,.76); backdrop-filter:blur(3px); padding:16px}
 .about-box{position:relative; width:min(580px,94vw); max-height:88vh; overflow:auto; padding:26px 28px; border-radius:16px;
   background:#0c1f15; border:1px solid var(--line); box-shadow:0 24px 70px rgba(0,0,0,.65)}
@@ -262,6 +264,28 @@ a{color:var(--accent)}
 .st-pick .p .k{font-size:9.5px; letter-spacing:.05em; text-transform:uppercase; color:var(--muted)}
 .st-pick .p .v{font-size:13px; font-weight:700; color:var(--txt); margin-top:2px}
 .st-pick .p .v small{color:var(--accent2); font-weight:600}
+
+/* ===== Kibbutz rise & fall ===== */
+.kibbutz-box{width:min(780px,95vw)}
+.kc-intro{font-size:13px; color:#d6e5da; line-height:1.6; margin:0 0 14px}
+.kc-svg{width:100%; height:auto; display:block; margin:2px 0 4px; overflow:visible}
+.kc-grid{stroke:rgba(150,224,170,.12); stroke-width:1}
+.kc-yl{fill:var(--accent); font-size:9px; text-anchor:end; font-weight:600}
+.kc-yr{fill:#eaf4ec; font-size:9px; text-anchor:start; opacity:.85}
+.kc-xl{fill:var(--muted); font-size:9px; text-anchor:middle}
+.kc-an{fill:#eef6ef; font-size:10px; font-weight:700; text-anchor:middle; opacity:.9}
+.kc-legend{display:flex; flex-wrap:wrap; gap:14px; font-size:11px; color:#cfe0d4; margin:4px 0 14px; justify-content:center}
+.kc-legend span{display:inline-flex; align-items:center; gap:6px}
+.kc-legend i{width:13px; height:9px; border-radius:2px; display:inline-block}
+.kc-legend i.ln{height:0; border-top:2px dashed #eaf4ec; border-radius:0; width:16px}
+.km-h{font-size:10px; letter-spacing:.09em; text-transform:uppercase; color:var(--muted); margin:14px 0 8px}
+.km-list{display:flex; flex-direction:column; gap:5px; margin-bottom:14px}
+.km{display:flex; align-items:baseline; gap:9px; font-size:12px; color:#d6e5da; line-height:1.4}
+.km-yr{flex:none; width:38px; font-weight:800; font-variant-numeric:tabular-nums; color:#eef6ef}
+.km-dot{flex:none; width:8px; height:8px; border-radius:50%; align-self:center}
+.km-dot.rise{background:var(--accent)} .km-dot.fall{background:var(--accent2)} .km-dot.neutral{background:var(--muted)}
+.detail-link.kib{background:linear-gradient(90deg,rgba(231,178,74,.18),rgba(231,178,74,.1)); color:var(--accent2); border:1px solid rgba(231,178,74,.4); box-shadow:none; cursor:pointer; font:inherit; font-size:12.5px; font-weight:700}
+.detail-link.kib:hover{background:rgba(231,178,74,.26); filter:none}
 
 /* responsive */
 @media (max-width:880px){
