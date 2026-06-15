@@ -13,7 +13,14 @@
 
 const NOW = 2026;
 const MIN_YEAR = 1850;
-const C = window.COMMUNITIES || [];
+// Dedupe by name-slug (the kibbutz supplement is compiled by overlapping regional
+// researchers, so the same kibbutz can appear twice; the first occurrence wins).
+const C = (() => {
+  const sl = s => ('' + s).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  const seen = new Set(), out = [];
+  for (const c of (window.COMMUNITIES || [])) { const id = sl(c.name); if (seen.has(id)) continue; seen.add(id); out.push(c); }
+  return out;
+})();
 
 /* ----------------------------- community types --------------------------- */
 const TYPES = {
@@ -133,7 +140,9 @@ function initGlobe(geo) {
   try { const m = globe.globeMaterial(); m.color.set('#0c2417'); m.emissive.set('#06140d'); m.emissiveIntensity = 0.94; m.shininess = 2; } catch (e) {}
   const ctr = globe.controls();
   ctr.autoRotate = true; ctr.autoRotateSpeed = 0.34; ctr.enableDamping = true; ctr.dampingFactor = 0.14;
-  ctr.minDistance = 165; ctr.maxDistance = 540; ctr.zoomSpeed = 1.4;
+  ctr.minDistance = 101; ctr.maxDistance = 600; ctr.zoomToCursor = true;
+  // globe.gl tends to reset zoomSpeed — re-apply it so wheel/pinch zoom stays fast
+  const setZoom = () => { ctr.zoomSpeed = 2.6; }; setZoom(); setTimeout(setZoom, 300); ctr.addEventListener('change', setZoom);
   globe.pointOfView({ lat: 22, lng: 40, altitude: 2.4 }, 0);
   try { globe.renderer().setPixelRatio(Math.min(window.devicePixelRatio || 1, 2)); } catch (e) {}
   sizeGlobe(); requestAnimationFrame(sizeGlobe);
