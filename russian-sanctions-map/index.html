@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Russian Sanctions Map · A century of the world for & against Moscow</title>
+<meta name="description" content="An interactive 3D globe and timeline of how the world has aligned for or against Russia — from the Russian Empire and the USSR to the largest sanctions programme in history. Green = open, yellow = neutral, red = sanctioning. Scrub a century of turning points.">
+<meta property="og:title" content="Russian Sanctions Map — a century of the world for & against Moscow">
+<meta property="og:description" content="Watch the Iron Curtain fall, the 1990s thaw, and the 2014→2022 re-freeze on a living globe of sanctions, with 48 milestones and a global-impact dashboard.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Crect width='256' height='256' rx='58' fill='%230d0f18'/%3E%3Ccircle cx='128' cy='128' r='76' fill='none' stroke='%238b7cff' stroke-width='6'/%3E%3Cellipse cx='128' cy='128' rx='34' ry='76' fill='none' stroke='%238b7cff' stroke-opacity='.5' stroke-width='3'/%3E%3Cline x1='52' y1='128' x2='204' y2='128' stroke='%238b7cff' stroke-opacity='.5' stroke-width='3'/%3E%3Cline x1='40' y1='176' x2='216' y2='80' stroke='%23e2483d' stroke-width='15' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="app.css?v=1">
+</head>
+<body>
+
+  <!-- ===== Header ===== -->
+  <header id="topbar">
+    <div class="brand" id="brandHome" title="Reset view">
+      <svg class="logo" viewBox="0 0 256 256" aria-hidden="true">
+        <defs>
+          <radialGradient id="lgBg" cx="50%" cy="30%" r="92%"><stop offset="0%" stop-color="#241a3a"/><stop offset="55%" stop-color="#15131f"/><stop offset="100%" stop-color="#0a0810"/></radialGradient>
+        </defs>
+        <rect width="256" height="256" rx="58" fill="url(#lgBg)"/>
+        <g fill="none" stroke="#8b7cff" stroke-opacity="0.4" stroke-width="3">
+          <circle cx="128" cy="128" r="80"/><ellipse cx="128" cy="128" rx="36" ry="80"/><ellipse cx="128" cy="128" rx="66" ry="80"/><line x1="48" y1="128" x2="208" y2="128"/>
+        </g>
+        <line x1="40" y1="186" x2="216" y2="74" stroke="#e2483d" stroke-width="17" stroke-linecap="round"/>
+        <circle cx="128" cy="128" r="10" fill="#8b7cff"/>
+      </svg>
+      <div class="brand-txt">
+        <span class="brand-kicker">A century of the world for &amp; against Moscow</span>
+        <span class="brand-name">Russian Sanctions Map</span>
+        <span class="brand-sub">Who sanctions Russia — and who stays open — over time</span>
+      </div>
+    </div>
+    <div class="tools">
+      <div id="searchWrap">
+        <input id="search" type="text" placeholder="Search a country or milestone…" autocomplete="off" spellcheck="false" aria-label="Search">
+        <div id="searchResults" class="hidden"></div>
+      </div>
+      <button id="menuBtn" class="iconbtn" title="Menu" aria-label="Menu">☰</button>
+      <div id="menu" class="hidden">
+        <button class="mi" id="miReset"><span class="mi-ic">⤢</span><span class="mi-tx">Reset view</span></button>
+        <button class="mi" id="miSpin"><span class="mi-ic">⟳</span><span class="mi-tx">Auto-rotate</span><span class="mi-state">On</span></button>
+        <button class="mi" id="miFull"><span class="mi-ic">⛶</span><span class="mi-tx">Fullscreen</span></button>
+        <div class="mi-sep"></div>
+        <button class="mi" id="miImpact"><span class="mi-ic">📊</span><span class="mi-tx">Global impact dashboard</span></button>
+        <button class="mi" id="miTour"><span class="mi-ic">🎬</span><span class="mi-tx">Guided tour</span></button>
+        <button class="mi" id="miRelief"><span class="mi-ic">⛰️</span><span class="mi-tx">3D relief</span><span class="mi-state">On</span></button>
+        <button class="mi" id="miMap"><span class="mi-ic">🗺️</span><span class="mi-tx">Flat map</span><span class="mi-state">Off</span></button>
+        <div class="mi-sep"></div>
+        <button class="mi" id="miPanel"><span class="mi-ic">📋</span><span class="mi-tx">Side panel</span><span class="mi-state">On</span></button>
+        <button class="mi" id="miHelp"><span class="mi-ic">❔</span><span class="mi-tx">How it works</span></button>
+        <button class="mi" id="miAbout"><span class="mi-ic">ℹ</span><span class="mi-tx">About &amp; sources</span></button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== Controls: era quick-jump ===== -->
+  <div id="controls">
+    <div id="eraBar" role="group" aria-label="Jump to an era"></div>
+    <div class="ctl-spacer"></div>
+    <button class="minibtn" id="btnImpact" title="Global impact dashboard">📊 <span class="mb-tx">Impact</span></button>
+    <button class="minibtn" id="btnMap" title="Toggle flat map / globe">🗺️ <span class="mb-tx">Flat map</span></button>
+  </div>
+
+  <!-- ===== Globe + flat map ===== -->
+  <div id="globeViz"></div>
+  <canvas id="flatViz" class="hidden"></canvas>
+  <div id="tooltip" class="hidden"></div>
+
+  <!-- ===== Left: countries / milestones ===== -->
+  <aside id="rankPanel">
+    <div class="rp-head">
+      <div class="rp-tabs" id="rpTabs">
+        <button data-tab="countries" class="on">🌍 Countries</button>
+        <button data-tab="milestones">📜 Milestones</button>
+      </div>
+      <button id="rpCollapse" title="Hide panel" aria-label="Hide panel">‹</button>
+    </div>
+    <div class="rp-sub" id="rpSub">Stance toward Russia · <b id="rpYear">2026</b></div>
+    <div class="rp-filters" id="rpFilters"></div>
+    <div class="rp-stat" id="rpStat"></div>
+    <div id="rankList"></div>
+    <div class="rp-foot" id="rpFoot">Tap a country to fly there ↗</div>
+  </aside>
+  <button id="rpShow" class="hidden" title="Show panel">📋</button>
+
+  <!-- ===== Right: detail ===== -->
+  <section id="detailCard" class="hidden">
+    <button id="detailClose" aria-label="Close">×</button>
+    <div id="detailBody"></div>
+  </section>
+
+  <!-- ===== Legend ===== -->
+  <div id="legend">
+    <button class="lg-head" id="legendToggle"><span>How to read the map</span><span class="lg-caret">▸</span></button>
+    <div id="legendBody">
+      <div class="lg-rows">
+        <div class="lg-row"><span class="lg-sw" style="background:#37c46a"></span><b>Open</b> — friendly, no sanctions</div>
+        <div class="lg-row"><span class="lg-sw" style="background:#f1c40f"></span><b>Neutral</b> — partial / staying out</div>
+        <div class="lg-row"><span class="lg-sw" style="background:#e2483d"></span><b>Sanctioning</b> — isolating Russia</div>
+        <div class="lg-row"><span class="lg-sw" style="background:#8b7cff"></span><b>Russia</b> (the USSR before 1991)</div>
+        <div class="lg-row nd"><span class="lg-sw" style="background:#3a4456"></span>No data / not yet featured</div>
+      </div>
+      <div class="lg-note">Colour = a country's stance <i>toward Moscow</i> in the selected year. Drag the timeline to watch it change.</div>
+    </div>
+  </div>
+
+  <!-- ===== Timeline ===== -->
+  <div id="timebar">
+    <button id="tlPlay" class="tl-play" title="Play through a century (1900 → 2026)">▶</button>
+    <div class="tl-main">
+      <div class="tl-head">
+        <span id="tlYear">2026</span>
+        <span id="tlEra" class="tl-era">Full-scale war</span>
+        <span id="tlReadout"></span>
+      </div>
+      <div class="tl-track">
+        <div id="tlEraBands"></div>
+        <div id="tlMarks"></div>
+        <input id="tlSlider" type="range" min="1900" max="2026" step="1" value="2026" aria-label="Year">
+      </div>
+    </div>
+    <button id="tlReset" class="tl-reset hidden" title="Back to today">today ⤢</button>
+  </div>
+
+  <!-- ===== Tour caption ===== -->
+  <div id="tourCaption" class="hidden"></div>
+
+  <!-- ===== Impact dashboard ===== -->
+  <div id="impactOverlay" class="overlay hidden">
+    <div class="ov-box wide">
+      <button class="ov-close" id="impactClose" aria-label="Close">×</button>
+      <h2>📊 The global impact</h2>
+      <p class="ov-lead" id="impactSop"></p>
+      <div id="impactStats"></div>
+      <h3>What the sanctions have done</h3>
+      <div id="impactNotes"></div>
+      <p class="ov-src">Figures compiled June 2026 from OFAC / EU / UK / G7 releases, the EU Council sanctions timeline, Castellum.AI, the UN ES-11 votes, SIPRI, Bruegel, CEPR, BOFIT and the Yale CELI list. Stat cards are best-available snapshots; some 2025–26 figures are provisional.</p>
+    </div>
+  </div>
+
+  <!-- ===== About ===== -->
+  <div id="aboutOverlay" class="overlay hidden">
+    <div class="ov-box">
+      <button class="ov-close" id="aboutClose" aria-label="Close">×</button>
+      <h2>About the Russian Sanctions Map</h2>
+      <p>This map paints every country by its stance <b>toward Moscow</b> — <b style="color:#37c46a">green</b> where relations are open and friendly, <b style="color:#f1c40f">yellow</b> where a country is neutral or partial, and <b style="color:#e2483d">red</b> where it sanctions or isolates Russia. <b style="color:#8b7cff">Russia itself</b> — and, before 1991, the other Soviet republics — is shown in violet.</p>
+      <p>The story runs from the <b>Russian Empire</b> through the USSR to the Russian Federation. Drag the <b>time slider</b> or press <b>▶</b> to watch the world re-colour: the WWII Grand Alliance, the Iron Curtain falling across Europe, the 1990s thaw when almost everyone turned green, and the <b>2014 → 2022</b> re-freeze into today's record sanctions. The <b>milestones</b> tab and the ticks on the timeline mark 48 turning points; click any for the full story.</p>
+      <p>Each country's colour is an editorial reading of its <i>relationship</i> with Russia, not only its legal measures — for older eras it reflects bloc alignment (NATO vs. the Warsaw Pact, the Non-Aligned Movement). The hard cases — India, Turkey, Serbia, the Gulf, Central Asia, Armenia, Georgia — are flagged in their detail cards.</p>
+      <p class="ov-cav">Sources: OFAC, the EU Council sanctions timeline, the UK & G7, Castellum.AI, the UN General Assembly ES-11 votes, SIPRI, Bruegel, CEPR, BOFIT and the Yale CELI list. Current stances reflect a <b>June 2026</b> snapshot and involve judgement calls; corrections welcome.</p>
+      <p class="ov-src">Built with globe.gl · part of the <a href="https://42-apps.github.io/" target="_blank" rel="noopener">42-apps</a> collection. Not affiliated with any government. For education and journalism.</p>
+    </div>
+  </div>
+
+  <!-- ===== Welcome ===== -->
+  <div id="welcomeOverlay" class="overlay hidden">
+    <div class="ov-box welcome-box">
+      <span class="wel-kicker">Russian Sanctions Map</span>
+      <h2>A century of the world — for &amp; against Moscow 🌍</h2>
+      <p class="wel-tag">A living globe of every country's stance toward Russia, from the <b>Russian Empire</b> to today's record sanctions — painted <b style="color:#37c46a">green</b> where relations are open and <b style="color:#e2483d">red</b> where Russia is sanctioned.</p>
+      <ul class="wel-tips">
+        <li><span class="wt-ic">🎨</span><span>Each country's <b>colour</b> shows its stance toward Moscow: <b style="color:#37c46a">open</b>, <b style="color:#f1c40f">neutral</b>, or <b style="color:#e2483d">sanctioning</b>.</span></li>
+        <li><span class="wt-ic">⏳</span><span>Drag the <b>timeline</b> or press ▶ to watch the Iron Curtain fall, the 1990s thaw, and the 2014→2022 re-freeze.</span></li>
+        <li><span class="wt-ic">📜</span><span>The ticks are <b>48 milestones</b> — click any for the date, the actors and why it mattered.</span></li>
+        <li><span class="wt-ic">📊</span><span>Click <b>Russia</b> or open the <b>impact dashboard</b> to see what the sanctions have actually done.</span></li>
+      </ul>
+      <div class="wel-btns">
+        <button class="wel-start" id="welStart">Explore the map</button>
+        <button class="wel-tour" id="welTour">🎬 Take the tour</button>
+      </div>
+      <p class="wel-foot">Drag to spin · scroll to zoom · click a country or a milestone</p>
+    </div>
+  </div>
+
+  <script src="lib/globe.gl.min.js"></script>
+  <script src="data/sanctions.js?v=1"></script>
+  <script src="app.js?v=1"></script>
+</body>
+</html>
