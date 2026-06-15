@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Geroscope · The Evidence-Based Longevity Explorer</title>
+<meta name="description" content="An interactive, evidence-ranked atlas of 129 longevity interventions — drugs, supplements, herbs, diets, exercise, thermal therapies and frontier biotech — scored on strength of evidence, human translation, impact and safety. Explore what actually works to slow aging.">
+<meta property="og:title" content="Geroscope — The Evidence-Based Longevity Explorer">
+<meta property="og:description" content="129 longevity interventions, ranked by evidence. See what works, what's promising, and what's hype — on one interactive map.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Crect width='256' height='256' rx='58' fill='%230a1426'/%3E%3Cpath d='M70 196 C70 130 186 126 186 60' fill='none' stroke='%2337dcc4' stroke-width='13' stroke-linecap='round'/%3E%3Cpath d='M70 60 C70 126 186 130 186 196' fill='none' stroke='%23f4c44e' stroke-width='13' stroke-linecap='round'/%3E%3Cg stroke='%23cfe0ea' stroke-width='7' stroke-linecap='round'%3E%3Cline x1='92' y1='78' x2='164' y2='78'/%3E%3Cline x1='110' y1='128' x2='146' y2='128'/%3E%3Cline x1='92' y1='178' x2='164' y2='178'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="stylesheet" href="app.css?v=1">
+</head>
+<body>
+
+  <!-- ===== Header ===== -->
+  <header id="topbar">
+    <div class="brand" id="brandHome" title="Reset">
+      <svg class="logo" viewBox="0 0 256 256" aria-hidden="true">
+        <defs>
+          <radialGradient id="bg" cx="50%" cy="28%" r="90%"><stop offset="0%" stop-color="#15324a"/><stop offset="70%" stop-color="#0a1426"/><stop offset="100%" stop-color="#070b16"/></radialGradient>
+        </defs>
+        <rect width="256" height="256" rx="58" fill="url(#bg)"/>
+        <path d="M70 198 C70 130 186 126 186 58" fill="none" stroke="#37dcc4" stroke-width="13" stroke-linecap="round"/>
+        <path d="M70 58 C70 126 186 130 186 198" fill="none" stroke="#f4c44e" stroke-width="13" stroke-linecap="round"/>
+        <g stroke="#cfe0ea" stroke-width="7" stroke-linecap="round" opacity="0.92">
+          <line x1="90" y1="76" x2="166" y2="76"/><line x1="108" y1="128" x2="148" y2="128"/><line x1="90" y1="180" x2="166" y2="180"/>
+        </g>
+      </svg>
+      <div class="brand-txt">
+        <span class="brand-kicker">Evidence-based longevity</span>
+        <span class="brand-name">Geroscope</span>
+        <span class="brand-sub">What actually works to slow aging</span>
+      </div>
+    </div>
+    <div class="tools">
+      <div id="searchWrap">
+        <input id="search" type="text" placeholder="Search interventions…" autocomplete="off" spellcheck="false" aria-label="Search interventions">
+        <div id="searchResults" class="hidden"></div>
+      </div>
+      <button id="menuBtn" class="iconbtn" title="Menu" aria-label="Menu">☰</button>
+      <div id="menu" class="hidden">
+        <button class="mi" id="miMethod"><span class="mi-ic">⚖️</span><span class="mi-tx">How it's scored</span></button>
+        <button class="mi" id="miStats"><span class="mi-ic">📊</span><span class="mi-tx">State of the field</span></button>
+        <button class="mi" id="miTop"><span class="mi-ic">⭐</span><span class="mi-tx">Jump to #1</span></button>
+        <button class="mi" id="miShare"><span class="mi-ic">🔗</span><span class="mi-tx">Copy link to this view</span></button>
+        <div class="mi-sep"></div>
+        <button class="mi" id="miReset"><span class="mi-ic">↺</span><span class="mi-tx">Reset filters</span></button>
+        <button class="mi" id="miHelp"><span class="mi-ic">❔</span><span class="mi-tx">How to use</span></button>
+        <button class="mi" id="miAbout"><span class="mi-ic">ℹ</span><span class="mi-tx">About &amp; sources</span></button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== Controls ===== -->
+  <div id="controls">
+    <div class="ctl-row r1">
+      <div class="viewtoggle" id="viewToggle">
+        <button class="vt on" data-view="landscape"><span class="vt-ic">🗺️</span><span class="vt-tx">Landscape</span></button>
+        <button class="vt" data-view="table"><span class="vt-ic">📋</span><span class="vt-tx">Ranking</span></button>
+        <button class="vt" data-view="tiers"><span class="vt-ic">🏆</span><span class="vt-tx">Tiers</span></button>
+      </div>
+      <div class="ctl-spacer"></div>
+      <span class="ctl-count" id="count"></span>
+      <select class="minibtn" id="sortSel" title="Sort by" aria-label="Sort by">
+        <option value="overall">Sort: Promise</option>
+        <option value="evi">Sort: Evidence</option>
+        <option value="hum">Sort: Human proof</option>
+        <option value="imp">Sort: Impact</option>
+        <option value="safe">Sort: Safety</option>
+        <option value="name">Sort: A–Z</option>
+      </select>
+      <button class="minibtn" id="filterBtn" title="Filters">⚙ Filters</button>
+      <button class="minibtn" id="resetBtn" title="Reset filters">↺</button>
+    </div>
+    <div class="ctl-row r2">
+      <div class="chips" id="catChips"></div>
+    </div>
+  </div>
+
+  <!-- ===== Filters popover ===== -->
+  <div id="filterPop" class="hidden">
+    <div class="fp-sec">
+      <div class="fp-h">Evidence type</div>
+      <div class="fp-opts" id="fpEtypes"></div>
+    </div>
+    <div class="fp-sec">
+      <div class="fp-h">Access</div>
+      <div class="fp-opts" id="fpAccs"></div>
+    </div>
+    <div class="fp-sec">
+      <div class="fp-h">Minimum promise score: <b id="fpMinVal" style="color:var(--accent)">0</b></div>
+      <div class="fp-slider"><input type="range" id="fpMin" min="0" max="90" step="1" value="0"></div>
+    </div>
+    <div class="fp-foot">
+      <button id="fpReset">Clear</button>
+      <button id="fpApply">Done</button>
+    </div>
+  </div>
+
+  <!-- ===== Stage ===== -->
+  <main id="stage">
+    <!-- Landscape -->
+    <section id="view-landscape" class="view">
+      <div class="scatter-wrap">
+        <div class="scatter-plot" id="scatterPlot">
+          <div class="quad-label quad-tr">Proven &amp; powerful</div>
+          <div class="quad-label quad-tl">Solid but modest</div>
+          <div class="quad-label quad-br">High-potential, unproven</div>
+          <div class="quad-label quad-bl">Speculative / weak</div>
+        </div>
+        <div class="axis-x">Impact / effect size →</div>
+        <div class="axis-y">Strength of proof →</div>
+      </div>
+      <div class="scatter-foot" id="scatterFoot"></div>
+    </section>
+
+    <!-- Table -->
+    <section id="view-table" class="view hidden">
+      <div class="tbl-scroll">
+        <table class="rank">
+          <thead><tr id="theadRow"></tr></thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Tiers -->
+    <section id="view-tiers" class="view hidden">
+      <div id="tiersWrap"></div>
+    </section>
+  </main>
+
+  <!-- ===== Detail drawer ===== -->
+  <aside id="detail">
+    <button id="detailClose" aria-label="Close">×</button>
+    <div id="detailBody"></div>
+  </aside>
+
+  <!-- ===== Tooltip / toast ===== -->
+  <div id="tip" class="hidden"></div>
+  <div id="toast"></div>
+
+  <!-- ===== Overlays ===== -->
+  <div id="welcome" class="overlay hidden">
+    <div class="ov-box welcome-box">
+      <span class="wel-kicker">Geroscope</span>
+      <h2>What actually works to slow aging? 🧬</h2>
+      <p class="wel-tag">An evidence-ranked atlas of <b id="welCount">129</b> longevity interventions — drugs, supplements, herbs, diets, exercise, thermal therapies and frontier biotech — scored on the strength of the science behind each.</p>
+      <ul class="wel-tips">
+        <li><span class="wt-ic">🗺️</span><span>The <b>Landscape</b> plots every intervention by <i>strength of proof</i> (up) vs <i>impact</i> (right). The top-right corner is the sweet spot — proven and powerful.</span></li>
+        <li><span class="wt-ic">📋</span><span>The <b>Ranking</b> table sorts everything by a transparent promise score; the <b>Tiers</b> view groups them S→D.</span></li>
+        <li><span class="wt-ic">🎚️</span><span>Filter by category, evidence type or access. Click anything for mechanism, key trials, dosing, risks and sources.</span></li>
+        <li><span class="wt-ic">⚖️</span><span>Scores reward <b>human evidence</b> and <b>safety</b> — so exercise and diet beat hyped pills. See <i>How it's scored</i>.</span></li>
+      </ul>
+      <button class="wel-start" id="welStart">Explore the landscape</button>
+      <p class="wel-foot">Educational only — not medical advice. Talk to a clinician before changing anything.</p>
+    </div>
+  </div>
+
+  <div id="methodology" class="overlay hidden">
+    <div class="ov-box wide">
+      <button class="ov-close" data-close="methodology" aria-label="Close">×</button>
+      <h2>⚖️ How it's scored</h2>
+      <p>Every intervention is rated on four 0–100 dimensions, curated on one consistent rubric so they can be compared fairly. The headline <b>Promise score</b> is a weighted blend:</p>
+      <div class="method-grid">
+        <div class="mg-row"><div class="mg-w"><b>30%</b><span>weight</span></div><div class="mg-d"><b>Evidence strength</b> — how rigorous and reproducible the <i>best</i> available study is (any species).</div></div>
+        <div class="mg-row"><div class="mg-w"><b>28%</b><span>weight</span></div><div class="mg-d"><b>Human translation</b> — how well the benefit is actually demonstrated <i>in humans</i> (penalizes worm/mouse-only data).</div></div>
+        <div class="mg-row"><div class="mg-w"><b>22%</b><span>weight</span></div><div class="mg-d"><b>Impact</b> — the magnitude of effect on lifespan/healthspan where shown. Null or harmful effects score low even if well-studied.</div></div>
+        <div class="mg-row"><div class="mg-w"><b>20%</b><span>weight</span></div><div class="mg-d"><b>Safety</b> — risk profile at the relevant dose (higher = safer).</div></div>
+      </div>
+      <h3>The evidence ladder</h3>
+      <p>Evidence strength follows this hierarchy, strongest first:</p>
+      <div class="ev-ladder" id="evLadder"></div>
+      <h3>Tiers</h3>
+      <div class="tier-legend" id="tierLegend"></div>
+      <p class="ov-cav" style="margin-top:16px">These scores are an informed synthesis, not a clinical guideline. Evidence-grade ≠ personal recommendation: the right intervention depends on your goals, health and risk tolerance. The strongest-evidence items (exercise, not smoking, good diet, sleep) are unglamorous on purpose — that's what the data show. Frontier biotech scores low on <i>current</i> proof, not on future potential.</p>
+    </div>
+  </div>
+
+  <div id="stats" class="overlay hidden">
+    <div class="ov-box wide">
+      <button class="ov-close" data-close="stats" aria-label="Close">×</button>
+      <h2>📊 State of the field</h2>
+      <div id="statsBody"></div>
+      <p class="ov-src">Aggregated live from the <span id="statsN">129</span> interventions in this database. Compiled from a multi-agent web-research sweep of 2023–2026 literature (RCTs, cohorts, meta-analyses and the NIA Interventions Testing Program).</p>
+    </div>
+  </div>
+
+  <div id="about" class="overlay hidden">
+    <div class="ov-box">
+      <button class="ov-close" data-close="about" aria-label="Close">×</button>
+      <h2>About Geroscope</h2>
+      <p><b>Geroscope</b> is an evidence-ranked atlas of the things people take or do to live longer and healthier — from rapamycin and metformin to sauna, senolytics, fasting and gene therapy. The goal is to cut through hype with a transparent, comparable read on the <i>quality of evidence</i> behind each.</p>
+      <p>Each of the <b id="aboutCount">129</b> interventions was researched across the 2023–2026 literature and scored on four dimensions — evidence strength, human translation, impact and safety (see <b>How it's scored</b>). Sources are linked on every card.</p>
+      <p class="ov-cav">⚠ This is an educational tool, <b>not medical advice</b>. Evidence summaries are simplifications and the science moves fast. Nothing here is a recommendation to take, stop, or combine any intervention — talk to a qualified clinician first. Several listed items are experimental, unregulated, or carry real risks.</p>
+      <p class="ov-src">Part of the <a href="https://42-apps.github.io/" target="_blank" rel="noopener">42-apps</a> collection. Corrections welcome.</p>
+    </div>
+  </div>
+
+  <script src="data/interventions.js?v=1"></script>
+  <script src="app.js?v=1"></script>
+</body>
+</html>
