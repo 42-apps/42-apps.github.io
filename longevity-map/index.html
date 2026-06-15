@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Longevity Map · World Life Expectancy & the Blue Zones</title>
+<meta name="description" content="An interactive 3D globe of how long people live in every country and territory — coloured green where life is longest, red where it is shortest — with the world's Blue Zones, men-vs-women views, subnational breakdowns, city rankings and a time slider back to 1960.">
+<meta property="og:title" content="Longevity Map — World Life Expectancy & the Blue Zones">
+<meta property="og:description" content="Explore how long people live across the world on a living globe. Featuring the five Blue Zones, emerging longevity hotspots, and 60 years of history.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Crect width='256' height='256' rx='58' fill='%23061018'/%3E%3Ccircle cx='128' cy='128' r='74' fill='none' stroke='%2337c46a' stroke-width='7'/%3E%3Cellipse cx='128' cy='128' rx='34' ry='74' fill='none' stroke='%2337c46a' stroke-opacity='.5' stroke-width='4'/%3E%3Cline x1='54' y1='128' x2='202' y2='128' stroke='%2337c46a' stroke-opacity='.5' stroke-width='4'/%3E%3Cpath d='M40 132 H92 L104 104 L120 156 L134 120 L146 132 H216' fill='none' stroke='%234fd0ff' stroke-width='8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="app.css?v=1">
+</head>
+<body>
+
+  <!-- ===== Header ===== -->
+  <header id="topbar">
+    <div class="brand" id="brandHome" title="Reset view">
+      <svg class="logo" viewBox="0 0 256 256" aria-hidden="true">
+        <defs>
+          <radialGradient id="lgBg" cx="50%" cy="32%" r="90%"><stop offset="0%" stop-color="#0f2f24"/><stop offset="55%" stop-color="#0a1d2e"/><stop offset="100%" stop-color="#050b14"/></radialGradient>
+          <linearGradient id="lgPulse" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#ff5a4d"/><stop offset="50%" stop-color="#f1c40f"/><stop offset="100%" stop-color="#37c46a"/></linearGradient>
+        </defs>
+        <rect width="256" height="256" rx="58" fill="url(#lgBg)"/>
+        <g fill="none" stroke="#5fd59a" stroke-opacity="0.34" stroke-width="3">
+          <circle cx="128" cy="128" r="78"/>
+          <ellipse cx="128" cy="128" rx="36" ry="78"/>
+          <ellipse cx="128" cy="128" rx="66" ry="78"/>
+          <line x1="50" y1="128" x2="206" y2="128"/>
+        </g>
+        <path d="M34 134 H92 L106 100 L122 168 L138 116 L150 134 H222" fill="none" stroke="url(#lgPulse)" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="222" cy="134" r="9" fill="#37c46a"/>
+      </svg>
+      <div class="brand-txt">
+        <span class="brand-kicker">World life expectancy &amp; the Blue Zones</span>
+        <span class="brand-name">Longevity Map</span>
+        <span class="brand-sub">How long people live, everywhere on Earth</span>
+      </div>
+    </div>
+    <div class="tools">
+      <div id="searchWrap">
+        <input id="search" type="text" placeholder="Search a country, city or Blue Zone…" autocomplete="off" spellcheck="false" aria-label="Search">
+        <div id="searchResults" class="hidden"></div>
+      </div>
+      <button id="menuBtn" class="iconbtn" title="Menu" aria-label="Menu">☰</button>
+      <div id="menu" class="hidden">
+        <button class="mi" id="miReset"><span class="mi-ic">⤢</span><span class="mi-tx">Reset view</span></button>
+        <button class="mi" id="miSpin"><span class="mi-ic">⟳</span><span class="mi-tx">Auto-rotate</span><span class="mi-state">On</span></button>
+        <button class="mi" id="miFull"><span class="mi-ic">⛶</span><span class="mi-tx">Fullscreen</span></button>
+        <div class="mi-sep"></div>
+        <button class="mi" id="miBluezones"><span class="mi-ic">🔵</span><span class="mi-tx">Blue Zones &amp; the Power 9</span></button>
+        <button class="mi" id="miTour"><span class="mi-ic">🎬</span><span class="mi-tx">Guided tour</span></button>
+        <button class="mi" id="miMed"><span class="mi-ic">🌅</span><span class="mi-tx">Mediterranean belt</span><span class="mi-state">Off</span></button>
+        <button class="mi" id="miRelief"><span class="mi-ic">⛰️</span><span class="mi-tx">3D longevity relief</span><span class="mi-state">On</span></button>
+        <button class="mi" id="miMap"><span class="mi-ic">🗺️</span><span class="mi-tx">Flat map</span><span class="mi-state">Off</span></button>
+        <div class="mi-sep"></div>
+        <button class="mi" id="miPanel"><span class="mi-ic">📊</span><span class="mi-tx">Ranking panel</span><span class="mi-state">On</span></button>
+        <button class="mi" id="miHelp"><span class="mi-ic">❔</span><span class="mi-tx">How it works</span></button>
+        <button class="mi" id="miAbout"><span class="mi-ic">ℹ</span><span class="mi-tx">About &amp; sources</span></button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== Controls ===== -->
+  <div id="controls">
+    <div class="seg" id="sexToggle" role="group" aria-label="Show life expectancy for">
+      <button class="seg-b on" data-sex="t">All</button>
+      <button class="seg-b" data-sex="f"><span class="seg-ic">♀</span> Women</button>
+      <button class="seg-b" data-sex="m"><span class="seg-ic">♂</span> Men</button>
+    </div>
+    <div class="ctl-spacer"></div>
+    <button class="minibtn" id="btnMed" title="Show the Mediterranean / temperate climate belt">🌅 <span class="mb-tx">Med. belt</span></button>
+    <button class="minibtn" id="btnBlue" title="Featured Blue Zones">🔵 <span class="mb-tx">Blue Zones</span></button>
+    <button class="minibtn" id="btnMap" title="Toggle flat map / globe">🗺️ <span class="mb-tx">Flat map</span></button>
+  </div>
+
+  <!-- ===== Globe + flat map ===== -->
+  <div id="globeViz"></div>
+  <canvas id="flatViz" class="hidden"></canvas>
+  <div id="tooltip" class="hidden"></div>
+
+  <!-- ===== Left: ranking ===== -->
+  <aside id="rankPanel">
+    <div class="rp-head">
+      <div class="rp-tabs" id="rpTabs">
+        <button data-tab="countries" class="on">🌍 Countries</button>
+        <button data-tab="cities">🏙️ Cities</button>
+      </div>
+      <button id="rpCollapse" title="Hide panel" aria-label="Hide panel">‹</button>
+    </div>
+    <div class="rp-sub" id="rpSub">Ranked by life expectancy · <b id="rpYear">2022</b></div>
+    <div class="rp-filters" id="rpFilters"></div>
+    <div class="rp-stat" id="rpStat"></div>
+    <div id="rankList"></div>
+    <div class="rp-foot" id="rpFoot">Tap a row to fly there ↗</div>
+  </aside>
+  <button id="rpShow" class="hidden" title="Show ranking">📊</button>
+
+  <!-- ===== Right: detail ===== -->
+  <section id="detailCard" class="hidden">
+    <button id="detailClose" aria-label="Close">×</button>
+    <div id="detailBody"></div>
+  </section>
+
+  <!-- ===== Legend ===== -->
+  <div id="legend">
+    <button class="lg-head" id="legendToggle"><span>Life expectancy</span><span class="lg-caret">▸</span></button>
+    <div id="legendBody">
+      <div class="lg-scale"><div class="lg-grad"></div><div class="lg-ticks"><span>50</span><span>60</span><span>70</span><span>80</span><span>86+</span></div></div>
+      <div class="lg-rows">
+        <div class="lg-row"><span class="lg-sw" style="background:#37c46a"></span>Longest-lived (green)</div>
+        <div class="lg-row"><span class="lg-sw" style="background:#f1c40f"></span>Around the world average</div>
+        <div class="lg-row"><span class="lg-sw" style="background:#c0392b"></span>Shortest-lived (red)</div>
+        <div class="lg-row"><span class="lg-sw bz"></span>Blue Zone — a longevity hotspot</div>
+        <div class="lg-row med"><span class="lg-sw" style="background:linear-gradient(90deg,#ffb05a,#ffd98a)"></span>Mediterranean climate belt (30°–45°)</div>
+        <div class="lg-row nd"><span class="lg-sw" style="background:#33414f"></span>No data</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Timeline ===== -->
+  <div id="timebar">
+    <button id="tlPlay" class="tl-play" title="Watch the world grow older (1960 → 2022)">▶</button>
+    <div class="tl-main">
+      <div class="tl-head"><span id="tlYear">2022</span><span id="tlReadout"></span></div>
+      <div class="tl-track"><input id="tlSlider" type="range" min="1960" max="2022" step="1" value="2022"></div>
+    </div>
+    <button id="tlReset" class="tl-reset hidden" title="Back to latest">latest ⤢</button>
+  </div>
+
+  <!-- ===== Tour caption + toast ===== -->
+  <div id="tourCaption" class="hidden"></div>
+  <div id="toast"></div>
+
+  <!-- ===== Blue Zones overlay ===== -->
+  <div id="bzOverlay" class="overlay hidden">
+    <div class="ov-box wide">
+      <button class="ov-close" id="bzClose" aria-label="Close">×</button>
+      <h2>🔵 The Blue Zones — where the world lives longest</h2>
+      <p class="ov-lead">Blue Zones are pockets of the planet where people reach 100 at extraordinary rates. Five were demographically validated by Dan Buettner and researchers; this atlas adds Buettner's "engineered" sixth, a set of <b>emerging candidates</b> it nominates, and two famous-but-debunked <b>legends</b> — because the difference between a real Blue Zone and a good story is the birth-certificate paperwork.</p>
+      <div id="bzGallery"></div>
+      <h3>The "Power 9" — what they share</h3>
+      <p class="ov-sub">Nine lifestyle traits common across the validated Blue Zones.</p>
+      <div id="power9"></div>
+      <p class="ov-src">Sources: Dan Buettner / National Geographic; Pes &amp; Poulain; the Adventist Health Study; and the regional studies cited on each card. Lifestyle claims are associations, not medical advice.</p>
+    </div>
+  </div>
+
+  <!-- ===== About ===== -->
+  <div id="aboutOverlay" class="overlay hidden">
+    <div class="ov-box">
+      <button class="ov-close" id="aboutClose" aria-label="Close">×</button>
+      <h2>About the Longevity Map</h2>
+      <p>The <b>Longevity Map</b> paints every country and territory by how long its people live — <b style="color:#37c46a">green</b> where life is longest, <b style="color:#f1c40f">yellow</b> around the world average, <b style="color:#e2604f">red</b> where it is shortest — and marks the world's <b style="color:#4fd0ff">Blue Zones</b> in blue.</p>
+      <p>Use the <b>All / Women / Men</b> switch to see the longevity gap between the sexes. Drag the <b>time slider</b> back to 1960 and press ▶ to watch six decades of dramatic gains — and the rare, real collapses (Rwanda 1994, Cambodia under the Khmer Rouge). Click a country to see its rank, its history, and — for many — <b>which of its regions live longest and shortest</b> (e.g. Kerala vs Chhattisgarh in India).</p>
+      <p>The <b>ranking panel</b> lists the longest-lived countries and, separately, the longest-lived <b>cities</b>. The faint <b>Mediterranean climate belt</b> (latitudes 30°–45°) can be toggled on — a nod to the old idea that mild, temperate climates are gentler on human life.</p>
+      <p class="ov-cav">Country data is sourced live from the <b>World Bank Open Data API</b> (life expectancy at birth, 1960–2022; total, male and female). Subnational and city figures come from national statistics offices and are best-available estimates with varying methods and years — compare within a country, not across. Conflict-affected states have volatile data. Taiwan is supplemented from its own statistics agency.</p>
+      <p class="ov-src">Built with globe.gl · data © World Bank (CC BY 4.0) · part of the <a href="https://42-apps.github.io/" target="_blank" rel="noopener">42-apps</a> collection.</p>
+    </div>
+  </div>
+
+  <!-- ===== Welcome ===== -->
+  <div id="welcomeOverlay" class="overlay hidden">
+    <div class="ov-box welcome-box">
+      <span class="wel-kicker">Longevity Map</span>
+      <h2>How long do people live — everywhere on Earth? 🌍</h2>
+      <p class="wel-tag">A living globe of <b id="welCount">200+</b> countries, painted <b style="color:#37c46a">green</b> where life is longest and <b style="color:#e2604f">red</b> where it is shortest — featuring the world's famous <b style="color:#4fd0ff">Blue Zones</b>.</p>
+      <ul class="wel-tips">
+        <li><span class="wt-ic">🟢</span><span>Each country's <b>colour &amp; height</b> shows its life expectancy. Greener and taller = longer lives.</span></li>
+        <li><span class="wt-ic">🔵</span><span>Glowing blue points are the <b>Blue Zones</b> — click them for the stories of the world's longest-lived people.</span></li>
+        <li><span class="wt-ic">⚥</span><span>Switch between <b>All / Women / Men</b>, and click a country to see <b>which regions</b> live longest &amp; shortest.</span></li>
+        <li><span class="wt-ic">⏳</span><span>Drag the <b>time slider</b> and press ▶ to watch the world grow older since <b>1960</b>.</span></li>
+      </ul>
+      <button class="wel-start" id="welStart">Explore the map</button>
+      <p class="wel-foot">Drag to spin · scroll to zoom · click a country or Blue Zone</p>
+    </div>
+  </div>
+
+  <script src="lib/globe.gl.min.js"></script>
+  <script src="data/longevity.js?v=1"></script>
+  <script src="data/bluezones.js?v=1"></script>
+  <script src="data/regions.js?v=1"></script>
+  <script src="data/cities.js?v=1"></script>
+  <script src="app.js?v=1"></script>
+</body>
+</html>
