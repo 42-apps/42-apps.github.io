@@ -4,16 +4,16 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
-  <title>🚀 SPCX Monitor</title>
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='0.9em' font-size='90'%3E%F0%9F%9A%80%3C/text%3E%3C/svg%3E">
+  <title>₿ BTC Monitor</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='0.9em' font-size='90'%3E%E2%82%BF%3C/text%3E%3C/svg%3E">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body class="is-starting">
   <div id="stars"></div>
 
   <header>
-    <h1>🛰️ SPCX&nbsp;Monitor</h1>
-    <div class="sub">Watching <b id="sym">SPCX</b> on Alpaca<span id="alertsTo"> · alerts to <b id="emailTo"></b></span></div>
+    <h1>₿ BTC&nbsp;Monitor</h1>
+    <div class="sub">Watching <b id="sym">BTC</b> · Alpaca crypto + CoinGecko · 24/7</div>
   </header>
 
   <main>
@@ -65,14 +65,14 @@
         <div class="lcard"><div class="k">High</div><div class="v" id="sHigh">—</div></div>
         <div class="lcard"><div class="k">Low</div><div class="v" id="sLow">—</div></div>
         <div class="lcard"><div class="k">VWAP</div><div class="v" id="sVwap">—</div></div>
-        <div class="lcard"><div class="k">Volume (IEX)</div><div class="v" id="sVol">—</div></div>
+        <div class="lcard"><div class="k">Volume (Alpaca)</div><div class="v" id="sVol">—</div></div>
         <div class="lcard"><div class="k">Vol / min</div><div class="v" id="sVelo">—</div></div>
         <div class="lcard"><div class="k">Spread</div><div class="v" id="sSpread">—</div></div>
         <div class="lcard" id="sIpoCard" hidden><div class="k">vs IPO ref</div><div class="v" id="sIpo">—</div></div>
       </div>
 
       <div class="orderflow">
-        <div class="charthead"><span>Order flow — buy vs sell <em>(since <span id="ofSince">—</span>, approx)</em></span><span id="ofDelta"></span></div>
+        <div class="charthead"><span>Order flow — buy vs sell <em>(since <span id="ofSince">—</span>, taker side · exact)</em></span><span id="ofDelta"></span></div>
         <div class="ofbar"><span class="ofbuy" id="ofBuy"></span><span class="ofsell" id="ofSell"></span></div>
         <div class="oflabels"><span id="ofBuyLbl">Buy —</span><span id="ofSellLbl">Sell —</span></div>
         <div class="of5row"><span>Last 5 min</span><span id="of5Delta"></span></div>
@@ -91,7 +91,7 @@
         <div class="lcard"><div class="k">% from open</div><div class="v" id="sPctOpen">—</div></div>
         <div class="lcard"><div class="k">Vol heat (×avg/min)</div><div class="v" id="sVolHeat">—</div></div>
         <div class="lcard"><div class="k">Mkt cap (live)</div><div class="v" id="sMktLive">—</div></div>
-        <div class="lcard"><div class="k">Float traded (IEX)</div><div class="v" id="sFloatTraded">—</div></div>
+        <div class="lcard"><div class="k">Supply traded</div><div class="v" id="sFloatTraded">—</div></div>
         <div class="lcard"><div class="k">Next milestone</div><div class="v" id="sNextMs">—</div></div>
       </div>
 
@@ -106,24 +106,24 @@
       </div>
 
       <div class="tapecard">
-        <div class="charthead"><span>Large prints · ≥ <span id="lpThresh">—</span> sh</span></div>
+        <div class="charthead"><span>Large prints · ≥ <span id="lpThresh">—</span> BTC</span></div>
         <ul class="tape" id="bigprints"></ul>
       </div>
 
-      <div class="iexnote">All session stats derive from Alpaca's IEX feed (~2–3% of the consolidated tape) — directionally useful, absolutely understated.</div>
+      <div class="iexnote">Price/VWAP/order-flow are Alpaca crypto venues (a slice of global volume); market cap, supply, ATH & 24h are CoinGecko.</div>
     </section>
 
     <section class="intel" id="intel" hidden>
       <div class="panel" id="companyPanel">
-        <div class="charthead"><span>Company &amp; float</span><span class="muted2" id="companySrc"></span></div>
+        <div class="charthead"><span>Bitcoin · supply</span><span class="muted2" id="companySrc"></span></div>
         <div class="livestats">
-          <div class="lcard"><div class="k">Shares out</div><div class="v" id="cShares">—</div></div>
-          <div class="lcard"><div class="k">Float</div><div class="v" id="cFloat">—</div></div>
-          <div class="lcard"><div class="k">% float</div><div class="v" id="cFloatPct">—</div></div>
+          <div class="lcard"><div class="k">Circulating</div><div class="v" id="cShares">—</div></div>
+          <div class="lcard"><div class="k">Max supply</div><div class="v" id="cFloat">—</div></div>
+          <div class="lcard"><div class="k">% mined</div><div class="v" id="cFloatPct">—</div></div>
           <div class="lcard"><div class="k">Market cap</div><div class="v" id="cMktCap">—</div></div>
-          <div class="lcard"><div class="k">Employees</div><div class="v" id="cEmp">—</div></div>
-          <div class="lcard"><div class="k">Listed</div><div class="v" id="cListed">—</div></div>
-          <div class="lcard"><div class="k">Industry</div><div class="v" id="cIndustry">—</div></div>
+          <div class="lcard"><div class="k">Rank</div><div class="v" id="cEmp">—</div></div>
+          <div class="lcard"><div class="k">All-time high</div><div class="v" id="cListed">—</div></div>
+          <div class="lcard"><div class="k">24h change</div><div class="v" id="cIndustry">—</div></div>
         </div>
         <div class="note" id="companyNote"></div>
       </div>
