@@ -154,6 +154,7 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:20px}
 #ofDelta.up,#of5Delta.up{color:var(--green)}#ofDelta.down,#of5Delta.down{color:var(--red)}
 
 /* ---- intel: company + news ---- */
+.netpanel{margin-top:18px}
 .intel{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px}
 .intel[hidden]{display:none}
 .panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px}
