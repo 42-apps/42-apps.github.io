@@ -110,7 +110,39 @@
         <ul class="tape" id="bigprints"></ul>
       </div>
 
-      <div class="iexnote">Price/VWAP/order-flow are Alpaca crypto venues (a slice of global volume); market cap, supply, ATH & 24h are CoinGecko.</div>
+      <div class="iexnote">Price/VWAP/order-flow are Alpaca crypto venues (a slice of global volume); cap/supply/ATH/24h are CoinGecko; on-chain is mempool.space + blockchain.info; news from Cointelegraph + Decrypt.</div>
+    </section>
+
+    <section class="netpanel" id="onchain" hidden>
+      <div class="panel">
+        <div class="charthead"><span>⛓️ On-chain · Bitcoin network</span><span class="muted2">mempool.space · blockchain.info</span></div>
+        <div class="livestats">
+          <div class="lcard"><div class="k">Block height</div><div class="v" id="ocBlock">—</div></div>
+          <div class="lcard"><div class="k">Fee (fast)</div><div class="v" id="ocFee">—</div></div>
+          <div class="lcard"><div class="k">Mempool</div><div class="v" id="ocMempool">—</div></div>
+          <div class="lcard"><div class="k">Tx / 24h</div><div class="v" id="ocTx">—</div></div>
+          <div class="lcard"><div class="k">Hashrate</div><div class="v" id="ocHash">—</div></div>
+          <div class="lcard"><div class="k">Difficulty Δ</div><div class="v" id="ocDiff">—</div></div>
+          <div class="lcard"><div class="k">Avg block</div><div class="v" id="ocBlockTime">—</div></div>
+          <div class="lcard"><div class="k">Halving in</div><div class="v" id="ocHalving">—</div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="netpanel" id="market" hidden>
+      <div class="panel">
+        <div class="charthead"><span>📊 Market &amp; sentiment</span><span class="muted2">CoinGecko · alt.me · OKX</span></div>
+        <div class="livestats">
+          <div class="lcard"><div class="k">BTC dominance</div><div class="v" id="mkDom">—</div></div>
+          <div class="lcard"><div class="k">Total crypto cap</div><div class="v" id="mkTotal">—</div></div>
+          <div class="lcard"><div class="k">Fear &amp; Greed</div><div class="v" id="mkFng">—</div></div>
+          <div class="lcard"><div class="k">Funding (perp)</div><div class="v" id="mkFunding">—</div></div>
+          <div class="lcard"><div class="k">Open interest</div><div class="v" id="mkOi">—</div></div>
+          <div class="lcard"><div class="k">24h</div><div class="v" id="mkChg24">—</div></div>
+          <div class="lcard"><div class="k">7d</div><div class="v" id="mkChg7">—</div></div>
+          <div class="lcard"><div class="k">30d</div><div class="v" id="mkChg30">—</div></div>
+        </div>
+      </div>
     </section>
 
     <section class="intel" id="intel" hidden>

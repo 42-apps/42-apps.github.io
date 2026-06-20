@@ -145,6 +145,8 @@ function render(s) {
   if (s.metrics) renderMetrics(s.metrics);
   if (s.live) renderExtras(s);
   renderIntel(s);
+  renderOnchain(s);
+  renderMarket(s);
   renderLogs(s.logs);
   updateTitle(s);
   updateHaltBanner(s);
@@ -525,6 +527,41 @@ function renderIntel(s) {
     $('newsMood').textContent = `mood ${pos}▲ ${neg}▼`;
   }
   $('intel').hidden = !show;
+}
+
+// On-chain + market panels — populated only when the API provides the data
+// (so they stay hidden on the stock dashboard, which never returns them).
+function renderOnchain(s) {
+  const o = s.onchain, sec = document.getElementById('onchain');
+  if (!sec) return;
+  if (!o) { sec.hidden = true; return; }
+  sec.hidden = false;
+  $('ocBlock').textContent = o.blockHeight != null ? Number(o.blockHeight).toLocaleString() : '—';
+  $('ocFee').textContent = (o.fees && o.fees.fastestFee != null) ? o.fees.fastestFee + ' sat/vB' : '—';
+  $('ocMempool').textContent = o.mempoolCount != null ? fmtNum(o.mempoolCount) + ' tx' : '—';
+  $('ocTx').textContent = o.txCount24h != null ? fmtNum(o.txCount24h) : '—';
+  $('ocHash').textContent = o.hashrate != null ? (o.hashrate / 1e18).toFixed(0) + ' EH/s' : '—';
+  const dv = $('ocDiff'); dv.className = 'v';
+  if (o.diffChangePct != null) { dv.textContent = (o.diffChangePct >= 0 ? '+' : '') + o.diffChangePct + '%'; dv.classList.add(o.diffChangePct >= 0 ? 'up' : 'down'); } else dv.textContent = '—';
+  $('ocBlockTime').textContent = o.minutesBetweenBlocks != null ? o.minutesBetweenBlocks + ' min' : '—';
+  if (o.halvingBlocks != null) { const days = Math.round(o.halvingBlocks * 10 / 60 / 24); $('ocHalving').textContent = fmtNum(o.halvingBlocks) + ' blk · ~' + (days >= 365 ? (days / 365).toFixed(1) + 'y' : days + 'd'); } else $('ocHalving').textContent = '—';
+}
+function renderMarket(s) {
+  const m = s.market, sec = document.getElementById('market');
+  if (!sec) return;
+  if (!m) { sec.hidden = true; return; }
+  sec.hidden = false;
+  $('mkDom').textContent = m.btcDominance != null ? m.btcDominance + '%' : '—';
+  $('mkTotal').textContent = m.totalCryptoMcap != null ? '$' + fmtNum(m.totalCryptoMcap) : '—';
+  const fg = $('mkFng'); fg.className = 'v';
+  if (m.fearGreed != null) { fg.textContent = m.fearGreed + ' · ' + (m.fearGreedLabel || ''); const c = m.fearGreed >= 55 ? 'up' : m.fearGreed <= 45 ? 'down' : null; if (c) fg.classList.add(c); } else fg.textContent = '—';
+  const fr = $('mkFunding'); fr.className = 'v';
+  if (m.fundingRatePct != null) { fr.textContent = (m.fundingRatePct >= 0 ? '+' : '') + m.fundingRatePct + '%'; fr.classList.add(m.fundingRatePct >= 0 ? 'up' : 'down'); } else fr.textContent = '—';
+  $('mkOi').textContent = m.openInterestBTC != null ? fmtNum(m.openInterestBTC) + ' BTC' : '—';
+  [['mkChg24', m.change24h], ['mkChg7', m.change7d], ['mkChg30', m.change30d]].forEach(([id, val]) => {
+    const el = $(id); el.className = 'v';
+    if (val != null) { el.textContent = (val >= 0 ? '+' : '') + val + '%'; el.classList.add(val >= 0 ? 'up' : 'down'); } else el.textContent = '—';
+  });
 }
 
 function renderLogs(logs) {
