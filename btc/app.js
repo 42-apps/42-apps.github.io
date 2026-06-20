@@ -97,6 +97,7 @@ function rel(iso) {
 function fmtTime(iso) { if (!iso) return '—'; try { return new Date(iso).toLocaleString(); } catch { return iso; } }
 function esc(s) { return String(s).replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c])); }
 
+let tickInFlight = false, failCount = 0;
 async function tick() {
   if (NEEDS_SETUP) {
     document.body.className = 'is-error';
@@ -104,15 +105,30 @@ async function tick() {
     $('detail').textContent = 'Set window.SPCX_API in config.js to your Cloudflare Worker URL (see web/DEPLOY.md), or append ?api=<worker-url> to this page to test.';
     return;
   }
+  if (tickInFlight) return; // don't stack requests if one is slow (cold cache)
+  tickInFlight = true;
   try {
-    const r = await fetch(API + '/api/status', { cache: 'no-store' });
+    const ctrl = new AbortController();
+    const to = setTimeout(() => ctrl.abort(), 14000);
+    const r = await fetch(API + '/api/status', { cache: 'no-store', signal: ctrl.signal });
+    clearTimeout(to);
     const s = await r.json();
     render(s);
     lastStatus = s;
+    failCount = 0;
   } catch {
-    document.body.className = 'is-error';
-    $('pillText').textContent = 'Lost connection to the monitor';
-    $('detail').textContent = PUBLIC_MODE ? 'The data API is unreachable — is the Worker deployed and the URL set in config.js?' : 'Is the server still running? (node server.js)';
+    failCount++;
+    // Keep showing the last good data; only surface an error after repeated misses,
+    // and a gentle "connecting" state on first load (cold cache can be slow).
+    if (!lastStatus) {
+      document.body.className = 'is-error';
+      $('pillText').textContent = failCount >= 2 ? 'Lost connection to the monitor' : '⏳ Connecting…';
+      $('detail').textContent = PUBLIC_MODE ? 'Reaching the data API (first load can take a few seconds)…' : 'Is the server running? (node server.js)';
+    } else if (failCount >= 3) {
+      $('pillText').textContent = 'Reconnecting…';
+    }
+  } finally {
+    tickInFlight = false;
   }
 }
 
