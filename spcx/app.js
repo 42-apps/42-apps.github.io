@@ -545,6 +545,19 @@ function renderOnchain(s) {
   if (o.diffChangePct != null) { dv.textContent = (o.diffChangePct >= 0 ? '+' : '') + o.diffChangePct + '%'; dv.classList.add(o.diffChangePct >= 0 ? 'up' : 'down'); } else dv.textContent = '—';
   $('ocBlockTime').textContent = o.minutesBetweenBlocks != null ? o.minutesBetweenBlocks + ' min' : '—';
   if (o.halvingBlocks != null) { const days = Math.round(o.halvingBlocks * 10 / 60 / 24); $('ocHalving').textContent = fmtNum(o.halvingBlocks) + ' blk · ~' + (days >= 365 ? (days / 365).toFixed(1) + 'y' : days + 'd'); } else $('ocHalving').textContent = '—';
+  $('ocReward').textContent = o.blockReward != null ? o.blockReward + ' BTC' : '—';
+  const px = (s.live && s.live.price) || s.lastPrice;
+  $('ocSats').textContent = px ? Math.round(1e8 / px).toLocaleString() + ' sats' : '—';
+  $('ocLnCap').textContent = (o.lightning && o.lightning.capacityBTC != null) ? fmtNum(o.lightning.capacityBTC) + ' BTC' : '—';
+  $('ocLnCh').textContent = (o.lightning && o.lightning.channels != null) ? fmtNum(o.lightning.channels) : '—';
+  const bl = $('ocBlocks');
+  bl.innerHTML = (o.blocks && o.blocks.length)
+    ? o.blocks.map(b => { const age = Math.max(0, Math.round(Date.now() / 1000 - b.ts) / 60); return `<li><span class="tt">#${b.height} · ${age < 1 ? '<1' : Math.round(age)}m</span><span class="tp">${esc(b.pool || '—')}</span><span class="ts">${fmtNum(b.txCount)} tx</span></li>`; }).join('')
+    : '<li class="muted">—</li>';
+  const pl = $('ocPools');
+  pl.innerHTML = (o.pools && o.pools.length)
+    ? o.pools.map(p => `<div class="poolrow"><span class="pn">${esc(p.name || '—')}</span><span class="pb"><i style="width:${p.sharePct || 0}%"></i></span><span class="pp">${p.sharePct != null ? p.sharePct + '%' : ''}</span></div>`).join('')
+    : '';
 }
 function renderMarket(s) {
   const m = s.market, sec = document.getElementById('market');
