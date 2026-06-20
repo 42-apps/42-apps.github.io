@@ -323,7 +323,7 @@ function renderDetail(x){
   h+='<div class="d-sec"><div class="d-sec-h">The evidence</div><div class="d-text">'+esc(x.evidence)+'</div></div>';
   if (x.keyStudies && x.keyStudies.length){
     h+='<div class="d-sec"><div class="d-sec-h">Key studies</div>';
-    x.keyStudies.forEach(function(s){ h+='<div class="d-study"><b>'+esc(s.ref)+'</b>'+esc(s.finding)+'</div>'; });
+    x.keyStudies.forEach(function(s){ var u=s.url||('https://scholar.google.com/scholar?q='+encodeURIComponent(s.ref)); h+='<div class="d-study"><a class="d-study-ref" href="'+esc(u)+'" target="_blank" rel="noopener" title="'+(s.url?'Open the study':'Look up this study')+'">'+esc(s.ref)+' ↗</a>'+esc(s.finding)+'</div>'; });
     h+='</div>';
   }
   h+='<div class="d-sec"><div class="d-sec-h">At a glance</div><div class="d-rows">';
