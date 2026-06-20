@@ -1,4 +1,8 @@
 const $ = id => document.getElementById(id);
+// Null-safe text setter: the BTC and SPCX pages share this app.js but have
+// slightly different layouts (e.g. BTC has no email UI), so a missing element
+// must be a harmless no-op, never a render-killing throw.
+const setTxt = (id, v) => { const e = $(id); if (e) e.textContent = v; };
 
 // API base: same-origin for the local Node app; a Cloudflare Worker URL for the
 // public static deploy. Override at runtime with ?api=<url>.
@@ -107,14 +111,15 @@ async function tick() {
   }
   if (tickInFlight) return; // don't stack requests if one is slow (cold cache)
   tickInFlight = true;
+  let s = null;
+  // Step 1: fetch + parse. ONLY genuine network/parse failures count as a lost
+  // connection. A render bug must never masquerade as one (see step 2).
   try {
     const ctrl = new AbortController();
     const to = setTimeout(() => ctrl.abort(), 14000);
     const r = await fetch(API + '/api/status', { cache: 'no-store', signal: ctrl.signal });
     clearTimeout(to);
-    const s = await r.json();
-    render(s);
-    lastStatus = s;
+    s = await r.json();
     failCount = 0;
   } catch {
     failCount++;
@@ -130,13 +135,19 @@ async function tick() {
   } finally {
     tickInFlight = false;
   }
+  // Step 2: render in isolation. A throw here is a UI bug, not a connection
+  // problem — log it and keep the last good frame, never flip to "lost connection".
+  if (s) {
+    try { render(s); lastStatus = s; }
+    catch (e) { console.error('render failed', e); }
+  }
 }
 
 function render(s) {
   const ph = PHASES[s.phase] || PHASES.waiting;
   document.body.className = ph.cls;
   $('sym').textContent = s.symbol;
-  $('emailTo').textContent = s.emailTo || '—';
+  setTxt('emailTo', s.emailTo || '—');
   $('pillText').textContent = ph.label;
   $('detail').textContent = s.lastError ? `⚠️ ${s.lastError}` : (s.detail || '—');
   $('g_phase').textContent = s.phase;
@@ -166,10 +177,10 @@ function render(s) {
   renderLogs(s.logs);
   updateTitle(s);
   updateHaltBanner(s);
-  $('srvTime').textContent = 'server ' + fmtTime(s.serverTime);
-  $('emailState').textContent = s.emailConfigured
+  setTxt('srvTime', 'server ' + fmtTime(s.serverTime));
+  setTxt('emailState', s.emailConfigured
     ? `✉️ email armed → ${s.emailTo}`
-    : '✉️ email not set up yet — popup + macOS notification still fire';
+    : '✉️ email not set up yet — popup + macOS notification still fire');
 
   if (s.alerts && s.alerts.length) {
     $('log').innerHTML = s.alerts.map(a =>
