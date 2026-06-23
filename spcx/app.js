@@ -186,6 +186,10 @@ function render(s) {
   renderIntel(s);
   renderOnchain(s);
   renderMarket(s);
+  renderOptions(s);
+  renderEtf(s);
+  renderMacro(s);
+  renderDerivatives(s);
   renderLogs(s.logs);
   updateTitle(s);
   updateHaltBanner(s);
@@ -611,9 +615,112 @@ function renderMarket(s) {
   if (m.fundingRatePct != null) { fr.textContent = (m.fundingRatePct >= 0 ? '+' : '') + m.fundingRatePct + '%'; fr.classList.add(m.fundingRatePct >= 0 ? 'up' : 'down'); } else fr.textContent = '—';
   $('mkOi').textContent = m.openInterestBTC != null ? fmtNum(m.openInterestBTC) + ' BTC' : '—';
   [['mkChg24', m.change24h], ['mkChg7', m.change7d], ['mkChg30', m.change30d]].forEach(([id, val]) => {
-    const el = $(id); el.className = 'v';
+    const el = $(id); if (!el) return; el.className = 'v';
     if (val != null) { el.textContent = (val >= 0 ? '+' : '') + val + '%'; el.classList.add(val >= 0 ? 'up' : 'down'); } else el.textContent = '—';
   });
+  setTxt('mkStable', m.stablecoinMcap != null ? '$' + fmtNum(m.stablecoinMcap) : '—');
+  setSigned('mkStableChg', m.stablecoinChg24h, '%');
+}
+
+// ---- shared render helpers for the new panels (all null-safe) ----
+function setSigned(id, val, suffix) {
+  const el = $(id); if (!el) return; el.className = 'v';
+  if (val == null) { el.textContent = '—'; return; }
+  el.textContent = (val >= 0 ? '+' : '') + val + (suffix || '');
+  el.classList.add(val >= 0 ? 'up' : 'down');
+}
+function setSignedUsd(id, val) {
+  const el = $(id); if (!el) return; el.className = 'v';
+  if (val == null) { el.textContent = '—'; return; }
+  el.textContent = (val >= 0 ? '+$' : '−$') + fmtNum(Math.abs(val));
+  el.classList.add(val >= 0 ? 'up' : 'down');
+}
+function drawSparkline(id, arr) {
+  const el = $(id); if (!el) return;
+  if (!arr || arr.length < 2) { el.innerHTML = ''; return; }
+  const w = 320, h = 54, pad = 3, min = Math.min(...arr), max = Math.max(...arr), range = (max - min) || 1;
+  const pts = arr.map((v, i) => {
+    const x = pad + i / (arr.length - 1) * (w - 2 * pad);
+    const y = h - pad - (v - min) / range * (h - 2 * pad);
+    return x.toFixed(1) + ',' + y.toFixed(1);
+  }).join(' ');
+  const col = arr[arr.length - 1] >= arr[0] ? '#27d17f' : '#ff5f57';
+  el.innerHTML = `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none"><polyline points="${pts}" fill="none" stroke="${col}" stroke-width="2" stroke-linejoin="round"/></svg>`;
+}
+
+// 🎲 Options & implied vol (Deribit) — only when the API returns it.
+function renderOptions(s) {
+  const o = s.options, sec = $('options'); if (!sec) return;
+  if (!o || (o.dvol == null && o.totalOiUsd == null)) { sec.hidden = true; return; }
+  sec.hidden = false;
+  setTxt('opDvol', o.dvol != null ? o.dvol + '%' : '—');
+  setTxt('opPc', o.putCallOi != null ? o.putCallOi : '—');
+  setTxt('opOi', o.totalOiUsd != null ? '$' + fmtNum(o.totalOiUsd) : '—');
+  setTxt('opMaxPain', o.maxPain != null ? '$' + fmtNum(o.maxPain) : '—');
+  setTxt('opCall', o.callOiBtc != null ? fmtNum(o.callOiBtc) + ' BTC' : '—');
+  setTxt('opPut', o.putOiBtc != null ? fmtNum(o.putOiBtc) + ' BTC' : '—');
+  const bar = $('opPcBar'), lbl = $('opPcLbl');
+  if (bar && o.callOiBtc != null && o.putOiBtc != null) {
+    const tot = o.callOiBtc + o.putOiBtc, callPct = tot ? o.callOiBtc / tot * 100 : 50;
+    bar.style.width = callPct.toFixed(0) + '%';
+    if (lbl) lbl.textContent = `${callPct.toFixed(0)}% calls`;
+  }
+}
+
+// 🏦 Spot BTC ETF flows (SoSoValue).
+function renderEtf(s) {
+  const e = s.etf, sec = $('etf'); if (!sec) return;
+  if (!e || e.netInflow == null) { sec.hidden = true; return; }
+  sec.hidden = false;
+  setTxt('etfDate', e.date ? 'SoSoValue · ' + e.date : 'SoSoValue');
+  setSignedUsd('etfNet', e.netInflow);
+  setSignedUsd('etf5d', e.flow5d);
+  setSignedUsd('etfCum', e.cumNetInflow);
+  setTxt('etfAum', e.totalNetAssets != null ? '$' + fmtNum(e.totalNetAssets) : '—');
+  setTxt('etfTraded', e.valueTraded != null ? '$' + fmtNum(e.valueTraded) : '—');
+  drawSparkline('etfSpark', e.sparkCum);
+}
+
+// 🌐 Macro & correlation (Yahoo).
+function renderMacro(s) {
+  const mc = s.macro, sec = $('macro'); if (!sec) return;
+  if (!mc || (!mc.spx && !mc.gold && !mc.dxy)) { sec.hidden = true; return; }
+  sec.hidden = false;
+  const one = (a, idV, idC) => {
+    setSigned(idV, a ? a.changePct : null, '%');
+    const c = $(idC); if (c) c.textContent = (a && a.corr30d != null) ? 'corr ' + (a.corr30d >= 0 ? '+' : '') + a.corr30d : 'corr —';
+  };
+  one(mc.spx, 'mcSpx', 'mcSpxCorr');
+  one(mc.gold, 'mcGold', 'mcGoldCorr');
+  one(mc.dxy, 'mcDxy', 'mcDxyCorr');
+  const note = $('mcNote');
+  if (note) {
+    const d = mc.dxy && mc.dxy.corr30d;
+    note.textContent = d == null ? '' : d < -0.2 ? '↗ Risk-on: BTC moving inverse to the dollar.' : d > 0.2 ? '⚠️ BTC moving with the dollar — unusual.' : 'BTC weakly correlated to the dollar right now.';
+  }
+}
+
+// ⚙️ Derivatives · multi-venue funding/OI + liquidations + positioning.
+function renderDerivatives(s) {
+  const d = s.derivatives, sec = $('derivatives'); if (!sec) return;
+  if (!d) { sec.hidden = true; return; }
+  sec.hidden = false;
+  const f = d.funding || {}, oi = d.openInterestUsd || {}, liq = d.liquidations || {}, pos = d.positioning || {};
+  setSigned('dvFund', f.blended, '%');
+  setTxt('dvOi', oi.total != null ? '$' + fmtNum(oi.total) : '—');
+  setTxt('dvLs', pos.longShortRatio != null ? pos.longShortRatio + '×' : '—');
+  const tk = $('dvTaker');
+  if (tk) { tk.className = 'v'; if (pos.takerBuyPct != null) { tk.textContent = pos.takerBuyPct + '%'; tk.classList.add(pos.takerBuyPct >= 50 ? 'up' : 'down'); } else tk.textContent = '—'; }
+  const totLiq = (liq.longUsd || 0) + (liq.shortUsd || 0);
+  setTxt('dvLiq', totLiq ? '$' + fmtNum(totLiq) : '—');
+  setTxt('dvLiqRatio', liq.ratio != null ? liq.ratio + '× (L/S)' : '—');
+  const fv = $('dvFundVenues');
+  if (fv) {
+    const seg = (n, v) => v != null ? `${n} ${v >= 0 ? '+' : ''}${v}%` : '';
+    fv.textContent = [seg('OKX', f.okx), seg('Bybit', f.bybit), seg('Deribit', f.deribit)].filter(Boolean).join('   ·   ');
+  }
+  const bar = $('dvLiqBar'), lbl = $('dvLiqLbl');
+  if (bar && totLiq) { const longPct = liq.longUsd / totLiq * 100; bar.style.width = longPct.toFixed(0) + '%'; if (lbl) lbl.textContent = `${longPct.toFixed(0)}% longs`; }
 }
 
 function renderLogs(logs) {
