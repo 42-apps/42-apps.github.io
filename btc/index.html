@@ -6,7 +6,7 @@
   <meta name="robots" content="noindex, nofollow">
   <title>₿ BTC Monitor</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='0.9em' font-size='90'%3E%E2%82%BF%3C/text%3E%3C/svg%3E">
-  <link rel="stylesheet" href="styles.css?v=20260623b">
+  <link rel="stylesheet" href="styles.css?v=20260623c">
 </head>
 <body class="is-starting">
   <div id="stars"></div>
@@ -149,7 +149,67 @@
           <div class="lcard"><div class="k">24h</div><div class="v" id="mkChg24">—</div></div>
           <div class="lcard"><div class="k">7d</div><div class="v" id="mkChg7">—</div></div>
           <div class="lcard"><div class="k">30d</div><div class="v" id="mkChg30">—</div></div>
+          <div class="lcard"><div class="k">Stablecoin cap</div><div class="v" id="mkStable">—</div></div>
+          <div class="lcard"><div class="k">Stable 24h Δ</div><div class="v" id="mkStableChg">—</div></div>
         </div>
+      </div>
+    </section>
+
+    <section class="netpanel" id="options" hidden>
+      <div class="panel">
+        <div class="charthead"><span>🎲 Options &amp; implied vol</span><span class="muted2">Deribit</span></div>
+        <div class="livestats">
+          <div class="lcard"><div class="k">DVOL · BTC's "VIX"</div><div class="v" id="opDvol">—</div></div>
+          <div class="lcard"><div class="k">Put / Call OI</div><div class="v" id="opPc">—</div></div>
+          <div class="lcard"><div class="k">Options OI</div><div class="v" id="opOi">—</div></div>
+          <div class="lcard"><div class="k">Max pain</div><div class="v" id="opMaxPain">—</div></div>
+          <div class="lcard"><div class="k">Call OI</div><div class="v" id="opCall">—</div></div>
+          <div class="lcard"><div class="k">Put OI</div><div class="v" id="opPut">—</div></div>
+        </div>
+        <div class="poolrow" style="margin-top:10px"><span class="pn">Calls vs Puts</span><span class="pb"><i id="opPcBar" style="width:50%;background:linear-gradient(90deg,#27c93f,#27c93f)"></i></span><span class="pp" id="opPcLbl"></span></div>
+      </div>
+    </section>
+
+    <section class="netpanel" id="etf" hidden>
+      <div class="panel">
+        <div class="charthead"><span>🏦 Spot BTC ETF flows</span><span class="muted2" id="etfDate">SoSoValue</span></div>
+        <div class="livestats">
+          <div class="lcard"><div class="k">Net flow (day)</div><div class="v" id="etfNet">—</div></div>
+          <div class="lcard"><div class="k">Flow (5d)</div><div class="v" id="etf5d">—</div></div>
+          <div class="lcard"><div class="k">Cumulative</div><div class="v" id="etfCum">—</div></div>
+          <div class="lcard"><div class="k">Total AUM</div><div class="v" id="etfAum">—</div></div>
+          <div class="lcard"><div class="k">Value traded</div><div class="v" id="etfTraded">—</div></div>
+        </div>
+        <div class="charthead" style="margin-top:8px"><span class="muted2">Cumulative net flow (last 30 sessions)</span></div>
+        <div id="etfSpark" class="spark"></div>
+      </div>
+    </section>
+
+    <section class="netpanel" id="macro" hidden>
+      <div class="panel">
+        <div class="charthead"><span>🌐 Macro &amp; correlation</span><span class="muted2">vs BTC · 30d · Yahoo</span></div>
+        <div class="livestats">
+          <div class="lcard"><div class="k">S&amp;P 500</div><div class="v" id="mcSpx">—</div><div class="sub" id="mcSpxCorr">—</div></div>
+          <div class="lcard"><div class="k">Gold</div><div class="v" id="mcGold">—</div><div class="sub" id="mcGoldCorr">—</div></div>
+          <div class="lcard"><div class="k">Dollar (DXY)</div><div class="v" id="mcDxy">—</div><div class="sub" id="mcDxyCorr">—</div></div>
+        </div>
+        <div class="note" id="mcNote"></div>
+      </div>
+    </section>
+
+    <section class="netpanel" id="derivatives" hidden>
+      <div class="panel">
+        <div class="charthead"><span>⚙️ Derivatives · multi-venue</span><span class="muted2">OKX · Bybit · Deribit</span></div>
+        <div class="livestats">
+          <div class="lcard"><div class="k">Funding (blended)</div><div class="v" id="dvFund">—</div></div>
+          <div class="lcard"><div class="k">Open interest (3 venues)</div><div class="v" id="dvOi">—</div></div>
+          <div class="lcard"><div class="k">L/S account ratio</div><div class="v" id="dvLs">—</div></div>
+          <div class="lcard"><div class="k">Taker buy share</div><div class="v" id="dvTaker">—</div></div>
+          <div class="lcard"><div class="k">Liquidations (recent)</div><div class="v" id="dvLiq">—</div></div>
+          <div class="lcard"><div class="k">Long / short liq</div><div class="v" id="dvLiqRatio">—</div></div>
+        </div>
+        <div class="poolrow" style="margin-top:8px"><span class="pn">Funding by venue</span><span class="pp" id="dvFundVenues" style="flex:1;text-align:left"></span></div>
+        <div class="poolrow"><span class="pn">Liq longs vs shorts</span><span class="pb"><i id="dvLiqBar" style="width:50%;background:#ff5f57"></i></span><span class="pp" id="dvLiqLbl"></span></div>
       </div>
     </section>
 
@@ -201,6 +261,6 @@
 
   <footer><span id="footNote">Runs locally on your Mac · read-only market data</span> · <span id="srvTime"></span></footer>
   <script src="config.js"></script>
-  <script src="app.js?v=20260623b"></script>
+  <script src="app.js?v=20260623c"></script>
 </body>
 </html>
