@@ -58,14 +58,26 @@ function easternClock(d) {
 }
 function updateHaltBanner(s) {
   const hb = $('haltBanner');
+  if (!hb) return;
   let show = false;
+  const isCrypto = /crypto|24\/7/i.test(s.exchange || '');
   if (s.phase === 'trading' && s.live && s.live.tradeTime) {
     const gap = (new Date(s.serverTime) - new Date(s.live.tradeTime)) / 1000;
-    const { mins, dow } = easternClock(new Date(s.serverTime));
-    const marketOpen = dow >= 1 && dow <= 5 && mins >= 570 && mins < 960; // 9:30–16:00 ET, DST-correct
-    if (marketOpen && gap > (s.haltSeconds || 120)) {
-      hb.textContent = `⚠️ No prints for ${Math.round(gap)}s — possible halt/pause (or an IEX feed gap)`;
-      show = true;
+    if (isCrypto) {
+      // Crypto never halts and isn't on IEX — the free feed is just sparse, so
+      // multi-minute gaps are normal. Only flag a genuinely stale feed (>15m),
+      // and word it neutrally rather than as a scary "halt".
+      if (gap > 900) {
+        hb.textContent = `ℹ️ Quiet feed — no new print for ${Math.round(gap / 60)}m (the free crypto feed updates sporadically)`;
+        show = true;
+      }
+    } else {
+      const { mins, dow } = easternClock(new Date(s.serverTime));
+      const marketOpen = dow >= 1 && dow <= 5 && mins >= 570 && mins < 960; // 9:30–16:00 ET, DST-correct
+      if (marketOpen && gap > (s.haltSeconds || 120)) {
+        hb.textContent = `⚠️ No prints for ${Math.round(gap)}s — possible halt/pause (or an IEX feed gap)`;
+        show = true;
+      }
     }
   }
   hb.hidden = !show;
