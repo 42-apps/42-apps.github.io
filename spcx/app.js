@@ -591,8 +591,8 @@ function renderOnchain(s) {
   $('ocMempool').textContent = o.mempoolCount != null ? fmtNum(o.mempoolCount) + ' tx' : '—';
   $('ocTx').textContent = o.txCount24h != null ? fmtNum(o.txCount24h) : '—';
   $('ocHash').textContent = o.hashrate != null ? (o.hashrate / 1e18).toFixed(0) + ' EH/s' : '—';
-  const dv = $('ocDiff'); dv.className = 'v';
-  if (o.diffChangePct != null) { dv.textContent = (o.diffChangePct >= 0 ? '+' : '') + o.diffChangePct + '%'; dv.classList.add(o.diffChangePct >= 0 ? 'up' : 'down'); } else dv.textContent = '—';
+  const dv = $('ocDiff');
+  if (dv) { dv.className = 'v'; if (o.diffChangePct != null) { dv.textContent = (o.diffChangePct >= 0 ? '+' : '') + o.diffChangePct + '%'; dv.classList.add(o.diffChangePct >= 0 ? 'up' : 'down'); } else dv.textContent = '—'; }
   $('ocBlockTime').textContent = o.minutesBetweenBlocks != null ? o.minutesBetweenBlocks + ' min' : '—';
   if (o.halvingBlocks != null) { const days = Math.round(o.halvingBlocks * 10 / 60 / 24); $('ocHalving').textContent = fmtNum(o.halvingBlocks) + ' blk · ~' + (days >= 365 ? (days / 365).toFixed(1) + 'y' : days + 'd'); } else $('ocHalving').textContent = '—';
   $('ocReward').textContent = o.blockReward != null ? o.blockReward + ' BTC' : '—';
@@ -601,11 +601,11 @@ function renderOnchain(s) {
   $('ocLnCap').textContent = (o.lightning && o.lightning.capacityBTC != null) ? fmtNum(o.lightning.capacityBTC) + ' BTC' : '—';
   $('ocLnCh').textContent = (o.lightning && o.lightning.channels != null) ? fmtNum(o.lightning.channels) : '—';
   const bl = $('ocBlocks');
-  bl.innerHTML = (o.blocks && o.blocks.length)
+  if (bl) bl.innerHTML = (o.blocks && o.blocks.length)
     ? o.blocks.map(b => { const age = Math.max(0, Math.round(Date.now() / 1000 - b.ts) / 60); return `<li><span class="tt">#${b.height} · ${age < 1 ? '<1' : Math.round(age)}m</span><span class="tp">${esc(b.pool || '—')}</span><span class="ts">${fmtNum(b.txCount)} tx</span></li>`; }).join('')
     : '<li class="muted">—</li>';
   const pl = $('ocPools');
-  pl.innerHTML = (o.pools && o.pools.length)
+  if (pl) pl.innerHTML = (o.pools && o.pools.length)
     ? o.pools.map(p => `<div class="poolrow"><span class="pn">${esc(p.name || '—')}</span><span class="pb"><i style="width:${p.sharePct || 0}%"></i></span><span class="pp">${p.sharePct != null ? p.sharePct + '%' : ''}</span></div>`).join('')
     : '';
 }
@@ -616,10 +616,10 @@ function renderMarket(s) {
   sec.hidden = false;
   $('mkDom').textContent = m.btcDominance != null ? m.btcDominance + '%' : '—';
   $('mkTotal').textContent = m.totalCryptoMcap != null ? '$' + fmtNum(m.totalCryptoMcap) : '—';
-  const fg = $('mkFng'); fg.className = 'v';
-  if (m.fearGreed != null) { fg.textContent = m.fearGreed + ' · ' + (m.fearGreedLabel || ''); const c = m.fearGreed >= 55 ? 'up' : m.fearGreed <= 45 ? 'down' : null; if (c) fg.classList.add(c); } else fg.textContent = '—';
-  const fr = $('mkFunding'); fr.className = 'v';
-  if (m.fundingRatePct != null) { fr.textContent = (m.fundingRatePct >= 0 ? '+' : '') + m.fundingRatePct + '%'; fr.classList.add(m.fundingRatePct >= 0 ? 'up' : 'down'); } else fr.textContent = '—';
+  const fg = $('mkFng');
+  if (fg) { fg.className = 'v'; if (m.fearGreed != null) { fg.textContent = m.fearGreed + ' · ' + (m.fearGreedLabel || ''); const c = m.fearGreed >= 55 ? 'up' : m.fearGreed <= 45 ? 'down' : null; if (c) fg.classList.add(c); } else fg.textContent = '—'; }
+  const fr = $('mkFunding');
+  if (fr) { fr.className = 'v'; if (m.fundingRatePct != null) { fr.textContent = (m.fundingRatePct >= 0 ? '+' : '') + m.fundingRatePct + '%'; fr.classList.add(m.fundingRatePct >= 0 ? 'up' : 'down'); } else fr.textContent = '—'; }
   $('mkOi').textContent = m.openInterestBTC != null ? fmtNum(m.openInterestBTC) + ' BTC' : '—';
   [['mkChg24', m.change24h], ['mkChg7', m.change7d], ['mkChg30', m.change30d]].forEach(([id, val]) => {
     const el = $(id); if (!el) return; el.className = 'v';
@@ -665,7 +665,7 @@ function renderRegime(s) {
   setTxt('rgNote', r.note || '');
   const needle = $('rgNeedle'); if (needle) needle.style.left = Math.max(0, Math.min(100, r.score)) + '%';
   const dr = $('rgDrivers');
-  if (dr) dr.innerHTML = (r.drivers || []).map(d => `<span class="rgchip ${d.dir}"><b>${esc(d.label)}</b><span class="d">${esc(d.detail || '')}</span></span>`).join('');
+  if (dr) dr.innerHTML = (r.drivers || []).map(d => `<span class="rgchip ${esc(d.dir)}"><b>${esc(d.label)}</b><span class="d">${esc(d.detail || '')}</span></span>`).join('');
   const fl = $('rgFlags');
   if (fl) fl.innerHTML = (r.flags || []).map(f => `<div class="rgflag ${esc(f.sev)}">${esc(f.text)}</div>`).join('');
 }
