@@ -672,7 +672,7 @@ function renderValuation(s) {
   if (!v || (v.mvrv == null && v.sopr == null && v.nupl == null)) { sec.hidden = true; return; }
   sec.hidden = false;
   if (v.date) setTxt('valDate', 'bitcoin-data.com · ' + v.date);
-  const mv = $('valMvrv'); if (mv) { mv.className = 'v'; if (v.mvrv != null) { mv.textContent = v.mvrv; mv.classList.add(v.mvrv < 1 ? 'up' : v.mvrv > 3.5 ? 'down' : ''); } else mv.textContent = '—'; }
+  const mv = $('valMvrv'); if (mv) { mv.className = 'v'; if (v.mvrv != null) { mv.textContent = v.mvrv; const c = v.mvrv < 1 ? 'up' : v.mvrv > 3.5 ? 'down' : null; if (c) mv.classList.add(c); } else mv.textContent = '—'; }
   setTxt('valMvrvSub', v.mvrv != null ? (v.mvrv < 1 ? 'below cost basis' : v.mvrv > 3.5 ? 'historically frothy' : 'mid-cycle') : '');
   setTxt('valZ', v.mvrvZscore != null ? v.mvrvZscore : '—');
   const sp = $('valSopr'); if (sp) { sp.className = 'v'; if (v.sopr != null) { sp.textContent = v.sopr; sp.classList.add(v.sopr >= 1 ? 'up' : 'down'); } else sp.textContent = '—'; }
