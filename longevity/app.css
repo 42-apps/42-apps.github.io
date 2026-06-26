@@ -356,6 +356,21 @@ tr.top1 .tc-rank{color:var(--t-s)} tr.top2 .tc-rank{color:#cdd6dd} tr.top3 .tc-r
   #printDoc .pc-guide{font-size:11px; background:#eef6f3; border:1px solid #cfe6dd; border-radius:6px; padding:5px 8px; margin-top:4px; color:#143}
   #printDoc .pc-guide b{color:#0a6a4e}
   #printDoc .pc-foot{margin-top:16px; font-size:10px; color:#666; border-top:1px solid #ccc; padding-top:8px}
+  /* full reference appendix (How it's scored / State of the field / How this was made) */
+  #printDoc .pc-ref{break-before:page; padding-top:6px}
+  #printDoc .pc-ref h2{font-size:17px; margin:0 0 8px; padding-bottom:4px; border-bottom:2px solid #222}
+  #printDoc .pc-ref h3{font-size:13px; margin:12px 0 5px}
+  #printDoc .pc-ref p,#printDoc .pc-ref li,#printDoc .pc-ref div,#printDoc .pc-ref span,#printDoc .pc-ref small,#printDoc .pc-ref ol{color:#333 !important}
+  #printDoc .pc-ref h1,#printDoc .pc-ref h2,#printDoc .pc-ref h3,#printDoc .pc-ref b,#printDoc .pc-ref strong{color:#111 !important}
+  #printDoc .pc-ref a{color:#0a5a7a !important}
+  #printDoc .pc-ref p{font-size:11px; margin:0 0 7px}
+  #printDoc .pc-ref .ov-cav{color:#7a3b00 !important; background:#fff7ef !important; border:1px solid #f0d9c0 !important; border-radius:6px; padding:8px 10px; font-size:11px}
+  #printDoc .pc-ref .ov-src{color:#666 !important; font-size:10px}
+  #printDoc .pc-ref .mg-row,#printDoc .pc-ref .el-row,#printDoc .pc-ref .tl-item,#printDoc .pc-ref .st-card{background:#f7f7f7 !important; border:1px solid #e2e2e2 !important; break-inside:avoid}
+  #printDoc .pc-ref .mg-w b{color:#111 !important}
+  #printDoc .pc-ref .st-num{color:#111 !important}
+  #printDoc .pc-ref .st-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:8px}
+  #printDoc .pc-ref .st-bar .ct{color:#111 !important}
 }
 
 /* ===== Responsive ===== */

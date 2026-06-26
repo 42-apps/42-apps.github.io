@@ -421,6 +421,22 @@ function buildFilterPop(){
 }
 
 /* ===================== OVERLAYS ===================== */
+/* reference appendix for the printable PDFs — reuses the live overlay content */
+function ovContent(id){
+  const box=document.querySelector("#"+id+" .ov-box");
+  if(!box) return "";
+  const c=box.cloneNode(true);
+  const btn=c.querySelector(".ov-close"); if(btn) btn.parentNode.removeChild(btn);
+  return c.innerHTML;
+}
+function referenceAppendix(){
+  try{ buildMethodology(); }catch(e){}
+  try{ buildStats(); }catch(e){}
+  return '<div class="pc-ref">'+ovContent("methodology")+'</div>'
+       + '<div class="pc-ref">'+ovContent("stats")+'</div>'
+       + '<div class="pc-ref">'+ovContent("provenance")+'</div>';
+}
+
 function printChecklist(){
   const items=filtered();
   const groups=ACCESS_GROUPS.map(function(g){
@@ -447,7 +463,7 @@ function printChecklist(){
     h+='</div>';
   });
   h+='<div class="pc-foot">Source: Geroscope · 42-apps.github.io/longevity — full evidence, key studies and citations for every item are on the site. Promise scores are a curated synthesis, not measured values. Not medical advice; consult a clinician.</div>';
-  $("printDoc").innerHTML=h;
+  $("printDoc").innerHTML=h+referenceAppendix();
   toast("Opening print dialog — pick “Save as PDF”");
   setTimeout(function(){ try{ window.print(); }catch(e){} }, 150);
 }
@@ -471,7 +487,7 @@ function printCheatSheet(){
     h+='</div>';
   });
   h+='<div class="pc-foot">Geroscope · 42-apps.github.io/longevity — not medical advice; consult a clinician. For the full 135-item checklist with how-to guidance, use “Full checklist” in the menu.</div>';
-  $("printDoc").innerHTML=h;
+  $("printDoc").innerHTML=h+referenceAppendix();
   toast("Opening print dialog — pick “Save as PDF”");
   setTimeout(function(){ try{ window.print(); }catch(e){} }, 150);
 }
