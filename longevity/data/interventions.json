@@ -2,7 +2,7 @@
   "_meta": {
     "title": "Geroscope — evidence-based longevity interventions (raw data export)",
     "site": "https://42-apps.github.io/longevity/",
-    "count": 129,
+    "count": 135,
     "license": "Open for independent review and correction.",
     "disclaimer": "Educational synthesis, NOT medical advice. The 0-100 component scores are an informed, curated judgement, not measured quantities. Independent fact-checking is explicitly welcomed — please flag errors in study citations, effect sizes, evidence grading, or scores.",
     "scoring": {
@@ -36,8 +36,8 @@
       "hallmarks": "Hallmarks of Aging targeted",
       "evidenceType": "tier of the best available evidence",
       "evidence": "2-3 sentence summary of best evidence + limitations",
-      "keyStudies": "array of {ref, finding, url} — url is a verified DOI/PubMed/official link",
-      "effect": "effect magnitude",
+      "keyStudies": "array of {ref, finding, url} — url is a verified DOI/PubMed/official link (or a Google Scholar lookup for a few diffuse refs)",
+      "effect": "effect magnitude (with 95% CI for marquee human-outcome interventions)",
       "human": "state of human evidence",
       "safety": "risk profile",
       "dose": "typical protocol",
@@ -53,7 +53,7 @@
       "tier": "computed",
       "rank": "computed (by overall, desc)"
     },
-    "provenance": "Compiled by a 7-agent web-research sweep of 2023-2026 literature, then twice audited: a 10-agent adversarial fact-check pass and a 10-agent citation-resolution pass (178/181 key studies linked to canonical sources)."
+    "provenance": "Compiled by a 7-agent web-research sweep of 2023-2026 literature, then audited by a 10-agent adversarial fact-check pass and a 10-agent citation-resolution pass (190/193 key studies linked to canonical sources). Independently fact-checked with no errors found by Gemini, Grok and GPT (mid-2026); their feedback added 95% confidence intervals to marquee figures and 6 gap-fill interventions."
   },
   "interventions": [
     {
@@ -78,7 +78,7 @@
           "url": "https://doi.org/10.1056/NEJMsa1211128"
         }
       ],
-      "effect": "+6-10 years life expectancy if quit by mid-40s",
+      "effect": "Quitting by mid-40s regains ~6-9 yrs life expectancy (quit at 35-44 ~9 yr, 45-54 ~6 yr; life-table estimates, no CI); continuing smokers' all-cause mortality HR ~2.8-3.0 vs never-smokers (99% CI 2.4-3.3) — Jha NEJM 2013, n=202,248",
       "human": "Overwhelming consistent cohort evidence with clear age gradient",
       "safety": "Only upside; transient withdrawal; cessation aids generally safe",
       "dose": "Complete permanent cessation (+ support/NRT/varenicline)",
@@ -118,7 +118,7 @@
           "url": "https://doi.org/10.1001/jamainternmed.2015.0533"
         }
       ],
-      "effect": "All-cause mortality HR ~0.69 at 150 min/wk; up to ~0.60 at higher doses",
+      "effect": "All-cause mortality HR 0.69 (95% CI 0.67-0.70) at ~150 min/wk; plateau HR 0.61 (95% CI 0.59-0.62) at 3-5x minimum, no harm at >=10x — Arem JAMA Intern Med 2015, n=661,137",
       "human": "Large consistent cohorts + RCTs on surrogates",
       "safety": "Very safe; rare acute cardiac events in high-risk unscreened individuals",
       "dose": "150-300 min/wk moderate or 75-150 vigorous",
@@ -157,7 +157,7 @@
           "url": "https://doi.org/10.1001/jamanetworkopen.2018.3605"
         }
       ],
-      "effect": "Up to ~80% lower mortality (elite vs low); each +1 MET ~10-15% lower risk",
+      "effect": "All-cause mortality HR 0.20 (95% CI 0.16-0.24), ~80% lower, elite vs low fitness; low fitness risk exceeds smoking/diabetes — Mandsager JAMA Netw Open 2018, n=122,007",
       "human": "Very large cohort with objectively measured fitness",
       "safety": "Achieving via exercise is very safe",
       "dose": "Aerobic base (Zone 2) + higher-intensity intervals",
@@ -197,7 +197,7 @@
           "url": "https://www.nejm.org/doi/full/10.1056/NEJMoa1800389"
         }
       ],
-      "effect": "Major CV events HR ~0.70; lower all-cause mortality in cohorts",
+      "effect": "Major CV events HR 0.69 (95% CI 0.53-0.91) with EVOO and HR 0.72 (95% CI 0.54-0.95) with nuts vs control — PREDIMED (Estruch NEJM 2018, republished), n=7,447",
       "human": "Primary-prevention RCT with hard CV endpoints + extensive cohorts",
       "safety": "Very safe; nutrient-dense",
       "dose": "High EVOO + nuts + vegetables/legumes/fish; low red/processed meat",
@@ -242,7 +242,7 @@
           "url": "https://doi.org/10.1177/2047487319850718"
         }
       ],
-      "effect": "All-cause mortality HR ~0.79-0.92 alone; ~0.60 combined with aerobic",
+      "effect": "All-cause mortality RR 0.85 (95% CI 0.79-0.93) for muscle-strengthening alone; RR 0.60 (95% CI 0.54-0.67) combined with aerobic — Momma BJSM 2022",
       "human": "Cohort mortality data + strong RCT evidence for strength/function",
       "safety": "Very safe with proper form; valsalva BP spikes in uncontrolled hypertension",
       "dose": ">=2 sessions/wk, all major muscle groups",
@@ -282,7 +282,7 @@
           "url": "https://www.ahajournals.org/doi/10.1161/JAHA.117.005947"
         }
       ],
-      "effect": "Nadir ~7h; healthy sleep adds years of life expectancy",
+      "effect": "U-shaped all-cause mortality: RR 1.06/h (95% CI 1.04-1.07) for short sleep and RR 1.13/h (95% CI 1.11-1.15) for long sleep, nadir ~7h — Yin et al. JAHA 2017 dose-response meta-analysis",
       "human": "Large consistent cohorts; RCTs only on surrogate markers",
       "safety": "No downside to healthy sleep (sedatives carry own risks)",
       "dose": "7-9 h/night, regular schedule; treat apnea/insomnia",
@@ -326,7 +326,7 @@
           "url": "https://doi.org/10.1056/NEJMoa2024816"
         }
       ],
-      "effect": "All-cause mortality HR ~0.68-0.69 (diseased populations)",
+      "effect": "All-cause mortality HR 0.68 (95% CI 0.57-0.82) empagliflozin in T2D+CVD (EMPA-REG, n=7,020); HR 0.69 (95% CI 0.53-0.88) dapagliflozin in CKD (DAPA-CKD, n=4,304)",
       "human": "Multiple positive hard-outcome RCTs, some incl. non-diabetics",
       "safety": "Genital/urinary infections, volume depletion, rare euglycemic DKA; no amputation signal",
       "dose": "Empagliflozin 10-25 mg/d; dapagliflozin 10 mg/d",
@@ -375,7 +375,7 @@
           "url": "https://doi.org/10.3389/fragi.2022.852643"
         }
       ],
-      "effect": "Biological-clock slowing ~3-4 months/3yr; MACE -25% only with Rx EPA",
+      "effect": "Epigenetic-clock slowing ~3-4 mo/3yr (GrimAge2 d -0.32, 95% CI -0.59 to -0.06) in DO-HEALTH (n=777); CV benefit only with Rx EPA — MACE HR 0.75 (95% CI 0.68-0.83), REDUCE-IT 2019",
       "human": "Multiple large RCTs; positive on aging biomarkers, mixed on CV",
       "safety": "Very safe; mild GI; modest AFib/bleeding signal at high dose",
       "dose": "~1-2 g/day EPA+DHA",
@@ -416,7 +416,7 @@
           "url": "https://doi.org/10.1016/S2468-2667(21)00302-9"
         }
       ],
-      "effect": "~40-50% lower mortality at plateau vs lowest; +1,000 steps ~15% lower",
+      "effect": "All-cause mortality HR 0.47 (95% CI 0.39-0.57), ~53% lower, highest vs lowest step quartile; optimum plateaus ~6,000-8,000/day (>=60y), ~8,000-10,000/day (<60y) — Paluch Lancet Public Health 2022",
       "human": "Strong device-measured cohort data; no RCT (impractical)",
       "safety": "Extremely safe",
       "dose": "~7,000-8,000+ steps/day (benefit begins below)",
@@ -455,7 +455,7 @@
           "url": "https://doi.org/10.1001/jamanetworkopen.2023.6185"
         }
       ],
-      "effect": "No mortality benefit at any level; increased mortality above ~25-45 g/d",
+      "effect": "No mortality benefit at low intake — RR 0.93 (95% CI 0.85-1.01, NS) for 1.3-24 g/d vs lifetime nondrinkers; harm >=25 g/d women (RR 1.21, 95% CI 1.08-1.36) and >=45 g/d men (RR 1.15, 95% CI 1.03-1.28) — Zhao/Naimi JAMA Netw Open 2023, n=4.8M",
       "human": "Bias-corrected meta-analysis + Mendelian randomization converge against the J-curve",
       "safety": "Alcohol is a Group 1 carcinogen; harms rise with dose; dependence risk",
       "dose": "Lowest risk is zero",
@@ -499,7 +499,7 @@
           "url": "https://pubmed.ncbi.nlm.nih.gov/30796437/"
         }
       ],
-      "effect": "Cancer mortality ~-12%; negligible for CV/all-cause in replete people",
+      "effect": "Total cancer mortality RR 0.87 (95% CI 0.79-0.96), ~13% lower (daily dosing); no effect on cancer incidence (RR 0.98, 95% CI 0.93-1.03); negligible CV/all-cause in replete people — Keum Ann Oncol 2019",
       "human": "Definitive RCTs: neutral for most hard endpoints except modest cancer-mortality signal",
       "safety": "Safe at <=4000 IU/d; high bolus dosing raises fall/fracture risk",
       "dose": "1000-2000 IU/day; correct deficiency",
@@ -582,7 +582,7 @@
           "url": "https://doi.org/10.1177/1745691614568352"
         }
       ],
-      "effect": "~50% higher survival odds with strong ties; isolation ~26-32% higher mortality",
+      "effect": "Stronger social ties: OR 1.50 (95% CI 1.42-1.59) for survival, rising to OR 1.91 (95% CI 1.63-2.23) for complex social integration — Holt-Lunstad PLoS Med 2010 (148 studies, n=308,849)",
       "human": "Large meta-analytic cohort data; no mortality-powered RCT",
       "safety": "No risk",
       "dose": "Regular meaningful relationships and community engagement",
@@ -626,7 +626,7 @@
           "url": "https://doi.org/10.1056/NEJMoa0807646"
         }
       ],
-      "effect": "All-cause mortality ~-10% per 1 mmol/L LDL (larger in secondary prevention)",
+      "effect": "All-cause mortality RR 0.90 (95% CI 0.87-0.93) and major vascular events RR 0.78 (95% CI 0.76-0.80) per 1 mmol/L LDL-C reduction — CTT Lancet 2010 (26 trials, n~170,000)",
       "human": "Strong for CV mortality; modest/uncertain in low-risk primary prevention",
       "safety": "Generally safe; myalgia, rare myopathy, small diabetes risk",
       "dose": "Disease-based dosing",
@@ -666,7 +666,7 @@
           "url": "https://doi.org/10.1056/NEJMoa2307563"
         }
       ],
-      "effect": "MACE -20% in non-diabetic obesity; ~9-15% weight loss (SELECT ~9%)",
+      "effect": "MACE HR 0.80 (95% CI 0.72-0.90), 20% lower, in non-diabetic obesity; mean weight -9.4% vs -0.9% placebo — SELECT (Lincoff NEJM 2023), n=17,604",
       "human": "Strong CV hard-outcome RCT; no aging-endpoint trial",
       "safety": "GI effects, pancreatitis/gallbladder risk, lean-mass loss, weight regain after stopping; rodent thyroid signal",
       "dose": "2.4 mg SC weekly (obesity)",
@@ -784,6 +784,96 @@
       "rank": 17
     },
     {
+      "id": "nut-consumption",
+      "name": "Nut Consumption",
+      "aka": "Tree nuts and peanuts",
+      "category": "diet",
+      "klass": "Whole food (unsaturated fat, fiber, polyphenols)",
+      "mechanism": "Unsaturated fats, fiber, plant protein, magnesium and polyphenols lower LDL, improve endothelial function/insulin sensitivity and reduce inflammation",
+      "hallmarks": [
+        "Chronic inflammation",
+        "Deregulated nutrient sensing",
+        "Mitochondrial dysfunction"
+      ],
+      "evidenceType": "human-rct-hard",
+      "evidence": "Large cohorts (Bao 2013 ~119k; Aune 2016 meta ~819k) show ~20% lower all-cause mortality with regular intake, and PREDIMED randomized high-CV-risk adults to a Mediterranean diet plus mixed nuts with a hard CV-event reduction. Limitation: mortality data are observational, and the RCT tests a whole pattern (with added nuts), not nuts in isolation.",
+      "keyStudies": [
+        {
+          "ref": "Bao et al., NEJM 2013 (NHS+HPFS, n=118,962)",
+          "finding": "Nuts 7+/wk vs never: total mortality HR 0.80 (95% CI 0.73-0.86)",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/24256379/"
+        },
+        {
+          "ref": "Aune et al., BMC Medicine 2016 (20 studies, n=819,448)",
+          "finding": "Per 28 g/day: all-cause mortality RR 0.78 (95% CI 0.72-0.84)",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5137221/"
+        }
+      ],
+      "effect": "~20-22% lower all-cause mortality (HR 0.80, 95% CI 0.73-0.86); RCT CV events HR 0.72 (0.54-0.97)",
+      "human": "Strong cohort mortality data plus an RCT with hard cardiovascular endpoints",
+      "safety": "Very safe; calorie-dense but no net weight gain at typical portions; tree-nut/peanut allergy is the one contraindication",
+      "dose": "~28 g/day (a small handful)",
+      "status": "Endorsed by dietary guidelines; component of the Mediterranean pattern",
+      "accessibility": "otc",
+      "caveats": "Mortality figures observational; the hard-endpoint RCT (PREDIMED) tests a whole pattern not nuts alone (and was retracted/re-analyzed 2018)",
+      "sources": [
+        "https://pubmed.ncbi.nlm.nih.gov/24256379/",
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC5137221/"
+      ],
+      "evi": 68,
+      "hum": 70,
+      "imp": 55,
+      "safe": 93,
+      "overall": 71,
+      "tier": "A",
+      "rank": 18
+    },
+    {
+      "id": "dietary-fiber",
+      "name": "Dietary Fiber",
+      "aka": "Soluble and insoluble fiber",
+      "category": "diet",
+      "klass": "Fermentable/viscous carbohydrate (microbiome substrate)",
+      "mechanism": "Fermentable fiber feeds gut microbiota producing anti-inflammatory short-chain fatty acids (butyrate); viscous fiber slows glucose absorption, binds bile acids to lower LDL, and increases satiety",
+      "hallmarks": [
+        "Dysbiosis",
+        "Chronic inflammation",
+        "Deregulated nutrient sensing"
+      ],
+      "evidenceType": "human-cohort",
+      "evidence": "The WHO-commissioned Reynolds (Lancet 2019) synthesis pooled ~135 million person-years across 185 prospective studies plus 58 RCTs and found the highest fiber consumers had 15-30% lower all-cause and CV mortality with a near-linear dose-response judged potentially causal (GRADE moderate). Mortality outcomes are predominantly observational; the included RCTs measured intermediate cardiometabolic markers.",
+      "keyStudies": [
+        {
+          "ref": "Reynolds et al., Lancet 2019 (WHO meta-analysis)",
+          "finding": "Highest vs lowest fiber: 15-30% lower all-cause + CV mortality; ~13 fewer deaths/1,000",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/30638909/"
+        },
+        {
+          "ref": "Park et al. (NIH-AARP, n=388,122), Arch Intern Med 2011",
+          "finding": "Highest vs lowest quintile all-cause mortality RR ~0.78 (95% CI 0.73-0.82)",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3513325/"
+        }
+      ],
+      "effect": "~15-30% lower all-cause mortality (highest vs lowest intake); large cohorts converge near RR 0.78",
+      "human": "Strong, consistent observational mortality evidence; RCTs support only intermediate markers",
+      "safety": "Very safe; GI tolerance the main issue if increased too fast (escalate gradually with fluids)",
+      "dose": "~25-29 g/day or more (most adults get only ~15-20 g) from whole grains, legumes, vegetables, fruit",
+      "status": "Core dietary-guideline recommendation",
+      "accessibility": "lifestyle",
+      "caveats": "Mortality evidence mostly observational with likely healthy-user confounding; RCT support limited to cardiometabolic surrogates",
+      "sources": [
+        "https://pubmed.ncbi.nlm.nih.gov/30638909/",
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC3513325/"
+      ],
+      "evi": 66,
+      "hum": 66,
+      "imp": 58,
+      "safe": 93,
+      "overall": 70,
+      "tier": "A",
+      "rank": 19
+    },
+    {
       "id": "creatine",
       "name": "Creatine",
       "aka": "Creatine monohydrate",
@@ -820,7 +910,95 @@
       "safe": 90,
       "overall": 69,
       "tier": "A",
-      "rank": 18
+      "rank": 20
+    },
+    {
+      "id": "polypill",
+      "name": "Cardiovascular Polypill",
+      "aka": "Fixed-dose combination; Polycap; Trinomia",
+      "category": "pharma",
+      "klass": "Fixed-dose combination (statin + antihypertensives +/- aspirin)",
+      "mechanism": "One daily tablet lowers LDL and blood pressure (plus antiplatelet if aspirin included), maximizing long-term adherence",
+      "hallmarks": [
+        "Chronic inflammation",
+        "Altered intercellular communication"
+      ],
+      "evidenceType": "human-rct-hard",
+      "evidence": "Large randomized trials with hard CV endpoints converge on ~30% fewer major cardiovascular events: TIPS-3 (n=5,713, placebo-controlled primary prevention) and PolyIran (50,045, pragmatic cluster-RCT), pooled RR 0.71. Its innovation is adherence/simplicity, not a novel mechanism, and all-cause mortality was not individually significant.",
+      "keyStudies": [
+        {
+          "ref": "Yusuf et al. (TIPS-3), NEJM 2021",
+          "finding": "Primary CV composite HR 0.79 (95% CI 0.63-1.00); polypill+aspirin HR 0.69 (0.50-0.97)",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/33186492/"
+        },
+        {
+          "ref": "Roshandel et al. (PolyIran), Lancet 2019",
+          "finding": "Major CV events HR 0.66 (95% CI 0.55-0.80); high-adherence HR 0.43 (0.33-0.55)",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/31448738/"
+        }
+      ],
+      "effect": "~21-34% fewer major CV events (pooled RR 0.71, 95% CI 0.63-0.80); all-cause mortality not individually significant",
+      "human": "Strong hard-outcome RCT evidence for CV-event reduction in primary prevention",
+      "safety": "Well tolerated; modest excess dizziness/hypotension; aspirin versions carry bleeding risk",
+      "dose": "One daily fixed-dose tablet (statin + 2-3 antihypertensives +/- low-dose aspirin)",
+      "status": "Marketed in several countries; on the WHO Essential Medicines List",
+      "accessibility": "rx",
+      "caveats": "Proven on CV events not all-cause mortality; an adherence/packaging strategy over drug classes already listed separately (statins, ACEi/ARBs)",
+      "sources": [
+        "https://pubmed.ncbi.nlm.nih.gov/33186492/",
+        "https://pubmed.ncbi.nlm.nih.gov/31448738/"
+      ],
+      "evi": 80,
+      "hum": 66,
+      "imp": 55,
+      "safe": 72,
+      "overall": 69,
+      "tier": "A",
+      "rank": 21
+    },
+    {
+      "id": "hearing-aids",
+      "name": "Hearing Aid Use",
+      "aka": "Hearing-loss treatment; OTC hearing aids",
+      "category": "lifestyle",
+      "klass": "Sensory-restoration device (dementia-risk modification)",
+      "mechanism": "Restoring auditory input reduces effortful-listening cognitive load, reverses sensory deprivation, sustains social engagement and slows temporal-lobe atrophy",
+      "hallmarks": [
+        "Altered intercellular communication",
+        "Chronic inflammation"
+      ],
+      "evidenceType": "human-rct-hard",
+      "evidence": "The ACHIEVE RCT (Lancet 2023, n=977) found a hearing intervention did NOT slow 3-year global cognitive decline overall, but in the prespecified higher-risk ARIC subgroup it slowed decline ~48%. This sits atop the Lancet Commission ranking hearing loss as the largest modifiable midlife dementia risk factor and a 31-study observational meta-analysis (HR 0.81). The primary RCT endpoint was null overall, so the benefit is a subgroup/observational signal.",
+      "keyStudies": [
+        {
+          "ref": "Lin et al. (ACHIEVE), Lancet 2023",
+          "finding": "3-yr cognition: full cohort null; high-risk ARIC subgroup ~48% slower decline (diff 0.191, 95% CI 0.022-0.360)",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/37478886/"
+        },
+        {
+          "ref": "Yeo et al. meta-analysis (31 studies, n=137,484), JAMA Neurol 2023",
+          "finding": "Hearing-device use: cognitive decline HR 0.81 (95% CI 0.76-0.87)",
+          "url": "https://jamanetwork.com/journals/jamaneurology/fullarticle/2799139"
+        }
+      ],
+      "effect": "High-risk RCT subgroup ~48% slower 3-yr cognitive decline; pooled observational HR 0.81 (0.76-0.87)",
+      "human": "Mixed RCT (null primary, strong high-risk subgroup) + consistent observational cognition data",
+      "safety": "Essentially no risk; non-invasive; worst case minor discomfort/feedback/cost",
+      "dose": "Daily wear of fitted hearing aids for adults with hearing loss; benefit greatest with earlier, consistent use",
+      "status": "OTC hearing aids available without prescription in the US since Oct 2022",
+      "accessibility": "otc",
+      "caveats": "The flagship RCT's primary endpoint was null in the full cohort — the 48% benefit is a high-risk subgroup finding; most supporting data are observational",
+      "sources": [
+        "https://pubmed.ncbi.nlm.nih.gov/37478886/",
+        "https://jamanetwork.com/journals/jamaneurology/fullarticle/2799139"
+      ],
+      "evi": 70,
+      "hum": 60,
+      "imp": 55,
+      "safe": 95,
+      "overall": 69,
+      "tier": "A",
+      "rank": 22
     },
     {
       "id": "coq10-ubiquinol",
@@ -848,7 +1026,7 @@
           "url": "https://doi.org/10.1016/j.jchf.2014.06.008"
         }
       ],
-      "effect": "CV mortality ~-50% with CoQ10+selenium in elderly",
+      "effect": "CV mortality HR 0.51 (95% CI 0.36-0.74), ~49% lower (5.9% vs 12.6%), with CoQ10 200mg + selenium 200ug/d in selenium-low elderly — KiSel-10 (Alehagen 2013), n=443",
       "human": "Positive hard-outcome RCTs (elderly/HF), but bundled with selenium",
       "safety": "Very safe; mild GI; interacts with warfarin",
       "dose": "100-200 mg/day (ubiquinol better absorbed)",
@@ -865,7 +1043,7 @@
       "safe": 88,
       "overall": 68,
       "tier": "A",
-      "rank": 19
+      "rank": 23
     },
     {
       "id": "menopausal-hormone-therapy",
@@ -910,7 +1088,7 @@
       "safe": 62,
       "overall": 68,
       "tier": "A",
-      "rank": 20
+      "rank": 24
     },
     {
       "id": "sauna-finnish-dry-heat",
@@ -938,7 +1116,7 @@
           "url": "https://doi.org/10.1152/japplphysiol.00322.2023"
         }
       ],
-      "effect": "Cohort: up to ~40% lower all-cause mortality; RCT surrogate ~null",
+      "effect": "All-cause mortality HR 0.60 (95% CI 0.46-0.80) at 4-7 sessions/wk vs 1/wk; fatal CVD HR 0.50 (95% CI 0.33-0.77) — Laukkanen JAMA Intern Med 2015 (KIHD, n=2,315 men); RCT surrogate data ~null",
       "human": "Strong cohorts; only RCT negative on vascular surrogates",
       "safety": "Generally safe; dehydration, orthostatic hypotension, caution with unstable cardiac disease",
       "dose": "4-7 sessions/wk, ~15-20 min at ~80-100C",
@@ -955,7 +1133,52 @@
       "safe": 82,
       "overall": 67,
       "tier": "B",
-      "rank": 21
+      "rank": 25
+    },
+    {
+      "id": "coffee",
+      "name": "Coffee / Caffeine",
+      "aka": "Caffeinated and decaffeinated coffee",
+      "category": "diet",
+      "klass": "Polyphenol-rich beverage (chlorogenic acids + caffeine)",
+      "mechanism": "Chlorogenic acids and caffeine act as antioxidants, activate AMPK/autophagy and suppress NF-kB inflammation while improving glucose/lipid metabolism",
+      "hallmarks": [
+        "Chronic inflammation",
+        "Deregulated nutrient sensing",
+        "Mitochondrial dysfunction"
+      ],
+      "evidenceType": "human-cohort",
+      "evidence": "Very large prospective cohorts (EPIC ~521k; UK Biobank ~498k) and a 40-study dose-response meta-analysis (~3.85M) consistently show ~10-18% lower all-cause mortality at ~3-4 cups/day, with decaffeinated coffee showing similar benefit (implicating non-caffeine compounds). All evidence is observational, so residual confounding and reverse causation can't be excluded; no long-term mortality RCT exists.",
+      "keyStudies": [
+        {
+          "ref": "Kim, Je & Giovannucci, Eur J Epidemiol 2019 (40-study meta, 3.85M)",
+          "finding": "All-cause mortality nadir at ~3.5 cups/day RR 0.85 (95% CI 0.82-0.89)",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/31055709/"
+        },
+        {
+          "ref": "Loftfield et al. (UK Biobank, n=498,134), JAMA Intern Med 2018",
+          "finding": "2-3 cups/day HR 0.88 (95% CI 0.84-0.93); decaf also inverse; independent of caffeine-metabolism genotype",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6143111/"
+        }
+      ],
+      "effect": "~12-18% lower all-cause mortality at ~3-4 cups/day (RR 0.85, 95% CI 0.82-0.89); observational",
+      "human": "Large, consistent observational mortality evidence across continents; not proven causal",
+      "safety": "Safe for most adults up to ~400 mg caffeine/day; caveats: pregnancy (<=200 mg/day), anxiety/insomnia, unfiltered coffee raises LDL via cafestol",
+      "dose": "~3-4 cups/day, preferably filtered (the dose-response nadir)",
+      "status": "Strong, widely-accepted observational evidence; likely modest net benefit at moderate intake",
+      "accessibility": "otc",
+      "caveats": "Entirely observational — coffee drinkers differ systematically and the ill cut back (reverse causation), so causality is unestablished",
+      "sources": [
+        "https://pubmed.ncbi.nlm.nih.gov/31055709/",
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC6143111/"
+      ],
+      "evi": 64,
+      "hum": 68,
+      "imp": 50,
+      "safe": 90,
+      "overall": 67,
+      "tier": "B",
+      "rank": 26
     },
     {
       "id": "tirzepatide",
@@ -1000,7 +1223,7 @@
       "safe": 66,
       "overall": 65,
       "tier": "B",
-      "rank": 22
+      "rank": 27
     },
     {
       "id": "ace-inhibitors-arbs",
@@ -1045,7 +1268,7 @@
       "safe": 72,
       "overall": 64,
       "tier": "B",
-      "rank": 23
+      "rank": 28
     },
     {
       "id": "nicotinamide",
@@ -1084,7 +1307,7 @@
       "safe": 80,
       "overall": 64,
       "tier": "B",
-      "rank": 24
+      "rank": 29
     },
     {
       "id": "trt",
@@ -1128,7 +1351,7 @@
       "safe": 55,
       "overall": 64,
       "tier": "B",
-      "rank": 25
+      "rank": 30
     },
     {
       "id": "zoledronate",
@@ -1174,7 +1397,7 @@
       "safe": 62,
       "overall": 63,
       "tier": "B",
-      "rank": 26
+      "rank": 31
     },
     {
       "id": "urolithin-a",
@@ -1219,7 +1442,7 @@
       "safe": 88,
       "overall": 63,
       "tier": "B",
-      "rank": 27
+      "rank": 32
     },
     {
       "id": "mind-diet",
@@ -1264,7 +1487,7 @@
       "safe": 92,
       "overall": 63,
       "tier": "B",
-      "rank": 28
+      "rank": 33
     },
     {
       "id": "metformin",
@@ -1309,7 +1532,7 @@
       "safe": 80,
       "overall": 62,
       "tier": "B",
-      "rank": 29
+      "rank": 34
     },
     {
       "id": "canakinumab",
@@ -1348,7 +1571,7 @@
       "safe": 45,
       "overall": 62,
       "tier": "B",
-      "rank": 30
+      "rank": 35
     },
     {
       "id": "magnesium",
@@ -1371,7 +1594,7 @@
           "url": "https://link.springer.com/article/10.1186/s12916-016-0742-z"
         }
       ],
-      "effect": "All-cause mortality ~-10% per 100 mg/d intake (cohort)",
+      "effect": "All-cause mortality RR 0.90 (95% CI 0.81-0.99) per 100 mg/d dietary intake; stronger for T2D (RR 0.81, 95% CI 0.77-0.86) and stroke (RR 0.93, 95% CI 0.89-0.97) — Fang BMC Med 2016 cohort meta-analysis",
       "human": "Strong cohort; RCT benefits mainly in deficiency/hypertension",
       "safety": "Very safe from food; supplements cause diarrhoea; caution in renal impairment",
       "dose": "~300-400 mg/day elemental",
@@ -1387,7 +1610,7 @@
       "safe": 88,
       "overall": 62,
       "tier": "B",
-      "rank": 31
+      "rank": 36
     },
     {
       "id": "time-restricted-eating",
@@ -1427,7 +1650,7 @@
       "safe": 84,
       "overall": 62,
       "tier": "B",
-      "rank": 32
+      "rank": 37
     },
     {
       "id": "intermittent-fasting",
@@ -1467,7 +1690,51 @@
       "safe": 82,
       "overall": 62,
       "tier": "B",
-      "rank": 33
+      "rank": 38
+    },
+    {
+      "id": "colchicine",
+      "name": "Colchicine (low-dose)",
+      "aka": "Lodoco; LoDoCo",
+      "category": "pharma",
+      "klass": "Anti-inflammatory / NLRP3 inflammasome inhibitor",
+      "mechanism": "Binds tubulin to block microtubule assembly, suppressing NLRP3 inflammasome activation and IL-1b/IL-18 release (targets 'inflammaging')",
+      "hallmarks": [
+        "Chronic inflammation",
+        "Cellular senescence"
+      ],
+      "evidenceType": "human-rct-hard",
+      "evidence": "Two large double-blind RCTs (LoDoCo2 n=5,522; COLCOT n=4,745) show 0.5 mg/day cuts major CV events ~25-31% on top of statins, earning the first FDA approval (2023) of an anti-inflammatory drug for atherosclerotic CVD. But the benefit is non-fatal ischemic events only: NO reduction in CV or all-cause mortality, and pooled data show a significant excess of non-cardiovascular death.",
+      "keyStudies": [
+        {
+          "ref": "Nidorf et al. (LoDoCo2), NEJM 2020",
+          "finding": "Primary CV composite HR 0.69 (95% CI 0.57-0.83); non-CV death HR 1.51 (0.99-2.31)",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/32865380/"
+        },
+        {
+          "ref": "Akl et al. meta-analysis (8 RCTs, 12,151), 2024",
+          "finding": "MACE OR 0.70 (95% CI 0.60-0.83); all-cause mortality OR 1.11 (NS); non-CV death OR 1.54 (1.10-2.15)",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10950412/"
+        }
+      ],
+      "effect": "~25-31% fewer major CV events (pooled OR 0.70, 95% CI 0.60-0.83); no mortality benefit",
+      "human": "Strong hard-outcome RCT evidence for CV events; no survival benefit shown",
+      "safety": "Generally tolerated at 0.5 mg/day; signal of excess non-CV death; dangerous with CYP3A4/P-gp inhibitors and in renal/hepatic impairment",
+      "dose": "0.5 mg orally once daily, added to standard secondary prevention",
+      "status": "FDA-approved 2023 for CV risk reduction in ASCVD",
+      "accessibility": "rx",
+      "caveats": "Cuts non-fatal events only — no CV or all-cause mortality benefit, and a significant excess of non-cardiovascular deaths in pooled data",
+      "sources": [
+        "https://pubmed.ncbi.nlm.nih.gov/32865380/",
+        "https://pubmed.ncbi.nlm.nih.gov/31733140/"
+      ],
+      "evi": 80,
+      "hum": 52,
+      "imp": 50,
+      "safe": 62,
+      "overall": 62,
+      "tier": "B",
+      "rank": 39
     },
     {
       "id": "curcumin",
@@ -1506,7 +1773,7 @@
       "safe": 84,
       "overall": 61,
       "tier": "B",
-      "rank": 34
+      "rank": 40
     },
     {
       "id": "aged-garlic-allicin",
@@ -1545,7 +1812,7 @@
       "safe": 84,
       "overall": 61,
       "tier": "B",
-      "rank": 35
+      "rank": 41
     },
     {
       "id": "green-tea-beverage",
@@ -1584,7 +1851,7 @@
       "safe": 86,
       "overall": 61,
       "tier": "B",
-      "rank": 36
+      "rank": 42
     },
     {
       "id": "blood-flow-restriction-training",
@@ -1623,7 +1890,7 @@
       "safe": 78,
       "overall": 61,
       "tier": "B",
-      "rank": 37
+      "rank": 43
     },
     {
       "id": "glucosamine",
@@ -1650,7 +1917,7 @@
           "url": "https://pubmed.ncbi.nlm.nih.gov/37422736/"
         }
       ],
-      "effect": "All-cause mortality ~-15% (cohort association)",
+      "effect": "All-cause mortality HR 0.85 (95% CI 0.82-0.89), ~15% lower, in regular users; CVD HR 0.82 (95% CI 0.74-0.90) — Li UK Biobank 2020 cohort association, n=495,077",
       "human": "Strong cohort associations; no RCT; HF link is protective in MR analysis",
       "safety": "Very safe; mild GI; may slightly raise glucose",
       "dose": "1500 mg/day",
@@ -1667,7 +1934,7 @@
       "safe": 82,
       "overall": 60,
       "tier": "B",
-      "rank": 38
+      "rank": 44
     },
     {
       "id": "blue-zones-plant-forward",
@@ -1713,7 +1980,7 @@
       "safe": 90,
       "overall": 60,
       "tier": "B",
-      "rank": 39
+      "rank": 45
     },
     {
       "id": "meditation-mindfulness",
@@ -1758,7 +2025,7 @@
       "safe": 92,
       "overall": 60,
       "tier": "B",
-      "rank": 40
+      "rank": 46
     },
     {
       "id": "therapeutic-plasma-exchange",
@@ -1797,7 +2064,7 @@
       "safe": 60,
       "overall": 60,
       "tier": "B",
-      "rank": 41
+      "rank": 47
     },
     {
       "id": "spermidine",
@@ -1842,7 +2109,7 @@
       "safe": 86,
       "overall": 59,
       "tier": "B",
-      "rank": 42
+      "rank": 48
     },
     {
       "id": "nac",
@@ -1881,7 +2148,7 @@
       "safe": 85,
       "overall": 59,
       "tier": "B",
-      "rank": 43
+      "rank": 49
     },
     {
       "id": "selenium",
@@ -1926,7 +2193,7 @@
       "safe": 58,
       "overall": 59,
       "tier": "B",
-      "rank": 44
+      "rank": 50
     },
     {
       "id": "berberine",
@@ -1966,7 +2233,7 @@
       "safe": 70,
       "overall": 59,
       "tier": "B",
-      "rank": 45
+      "rank": 51
     },
     {
       "id": "fasting-mimicking-diet",
@@ -2006,7 +2273,7 @@
       "safe": 80,
       "overall": 59,
       "tier": "B",
-      "rank": 46
+      "rank": 52
     },
     {
       "id": "low-dose-aspirin",
@@ -2050,7 +2317,7 @@
       "safe": 50,
       "overall": 58,
       "tier": "B",
-      "rank": 47
+      "rank": 53
     },
     {
       "id": "glynac",
@@ -2090,7 +2357,7 @@
       "safe": 84,
       "overall": 58,
       "tier": "B",
-      "rank": 48
+      "rank": 54
     },
     {
       "id": "sulforaphane",
@@ -2129,7 +2396,7 @@
       "safe": 84,
       "overall": 58,
       "tier": "B",
-      "rank": 49
+      "rank": 55
     },
     {
       "id": "ergothioneine",
@@ -2168,7 +2435,7 @@
       "safe": 86,
       "overall": 58,
       "tier": "B",
-      "rank": 50
+      "rank": 56
     },
     {
       "id": "collagen-peptides",
@@ -2206,7 +2473,7 @@
       "safe": 90,
       "overall": 58,
       "tier": "B",
-      "rank": 51
+      "rank": 57
     },
     {
       "id": "acarbose",
@@ -2250,7 +2517,7 @@
       "safe": 72,
       "overall": 57,
       "tier": "B",
-      "rank": 52
+      "rank": 58
     },
     {
       "id": "canagliflozin",
@@ -2295,7 +2562,7 @@
       "safe": 60,
       "overall": 57,
       "tier": "B",
-      "rank": 53
+      "rank": 59
     },
     {
       "id": "alpha-lipoic-acid",
@@ -2334,7 +2601,7 @@
       "safe": 82,
       "overall": 57,
       "tier": "B",
-      "rank": 54
+      "rank": 60
     },
     {
       "id": "infrared-sauna",
@@ -2372,7 +2639,7 @@
       "safe": 82,
       "overall": 57,
       "tier": "B",
-      "rank": 55
+      "rank": 61
     },
     {
       "id": "dasatinib-quercetin",
@@ -2417,7 +2684,7 @@
       "safe": 55,
       "overall": 56,
       "tier": "B",
-      "rank": 56
+      "rank": 62
     },
     {
       "id": "vitamin-k2-mk7",
@@ -2461,7 +2728,7 @@
       "safe": 86,
       "overall": 56,
       "tier": "B",
-      "rank": 57
+      "rank": 63
     },
     {
       "id": "silymarin-milk-thistle",
@@ -2500,7 +2767,7 @@
       "safe": 84,
       "overall": 56,
       "tier": "B",
-      "rank": 58
+      "rank": 64
     },
     {
       "id": "nicotinamide-riboside",
@@ -2545,7 +2812,7 @@
       "safe": 80,
       "overall": 55,
       "tier": "C",
-      "rank": 59
+      "rank": 65
     },
     {
       "id": "melatonin",
@@ -2584,7 +2851,7 @@
       "safe": 70,
       "overall": 55,
       "tier": "C",
-      "rank": 60
+      "rank": 66
     },
     {
       "id": "ashwagandha",
@@ -2623,7 +2890,7 @@
       "safe": 75,
       "overall": 55,
       "tier": "C",
-      "rank": 61
+      "rank": 67
     },
     {
       "id": "oleuropein-olive-leaf",
@@ -2662,7 +2929,7 @@
       "safe": 84,
       "overall": 55,
       "tier": "C",
-      "rank": 62
+      "rank": 68
     },
     {
       "id": "red-light-therapy-pbm",
@@ -2701,7 +2968,7 @@
       "safe": 80,
       "overall": 55,
       "tier": "C",
-      "rank": 63
+      "rank": 69
     },
     {
       "id": "whole-body-vibration",
@@ -2739,7 +3006,7 @@
       "safe": 80,
       "overall": 55,
       "tier": "C",
-      "rank": 64
+      "rank": 70
     },
     {
       "id": "ginkgo-biloba",
@@ -2790,7 +3057,7 @@
       "safe": 70,
       "overall": 54,
       "tier": "C",
-      "rank": 65
+      "rank": 71
     },
     {
       "id": "saffron-crocin",
@@ -2829,7 +3096,7 @@
       "safe": 74,
       "overall": 54,
       "tier": "C",
-      "rank": 66
+      "rank": 72
     },
     {
       "id": "bacopa-monnieri",
@@ -2868,7 +3135,7 @@
       "safe": 76,
       "overall": 53,
       "tier": "C",
-      "rank": 67
+      "rank": 73
     },
     {
       "id": "dhea",
@@ -2912,7 +3179,7 @@
       "safe": 70,
       "overall": 53,
       "tier": "C",
-      "rank": 68
+      "rank": 74
     },
     {
       "id": "nmn",
@@ -2957,7 +3224,7 @@
       "safe": 76,
       "overall": 52,
       "tier": "C",
-      "rank": 69
+      "rank": 75
     },
     {
       "id": "niacin",
@@ -3002,7 +3269,7 @@
       "safe": 55,
       "overall": 52,
       "tier": "C",
-      "rank": 70
+      "rank": 76
     },
     {
       "id": "carnosine",
@@ -3041,7 +3308,7 @@
       "safe": 84,
       "overall": 52,
       "tier": "C",
-      "rank": 71
+      "rank": 77
     },
     {
       "id": "hesperidin",
@@ -3083,7 +3350,7 @@
       "safe": 86,
       "overall": 52,
       "tier": "C",
-      "rank": 72
+      "rank": 78
     },
     {
       "id": "cold-water-immersion",
@@ -3122,7 +3389,7 @@
       "safe": 65,
       "overall": 52,
       "tier": "C",
-      "rank": 73
+      "rank": 79
     },
     {
       "id": "nr-pterostilbene",
@@ -3161,7 +3428,7 @@
       "safe": 76,
       "overall": 51,
       "tier": "C",
-      "rank": 74
+      "rank": 80
     },
     {
       "id": "glycine",
@@ -3200,7 +3467,7 @@
       "safe": 88,
       "overall": 51,
       "tier": "C",
-      "rank": 75
+      "rank": 81
     },
     {
       "id": "taurine",
@@ -3245,7 +3512,7 @@
       "safe": 88,
       "overall": 51,
       "tier": "C",
-      "rank": 76
+      "rank": 82
     },
     {
       "id": "panax-ginseng",
@@ -3284,7 +3551,7 @@
       "safe": 72,
       "overall": 51,
       "tier": "C",
-      "rank": 77
+      "rank": 83
     },
     {
       "id": "protein-methionine-restriction",
@@ -3324,7 +3591,7 @@
       "safe": 60,
       "overall": 51,
       "tier": "C",
-      "rank": 78
+      "rank": 84
     },
     {
       "id": "ketogenic-diet",
@@ -3376,7 +3643,7 @@
       "safe": 65,
       "overall": 51,
       "tier": "C",
-      "rank": 79
+      "rank": 85
     },
     {
       "id": "contrast-therapy",
@@ -3414,7 +3681,7 @@
       "safe": 80,
       "overall": 51,
       "tier": "C",
-      "rank": 80
+      "rank": 86
     },
     {
       "id": "msc-therapy",
@@ -3453,7 +3720,7 @@
       "safe": 55,
       "overall": 51,
       "tier": "C",
-      "rank": 81
+      "rank": 87
     },
     {
       "id": "quercetin",
@@ -3498,7 +3765,7 @@
       "safe": 80,
       "overall": 50,
       "tier": "C",
-      "rank": 82
+      "rank": 88
     },
     {
       "id": "ubx1325",
@@ -3537,7 +3804,7 @@
       "safe": 70,
       "overall": 50,
       "tier": "C",
-      "rank": 83
+      "rank": 89
     },
     {
       "id": "ca-akg",
@@ -3576,7 +3843,7 @@
       "safe": 82,
       "overall": 50,
       "tier": "C",
-      "rank": 84
+      "rank": 90
     },
     {
       "id": "thymosin-alpha-1",
@@ -3614,7 +3881,7 @@
       "safe": 65,
       "overall": 50,
       "tier": "C",
-      "rank": 85
+      "rank": 91
     },
     {
       "id": "pqq",
@@ -3658,7 +3925,7 @@
       "safe": 80,
       "overall": 49,
       "tier": "C",
-      "rank": 86
+      "rank": 92
     },
     {
       "id": "resveratrol",
@@ -3697,7 +3964,7 @@
       "safe": 80,
       "overall": 49,
       "tier": "C",
-      "rank": 87
+      "rank": 93
     },
     {
       "id": "egcg-green-tea-catechins",
@@ -3736,7 +4003,7 @@
       "safe": 58,
       "overall": 49,
       "tier": "C",
-      "rank": 88
+      "rank": 94
     },
     {
       "id": "rhodiola-rosea",
@@ -3775,7 +4042,7 @@
       "safe": 76,
       "overall": 49,
       "tier": "C",
-      "rank": 89
+      "rank": 95
     },
     {
       "id": "fisetin",
@@ -3820,7 +4087,7 @@
       "safe": 70,
       "overall": 48,
       "tier": "C",
-      "rank": 90
+      "rank": 96
     },
     {
       "id": "gynostemma-pentaphyllum",
@@ -3859,7 +4126,7 @@
       "safe": 72,
       "overall": 48,
       "tier": "C",
-      "rank": 91
+      "rank": 97
     },
     {
       "id": "gotu-kola-centella",
@@ -3904,7 +4171,7 @@
       "safe": 76,
       "overall": 48,
       "tier": "C",
-      "rank": 92
+      "rank": 98
     },
     {
       "id": "hbot",
@@ -3943,7 +4210,7 @@
       "safe": 55,
       "overall": 48,
       "tier": "C",
-      "rank": 93
+      "rank": 99
     },
     {
       "id": "cordyceps",
@@ -3982,7 +4249,7 @@
       "safe": 74,
       "overall": 47,
       "tier": "C",
-      "rank": 94
+      "rank": 100
     },
     {
       "id": "reishi-ganoderma",
@@ -4021,7 +4288,7 @@
       "safe": 72,
       "overall": 46,
       "tier": "C",
-      "rank": 95
+      "rank": 101
     },
     {
       "id": "ghk-cu",
@@ -4060,7 +4327,7 @@
       "safe": 60,
       "overall": 46,
       "tier": "C",
-      "rank": 96
+      "rank": 102
     },
     {
       "id": "astragalus-cycloastragenol-ta65",
@@ -4099,7 +4366,7 @@
       "safe": 60,
       "overall": 45,
       "tier": "C",
-      "rank": 97
+      "rank": 103
     },
     {
       "id": "low-dose-lithium",
@@ -4144,7 +4411,7 @@
       "safe": 60,
       "overall": 44,
       "tier": "C",
-      "rank": 98
+      "rank": 104
     },
     {
       "id": "thymus-regeneration",
@@ -4183,7 +4450,7 @@
       "safe": 45,
       "overall": 44,
       "tier": "C",
-      "rank": 99
+      "rank": 105
     },
     {
       "id": "growth-hormone",
@@ -4228,7 +4495,7 @@
       "safe": 38,
       "overall": 44,
       "tier": "C",
-      "rank": 100
+      "rank": 106
     },
     {
       "id": "17-alpha-estradiol",
@@ -4273,7 +4540,7 @@
       "safe": 50,
       "overall": 43,
       "tier": "D",
-      "rank": 101
+      "rank": 107
     },
     {
       "id": "pterostilbene",
@@ -4312,7 +4579,7 @@
       "safe": 65,
       "overall": 43,
       "tier": "D",
-      "rank": 102
+      "rank": 108
     },
     {
       "id": "partial-reprogramming-osk",
@@ -4357,7 +4624,7 @@
       "safe": 28,
       "overall": 41,
       "tier": "D",
-      "rank": 103
+      "rank": 109
     },
     {
       "id": "oxytocin",
@@ -4396,7 +4663,7 @@
       "safe": 60,
       "overall": 41,
       "tier": "D",
-      "rank": 104
+      "rank": 110
     },
     {
       "id": "apigenin",
@@ -4435,7 +4702,7 @@
       "safe": 75,
       "overall": 39,
       "tier": "D",
-      "rank": 105
+      "rank": 111
     },
     {
       "id": "thymalin",
@@ -4474,7 +4741,7 @@
       "safe": 50,
       "overall": 39,
       "tier": "D",
-      "rank": 106
+      "rank": 112
     },
     {
       "id": "pregnenolone",
@@ -4511,7 +4778,7 @@
       "safe": 60,
       "overall": 39,
       "tier": "D",
-      "rank": 107
+      "rank": 113
     },
     {
       "id": "procyanidin-c1",
@@ -4550,7 +4817,7 @@
       "safe": 60,
       "overall": 38,
       "tier": "D",
-      "rank": 108
+      "rank": 114
     },
     {
       "id": "nadh",
@@ -4588,7 +4855,7 @@
       "safe": 70,
       "overall": 38,
       "tier": "D",
-      "rank": 109
+      "rank": 115
     },
     {
       "id": "klotho-therapy",
@@ -4633,7 +4900,7 @@
       "safe": 40,
       "overall": 38,
       "tier": "D",
-      "rank": 110
+      "rank": 116
     },
     {
       "id": "heterochronic-fmt",
@@ -4672,7 +4939,7 @@
       "safe": 50,
       "overall": 38,
       "tier": "D",
-      "rank": 111
+      "rank": 117
     },
     {
       "id": "rilmenidine",
@@ -4711,7 +4978,7 @@
       "safe": 60,
       "overall": 37,
       "tier": "D",
-      "rank": 112
+      "rank": 118
     },
     {
       "id": "humanin",
@@ -4750,7 +5017,7 @@
       "safe": 45,
       "overall": 37,
       "tier": "D",
-      "rank": 113
+      "rank": 119
     },
     {
       "id": "navitoclax",
@@ -4789,7 +5056,7 @@
       "safe": 32,
       "overall": 36,
       "tier": "D",
-      "rank": 114
+      "rank": 120
     },
     {
       "id": "young-plasma-transfusion",
@@ -4834,7 +5101,7 @@
       "safe": 45,
       "overall": 36,
       "tier": "D",
-      "rank": 115
+      "rank": 121
     },
     {
       "id": "telomerase-gene-therapy",
@@ -4873,7 +5140,7 @@
       "safe": 32,
       "overall": 35,
       "tier": "D",
-      "rank": 116
+      "rank": 122
     },
     {
       "id": "mitochondrial-transplantation",
@@ -4909,7 +5176,7 @@
       "safe": 45,
       "overall": 35,
       "tier": "D",
-      "rank": 117
+      "rank": 123
     },
     {
       "id": "minocycline",
@@ -4947,7 +5214,7 @@
       "safe": 55,
       "overall": 34,
       "tier": "D",
-      "rank": 118
+      "rank": 124
     },
     {
       "id": "senolytic-vaccine",
@@ -4986,7 +5253,7 @@
       "safe": 35,
       "overall": 34,
       "tier": "D",
-      "rank": 119
+      "rank": 125
     },
     {
       "id": "nk-cell-rejuvenation",
@@ -5025,7 +5292,7 @@
       "safe": 50,
       "overall": 34,
       "tier": "D",
-      "rank": 120
+      "rank": 126
     },
     {
       "id": "nad-iv",
@@ -5064,7 +5331,7 @@
       "safe": 55,
       "overall": 33,
       "tier": "D",
-      "rank": 121
+      "rank": 127
     },
     {
       "id": "exosome-therapy",
@@ -5109,7 +5376,7 @@
       "safe": 45,
       "overall": 33,
       "tier": "D",
-      "rank": 122
+      "rank": 128
     },
     {
       "id": "mots-c",
@@ -5148,7 +5415,7 @@
       "safe": 40,
       "overall": 33,
       "tier": "D",
-      "rank": 123
+      "rank": 129
     },
     {
       "id": "grounding-earthing",
@@ -5185,7 +5452,7 @@
       "safe": 70,
       "overall": 32,
       "tier": "D",
-      "rank": 124
+      "rank": 130
     },
     {
       "id": "follistatin-gene-therapy",
@@ -5224,7 +5491,7 @@
       "safe": 38,
       "overall": 31,
       "tier": "D",
-      "rank": 125
+      "rank": 131
     },
     {
       "id": "epitalon",
@@ -5263,7 +5530,7 @@
       "safe": 45,
       "overall": 30,
       "tier": "D",
-      "rank": 126
+      "rank": 132
     },
     {
       "id": "foxo4-dri",
@@ -5302,7 +5569,7 @@
       "safe": 30,
       "overall": 27,
       "tier": "D",
-      "rank": 127
+      "rank": 133
     },
     {
       "id": "bpc-157",
@@ -5344,7 +5611,7 @@
       "safe": 38,
       "overall": 27,
       "tier": "D",
-      "rank": 128
+      "rank": 134
     },
     {
       "id": "piperlongumine",
@@ -5382,7 +5649,7 @@
       "safe": 40,
       "overall": 26,
       "tier": "D",
-      "rank": 129
+      "rank": 135
     }
   ]
 }
