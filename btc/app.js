@@ -191,6 +191,7 @@ function render(s) {
   renderEtf(s);
   renderMacro(s);
   renderDerivatives(s);
+  renderValuation(s);
   renderLogs(s.logs);
   updateTitle(s);
   updateHaltBanner(s);
@@ -662,6 +663,26 @@ function renderRegime(s) {
   if (dr) dr.innerHTML = (r.drivers || []).map(d => `<span class="rgchip ${d.dir}"><b>${esc(d.label)}</b><span class="d">${esc(d.detail || '')}</span></span>`).join('');
   const fl = $('rgFlags');
   if (fl) fl.innerHTML = (r.flags || []).map(f => `<div class="rgflag ${esc(f.sev)}">${esc(f.text)}</div>`).join('');
+}
+
+// 📈 On-chain valuation (MVRV/SOPR/NUPL via bitcoin-data.com, fed by a GitHub Action).
+function nuplZone(n) { return n < 0 ? 'capitulation' : n < 0.25 ? 'hope / fear' : n < 0.5 ? 'optimism' : n < 0.75 ? 'belief' : 'euphoria'; }
+function renderValuation(s) {
+  const v = s.valuation, sec = $('valuation'); if (!sec) return;
+  if (!v || (v.mvrv == null && v.sopr == null && v.nupl == null)) { sec.hidden = true; return; }
+  sec.hidden = false;
+  if (v.date) setTxt('valDate', 'bitcoin-data.com · ' + v.date);
+  const mv = $('valMvrv'); if (mv) { mv.className = 'v'; if (v.mvrv != null) { mv.textContent = v.mvrv; mv.classList.add(v.mvrv < 1 ? 'up' : v.mvrv > 3.5 ? 'down' : ''); } else mv.textContent = '—'; }
+  setTxt('valMvrvSub', v.mvrv != null ? (v.mvrv < 1 ? 'below cost basis' : v.mvrv > 3.5 ? 'historically frothy' : 'mid-cycle') : '');
+  setTxt('valZ', v.mvrvZscore != null ? v.mvrvZscore : '—');
+  const sp = $('valSopr'); if (sp) { sp.className = 'v'; if (v.sopr != null) { sp.textContent = v.sopr; sp.classList.add(v.sopr >= 1 ? 'up' : 'down'); } else sp.textContent = '—'; }
+  setTxt('valSoprSub', v.sopr != null ? (v.sopr >= 1 ? 'coins moving in profit' : 'coins moving at a loss') : '');
+  const nu = $('valNupl'); if (nu) { nu.className = 'v'; if (v.nupl != null) { nu.textContent = v.nupl; nu.classList.add(v.nupl > 0 ? 'up' : 'down'); } else nu.textContent = '—'; }
+  setTxt('valNuplSub', v.nupl != null ? nuplZone(v.nupl) : '');
+  setTxt('valRprice', v.realizedPrice != null ? '$' + fmtNum(v.realizedPrice) : '—');
+  setTxt('valRcap', v.realizedCap != null ? '$' + fmtNum(v.realizedCap) : '—');
+  const note = $('valNote');
+  if (note) note.textContent = v.mvrv == null ? '' : v.mvrv < 1 ? 'Market value below aggregate cost basis — historically a capitulation / value zone.' : v.mvrv > 3.5 ? 'Market value far above cost basis — historically late-cycle / frothy.' : "Mid-cycle: market value moderately above holders' cost basis.";
 }
 
 // 🎲 Options & implied vol (Deribit) — only when the API returns it.

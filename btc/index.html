@@ -6,7 +6,7 @@
   <meta name="robots" content="noindex, nofollow">
   <title>₿ BTC Monitor</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='0.9em' font-size='90'%3E%E2%82%BF%3C/text%3E%3C/svg%3E">
-  <link rel="stylesheet" href="styles.css?v=20260623d">
+  <link rel="stylesheet" href="styles.css?v=20260623e">
 </head>
 <body class="is-starting">
   <div id="stars"></div>
@@ -152,6 +152,21 @@
       </div>
     </section>
 
+    <section class="netpanel" id="valuation" hidden>
+      <div class="panel">
+        <div class="charthead"><span>📈 On-chain valuation</span><span class="muted2" id="valDate">bitcoin-data.com · daily</span></div>
+        <div class="livestats">
+          <div class="lcard"><div class="k">MVRV</div><div class="v" id="valMvrv">—</div><div class="sub" id="valMvrvSub"></div></div>
+          <div class="lcard"><div class="k">MVRV Z-score</div><div class="v" id="valZ">—</div></div>
+          <div class="lcard"><div class="k">SOPR</div><div class="v" id="valSopr">—</div><div class="sub" id="valSoprSub"></div></div>
+          <div class="lcard"><div class="k">NUPL</div><div class="v" id="valNupl">—</div><div class="sub" id="valNuplSub"></div></div>
+          <div class="lcard"><div class="k">Realized price</div><div class="v" id="valRprice">—</div></div>
+          <div class="lcard"><div class="k">Realized cap</div><div class="v" id="valRcap">—</div></div>
+        </div>
+        <div class="note" id="valNote"></div>
+      </div>
+    </section>
+
     <section class="netpanel" id="market" hidden>
       <div class="panel">
         <div class="charthead"><span>📊 Market &amp; sentiment</span><span class="muted2">CoinGecko · alt.me · OKX</span></div>
@@ -276,6 +291,6 @@
 
   <footer><span id="footNote">Runs locally on your Mac · read-only market data</span> · <span id="srvTime"></span></footer>
   <script src="config.js"></script>
-  <script src="app.js?v=20260623d"></script>
+  <script src="app.js?v=20260623e"></script>
 </body>
 </html>
