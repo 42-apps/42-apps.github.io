@@ -186,6 +186,7 @@ function render(s) {
   renderIntel(s);
   renderOnchain(s);
   renderMarket(s);
+  renderRegime(s);
   renderOptions(s);
   renderEtf(s);
   renderMacro(s);
@@ -646,6 +647,21 @@ function drawSparkline(id, arr) {
   }).join(' ');
   const col = arr[arr.length - 1] >= arr[0] ? '#27d17f' : '#ff5f57';
   el.innerHTML = `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none"><polyline points="${pts}" fill="none" stroke="${col}" stroke-width="2" stroke-linejoin="round"/></svg>`;
+}
+
+// 🧭 Regime read — synthesized bull/neutral/bear gauge + driver chips + alert banners.
+function renderRegime(s) {
+  const r = s.regime, sec = $('regime'); if (!sec) return;
+  if (!r || r.score == null) { sec.hidden = true; return; }
+  sec.hidden = false;
+  const num = $('rgScore'); if (num) { num.textContent = r.score; num.className = 'rgnum ' + (r.tone || 'neutral'); }
+  const lbl = $('rgLabel'); if (lbl) { lbl.textContent = r.label || '—'; lbl.className = 'rglabel ' + (r.tone || 'neutral'); }
+  setTxt('rgNote', r.note || '');
+  const needle = $('rgNeedle'); if (needle) needle.style.left = Math.max(0, Math.min(100, r.score)) + '%';
+  const dr = $('rgDrivers');
+  if (dr) dr.innerHTML = (r.drivers || []).map(d => `<span class="rgchip ${d.dir}"><b>${esc(d.label)}</b><span class="d">${esc(d.detail || '')}</span></span>`).join('');
+  const fl = $('rgFlags');
+  if (fl) fl.innerHTML = (r.flags || []).map(f => `<div class="rgflag ${esc(f.sev)}">${esc(f.text)}</div>`).join('');
 }
 
 // 🎲 Options & implied vol (Deribit) — only when the API returns it.

@@ -6,7 +6,7 @@
   <meta name="robots" content="noindex, nofollow">
   <title>🚀 SPCX Monitor</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='0.9em' font-size='90'%3E%F0%9F%9A%80%3C/text%3E%3C/svg%3E">
-  <link rel="stylesheet" href="styles.css?v=20260623c">
+  <link rel="stylesheet" href="styles.css?v=20260623d">
 </head>
 <body class="is-starting">
   <div id="stars"></div>
@@ -36,6 +36,21 @@
       <div class="card"><div class="k">Exchange</div><div class="v" id="g_exch">—</div></div>
       <div class="card"><div class="k">Asset name</div><div class="v" id="g_name">—</div></div>
       <div class="card"><div class="k">Last checked</div><div class="v" id="g_check">—</div></div>
+    </section>
+
+    <section class="regime" id="regime" hidden>
+      <div class="panel">
+        <div class="charthead"><span>🧭 Regime read</span><span class="muted2" id="rgNote"></span></div>
+        <div class="rgmain">
+          <div class="rgscore"><div class="rgnum" id="rgScore">—</div><div class="rglabel" id="rgLabel">—</div></div>
+          <div class="rggauge">
+            <div class="rgtrack"><div class="rgneedle" id="rgNeedle"></div></div>
+            <div class="rgends"><span>Risk-off</span><span>Neutral</span><span>Risk-on</span></div>
+          </div>
+        </div>
+        <div class="rgdrivers" id="rgDrivers"></div>
+        <div class="rgflags" id="rgFlags"></div>
+      </div>
     </section>
 
     <section class="live" id="live" hidden>
@@ -261,6 +276,6 @@
 
   <footer><span id="footNote">Runs locally on your Mac · read-only market data</span> · <span id="srvTime"></span></footer>
   <script src="config.js"></script>
-  <script src="app.js?v=20260623c"></script>
+  <script src="app.js?v=20260623d"></script>
 </body>
 </html>

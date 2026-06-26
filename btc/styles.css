@@ -164,6 +164,29 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:20px}
 .spark{margin-top:6px;height:54px}
 .spark svg{display:block;width:100%;height:54px}
 .lcard .sub{margin-top:4px;font-size:11px;color:var(--muted)}
+/* 🧭 regime gauge */
+.regime{margin-top:18px}
+.regime[hidden]{display:none}
+.rgmain{display:flex;gap:22px;align-items:center;margin-top:8px}
+.rgscore{text-align:center;min-width:118px}
+.rgnum{font-size:46px;font-weight:800;line-height:1;font-variant-numeric:tabular-nums}
+.rgnum.bull{color:#27c93f}.rgnum.bear{color:#ff5f57}.rgnum.neutral{color:#ffbd2e}
+.rglabel{margin-top:5px;font-size:13px;font-weight:600}
+.rglabel.bull{color:#27c93f}.rglabel.bear{color:#ff5f57}.rglabel.neutral{color:#ffbd2e}
+.rggauge{flex:1}
+.rgtrack{position:relative;height:12px;border-radius:6px;background:linear-gradient(90deg,#ff5f57,#ffbd2e,#27c93f)}
+.rgneedle{position:absolute;top:-4px;left:50%;width:4px;height:20px;border-radius:2px;background:#fff;box-shadow:0 0 0 2px rgba(0,0,0,.45);transform:translateX(-2px);transition:left .6s ease}
+.rgends{display:flex;justify-content:space-between;margin-top:7px;font-size:11px;color:var(--muted)}
+.rgdrivers{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.rgchip{font-size:12px;padding:5px 10px;border-radius:8px;border:1px solid var(--line);background:#0e1430;display:flex;gap:7px;align-items:center}
+.rgchip .d{color:var(--muted)}
+.rgchip.bull{border-color:rgba(39,201,63,.45)}
+.rgchip.bear{border-color:rgba(255,95,87,.45)}
+.rgflags{display:flex;flex-direction:column;gap:6px;margin-top:12px}
+.rgflag{font-size:12px;padding:7px 11px;border-radius:8px;border:1px solid}
+.rgflag.warn{background:rgba(255,189,46,.08);border-color:rgba(255,189,46,.38)}
+.rgflag.good{background:rgba(39,201,63,.08);border-color:rgba(39,201,63,.38)}
+.rgflag.info{background:rgba(91,140,255,.08);border-color:rgba(91,140,255,.38)}
 .intel{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px}
 .intel[hidden]{display:none}
 .panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px}
