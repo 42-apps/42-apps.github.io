@@ -131,7 +131,12 @@ async function tick() {
     const to = setTimeout(() => ctrl.abort(), 14000);
     const r = await fetch(API + '/api/status', { cache: 'no-store', signal: ctrl.signal });
     clearTimeout(to);
-    s = await r.json();
+    const j = await r.json();
+    // A non-ok status or an {error}/symbol-less body is a transient backend miss —
+    // treat it like a fetch failure (keep the last good frame), never render it as
+    // an empty "standing by" state.
+    if (!r.ok || !j || j.error || !j.symbol) throw new Error((j && j.error) || 'bad response');
+    s = j;
     failCount = 0;
   } catch {
     failCount++;
