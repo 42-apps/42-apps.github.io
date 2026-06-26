@@ -1,0 +1,71 @@
+name: BTC on-chain valuation refresh
+
+# bitcoin-data.com rate-limits by IP (~10/hr) and hard-blocks Cloudflare's shared
+# egress IP (429). GitHub-hosted runners have their own IPs, so we fetch the daily
+# valuation metrics here and commit btc/valuation.json; the Worker + page read that.
+
+on:
+  schedule:
+    - cron: '17 */6 * * *'   # every 6 hours
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: btc-valuation
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch valuation metrics from bitcoin-data.com
+        run: |
+          python3 - <<'PY'
+          import json, urllib.request, datetime
+          B = 'https://bitcoin-data.com/v1'
+          def get(p):
+              try:
+                  req = urllib.request.Request(f'{B}/{p}/last', headers={'User-Agent': 'btc-monitor-valuation/1.0'})
+                  with urllib.request.urlopen(req, timeout=20) as r:
+                      return json.load(r)
+              except Exception as e:
+                  print('warn', p, e); return {}
+          def num(d, k):
+              v = d.get(k)
+              try: return float(v) if v is not None else None
+              except: return None
+          mv = get('mvrv'); z = get('mvrv-zscore'); so = get('sopr')
+          nu = get('nupl'); rp = get('realized-price'); rc = get('realized-cap')
+          def r3(x): return round(x, 3) if x is not None else None
+          def r4(x): return round(x, 4) if x is not None else None
+          out = {
+            'mvrv': r3(num(mv, 'mvrv')),
+            'mvrvZscore': r3(num(z, 'mvrvZscore')),
+            'sopr': r4(num(so, 'sopr')),
+            'nupl': r4(num(nu, 'nupl')),
+            'realizedPrice': round(num(rp, 'realizedPrice')) if num(rp, 'realizedPrice') is not None else None,
+            'realizedCap': round(num(rc, 'realizedCap')) if num(rc, 'realizedCap') is not None else None,
+            'date': mv.get('d'),
+          }
+          if out['mvrv'] is None and out['sopr'] is None and out['nupl'] is None:
+              print('no core metrics fetched; leaving existing file'); raise SystemExit(0)
+          out['updated'] = datetime.datetime.utcnow().replace(microsecond=0).isoformat() + 'Z'
+          with open('btc/valuation.json', 'w') as f:
+              json.dump(out, f, indent=0)
+          print('wrote', json.dumps(out))
+          PY
+      - name: Commit if changed
+        run: |
+          git config user.name "42-apps"
+          git config user.email "42-apps@users.noreply.github.com"
+          git add btc/valuation.json
+          if git diff --cached --quiet; then
+            echo "no change"
+          else
+            git commit -m "chore: refresh BTC on-chain valuation"
+            git pull --rebase --autostash origin main || true
+            git push
+          fi
