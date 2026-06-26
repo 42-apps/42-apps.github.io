@@ -141,6 +141,9 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:20px}
 .tape li .tp{font-weight:700;flex:1 1 auto;text-align:right}
 .tape li .ts{color:var(--muted);flex:0 0 64px;text-align:right}
 .tape li.up .tp{color:var(--green)}.tape li.down .tp{color:var(--red)}
+.tape li.buy .tp{color:var(--green)}.tape li.sell .tp{color:var(--red)}
+.tape li .bs{flex:0 0 auto;font-weight:700;font-size:11px;letter-spacing:.03em}
+.tape li.buy .bs{color:var(--green)}.tape li.sell .bs{color:var(--red)}
 @media(max-width:620px){.livestats{grid-template-columns:1fr 1fr}.livePrice{font-size:40px}}
 
 /* ---- order flow + analytics ---- */

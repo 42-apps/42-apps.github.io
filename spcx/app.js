@@ -536,8 +536,12 @@ function renderMetrics(m) {
 
   const ul = $('bigprints');
   const lp = m.largePrints || [];
-  ul.innerHTML = lp.length
-    ? lp.map(t => `<li><span class="tt">${new Date(t.t).toLocaleTimeString([], { hour12: false })}</span><span class="tp">${fmtUSD(t.p)}</span><span class="ts">${fmtNum(t.s)}</span></li>`).join('')
+  if (ul) ul.innerHTML = lp.length
+    ? lp.map(t => {
+        const side = t.tks === 'B' ? 'buy' : t.tks === 'S' ? 'sell' : '';
+        const tag = side === 'buy' ? '▲ BUY' : side === 'sell' ? '▼ SELL' : '';
+        return `<li class="${side}"><span class="tt">${new Date(t.t).toLocaleTimeString([], { hour12: false })}</span><span class="bs">${tag}</span><span class="tp">${fmtUSD(t.p)}</span><span class="ts">${fmtNum(t.s)}</span></li>`;
+      }).join('')
     : '<li class="muted">No block prints yet.</li>';
 }
 
@@ -938,12 +942,14 @@ function drawShareCard(s) {
   const lp = (m.largePrints || []).slice(0, 5);
   if (lp.length) {
     lp.forEach(t => {
+      const side = t.tks === 'B' ? 'buy' : t.tks === 'S' ? 'sell' : '';
       ctx.fillStyle = '#8a93b8';
       ctx.fillText(new Date(t.t).toLocaleTimeString([], { hour12: false }), X, y + 8);
-      ctx.fillStyle = '#e8ecff'; ctx.font = 'bold 14px sans-serif';
+      ctx.fillStyle = side === 'buy' ? '#27d17f' : side === 'sell' ? '#ff5f57' : '#e8ecff'; ctx.font = 'bold 14px sans-serif';
       ctx.fillText(usd(t.p), X + 110, y + 8);
       ctx.font = '14px sans-serif'; ctx.fillStyle = '#8a93b8';
       ctx.fillText(fmtNum(t.s) + ' sh', X + 220, y + 8);
+      if (side) { ctx.fillStyle = side === 'buy' ? '#27d17f' : '#ff5f57'; ctx.font = 'bold 12px sans-serif'; ctx.fillText(side === 'buy' ? '▲ BUY' : '▼ SELL', X + 320, y + 8); }
       y += 22;
     });
   } else { ctx.fillStyle = '#5a6488'; ctx.fillText('No block prints yet.', X, y + 8); y += 22; }
