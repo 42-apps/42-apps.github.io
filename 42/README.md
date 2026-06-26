@@ -11,7 +11,7 @@ is: the facts are real astronomy; the verdicts and survival tips are editorial.
 Part of the [42-apps](https://42-apps.github.io/) collection, built with
 [three.js](https://threejs.org). The Answer is 42; the map is the question.
 
-🔗 **Live:** https://42-apps.github.io/hhgttg/
+🔗 **Live:** https://42-apps.github.io/42/
 
 ## What it does
 
