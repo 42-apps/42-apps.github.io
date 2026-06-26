@@ -9,7 +9,7 @@
 <meta property="og:description" content="135 longevity interventions, ranked by evidence. See what works, what's promising, and what's hype — on one interactive map.">
 <meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Crect width='256' height='256' rx='58' fill='%230a1426'/%3E%3Cpath d='M70 196 C70 130 186 126 186 60' fill='none' stroke='%2337dcc4' stroke-width='13' stroke-linecap='round'/%3E%3Cpath d='M70 60 C70 126 186 130 186 196' fill='none' stroke='%23f4c44e' stroke-width='13' stroke-linecap='round'/%3E%3Cg stroke='%23cfe0ea' stroke-width='7' stroke-linecap='round'%3E%3Cline x1='92' y1='78' x2='164' y2='78'/%3E%3Cline x1='110' y1='128' x2='146' y2='128'/%3E%3Cline x1='92' y1='178' x2='164' y2='178'/%3E%3C/g%3E%3C/svg%3E">
-<link rel="stylesheet" href="app.css?v=4">
+<link rel="stylesheet" href="app.css?v=5">
 </head>
 <body>
 
@@ -42,6 +42,7 @@
       <div id="menu" class="hidden">
         <button class="mi" id="miMethod"><span class="mi-ic">⚖️</span><span class="mi-tx">How it's scored</span></button>
         <button class="mi" id="miStats"><span class="mi-ic">📊</span><span class="mi-tx">State of the field</span></button>
+        <button class="mi" id="miChecklist"><span class="mi-ic">🖨</span><span class="mi-tx">Printable checklist (PDF)</span></button>
         <button class="mi" id="miTop"><span class="mi-ic">⭐</span><span class="mi-tx">Jump to #1</span></button>
         <button class="mi" id="miShare"><span class="mi-ic">🔗</span><span class="mi-tx">Copy link to this view</span></button>
         <div class="mi-sep"></div>
@@ -71,6 +72,7 @@
         <option value="name">Sort: A–Z</option>
       </select>
       <button class="minibtn" id="filterBtn" title="Filters">⚙ Filters</button>
+      <button class="minibtn" id="checklistBtn" title="Printable checklist (PDF) — respects current filters">🖨 Checklist</button>
       <button class="minibtn" id="resetBtn" title="Reset filters">↺</button>
     </div>
     <div class="ctl-row r2">
@@ -199,7 +201,9 @@
     </div>
   </div>
 
-  <script src="data/interventions.js?v=4"></script>
-  <script src="app.js?v=4"></script>
+  <div id="printDoc"></div>
+
+  <script src="data/interventions.js?v=5"></script>
+  <script src="app.js?v=5"></script>
 </body>
 </html>

@@ -50,6 +50,39 @@ const TIER = {
 };
 const TIER_ORDER = ["S","A","B","C","D"];
 
+/* ---------- printable checklist: access groups + practical how-to guidance ---------- */
+const ACCESS_GROUPS = [
+  {key:"lifestyle", match:["lifestyle"], icon:"🟢", label:"Lifestyle & free", desc:"Free things you do — the strongest, safest evidence in all of longevity. Start here."},
+  {key:"otc", match:["otc"], icon:"🛒", label:"Supplements & over-the-counter", desc:"Buyable without a prescription. Quality varies; most are optional add-ons, not substitutes for the lifestyle basics."},
+  {key:"rx", match:["rx"], icon:"℞", label:"Prescription — talk to your doctor", desc:"Prescription-only; do not self-source. Several are used off-label for longevity. Discuss risks and monitoring with a clinician."},
+  {key:"adv", match:["clinic-only","experimental"], icon:"🏥", label:"Clinical & experimental (advanced)", desc:"Procedures and investigational options — mostly unproven in humans for longevity and some carry real risks. For information, not a to-do list."}
+];
+const GUIDE = {
+  "cardiorespiratory-fitness-vo2max":"<b>How:</b> VO₂max is the single strongest fitness predictor of lifespan. Build it two ways — a <b>Zone 2</b> base (easy enough to hold a conversation) 3–4×/week for 45–60 min, plus <b>one</b> weekly session of short hard intervals near your max. <b>Try ~1 hr:</b> singles tennis, continuous rowing, a hilly bike ride, uphill hiking, lap swimming, or a spin class. Track it with a watch (Garmin/Apple/Whoop) or a gym test.",
+  "aerobic-exercise":"<b>How:</b> 150–300 min/week of moderate cardio (you can talk but not sing), or 75–150 min vigorous — spread over most days. <b>Try:</b> brisk walking, cycling, swimming, doubles tennis, dancing, elliptical, hiking, steady jogging.",
+  "resistance-training":"<b>How:</b> 2–3 sessions/week covering all major muscle groups, adding load over time (~2–3 sets, 6–15 reps). <b>Try:</b> free weights or machines, bodyweight (push-ups, squats, lunges, rows), resistance bands, kettlebells.",
+  "hiit":"<b>How:</b> 1–2×/week once you have an aerobic base. Classic: <b>4×4 min</b> hard (~85–95% max HR — hard but you could manage one more) with 3 min easy between. <b>Try:</b> bike/rower/ski-erg intervals, hill sprints, incline-treadmill or stair repeats.",
+  "daily-steps-walking":"<b>How:</b> aim ~7,000–8,000+ steps/day (benefit starts well below 10k). <b>Easy wins:</b> walking meetings, take the stairs, a 10-min post-meal walk, park farther away, get off a stop early.",
+  "sleep-optimization":"<b>How:</b> 7–9 h on a consistent schedule. Keep the room dark and cool, cut screens & caffeine before bed, get morning daylight, and get snoring/sleep-apnea checked — it matters.",
+  "mediterranean-diet":"<b>How:</b> base meals on vegetables, legumes, whole grains, fish, nuts and extra-virgin olive oil; minimise red/processed meat, refined carbs and sugar. Roughly 4 tbsp olive oil + a handful of nuts daily.",
+  "time-restricted-eating":"<b>How:</b> eat within a consistent ~8–10 h window (e.g. 9am–6pm) and stop ~3 h before bed. Earlier windows beat late-night eating; benefits mostly come from eating a bit less.",
+  "intermittent-fasting":"<b>How:</b> e.g. 5:2 (two ~500–600 kcal days/week) or alternate-day. Effects track with the calorie deficit; not for those with a history of disordered eating, and adjust diabetes meds with your doctor.",
+  "caloric-restriction":"<b>How:</b> a sustained ~10–15% calorie reduction with adequate protein and micronutrients. Hard to maintain long-term; not for the underweight, frail or elderly.",
+  "dietary-fiber":"<b>How:</b> aim 25–30 g+/day (most people get ~15–20). <b>Try:</b> whole grains and oats, beans/lentils, vegetables, fruit, nuts and seeds. Increase gradually with plenty of water.",
+  "nut-consumption":"<b>How:</b> a small daily handful (~30 g) of unsalted nuts. <b>Try:</b> almonds, walnuts, pistachios, mixed nuts — swapped in for chips or sweets.",
+  "coffee":"<b>How:</b> ~3–4 cups/day is the sweet spot (decaf works too — much of the benefit isn't caffeine). Prefer filtered; avoid late-day caffeine if it harms your sleep; ≤200 mg/day in pregnancy.",
+  "green-tea-beverage":"<b>How:</b> ~1.5–3 cups/day of brewed green tea. Stick to the beverage rather than high-dose extract pills (those can stress the liver).",
+  "sauna-finnish-dry-heat":"<b>How:</b> 4–7 sessions/week, ~15–20 min at ~80–100 °C; hydrate well. Start shorter/cooler and build up. Avoid with unstable heart disease or in pregnancy without medical advice.",
+  "cold-water-immersion":"<b>How:</b> short and occasional — ~1–5 min at ~10–15 °C, a few times/week. Never alone, ease in slowly, and skip it if you have heart disease.",
+  "contrast-therapy":"<b>How:</b> alternate hot and cold (e.g. ~1 min cold / 1–2 min warm) for ~10–15 min, mainly for post-exercise recovery rather than a proven aging effect.",
+  "infrared-sauna":"<b>How:</b> ~15–30 min at ~50–60 °C, a few times/week; gentler heat than a traditional sauna. Hydrate and build tolerance gradually.",
+  "red-light-therapy-pbm":"<b>How:</b> red/near-infrared panels (~630–850 nm), a few minutes per area several times/week, at the device's recommended distance. Wear eye protection; more is not better (the dose-response is biphasic).",
+  "meditation-mindfulness":"<b>How:</b> ~10–20 min most days — breath focus or a body scan, an app (Headspace/Calm/Waking Up), or an 8-week MBSR course (the studied format).",
+  "social-connection":"<b>How:</b> protect regular, meaningful contact — schedule time with friends/family, join a club, class or volunteer group, and invest in a few close relationships. Loneliness rivals smoking for mortality risk.",
+  "smoking-cessation":"<b>How:</b> quitting at any age helps — the earlier, the bigger the gain. Combine behavioural support with NRT/varenicline, set a quit date, and use a quitline or app.",
+  "alcohol-moderation":"<b>How:</b> less is better and no amount is 'protective.' Keep well below ~1 drink/day, have several alcohol-free days each week, or skip it entirely."
+};
+
 const W = {evi:0.30, hum:0.28, imp:0.22, safe:0.20};
 const SUB = [
   {k:"evi", label:"Evidence"},
@@ -388,6 +421,37 @@ function buildFilterPop(){
 }
 
 /* ===================== OVERLAYS ===================== */
+function printChecklist(){
+  const items=filtered();
+  const groups=ACCESS_GROUPS.map(function(g){
+    return {g:g, list:items.filter(function(x){return g.match.indexOf(x.accessibility)>=0;}).sort(function(a,b){return b.o-a.o;})};
+  }).filter(function(z){return z.list.length;});
+  const filt=(S.cats.size||S.etypes.size||S.accs.size||S.min||S.q)?" (current filter)":"";
+  let dt=""; try{dt=new Date().toLocaleDateString();}catch(e){}
+  let h="";
+  h+='<h1>Geroscope — Longevity Checklist</h1>';
+  h+='<p class="pc-sub">What actually works to slow aging · ranked by evidence · '+esc(dt)+'</p>';
+  h+='<div class="pc-meta">Tick what you already do or plan to try. Grouped by how you access each, ranked within each group by a 0–100 <b>promise score</b> (30% evidence + 28% human proof + 22% impact + 20% safety; tiers S&ge;78 · A · B · C · D). <b>Educational only — not medical advice.</b> Talk to a clinician before starting anything new — especially prescription and advanced items. '+items.length+' interventions'+filt+'.</div>';
+  groups.forEach(function(z){
+    h+='<div class="pc-grp"><h2>'+z.g.icon+' '+esc(z.g.label)+' ('+z.list.length+')</h2><div class="pc-gd">'+esc(z.g.desc)+'</div>';
+    z.list.forEach(function(x){
+      const why=(x.effect||"").split(" — ")[0];
+      h+='<div class="pc-item"><div class="pc-box"></div><div class="pc-main">';
+      h+='<div class="pc-h">'+esc(x.name)+' <span class="pc-tier" style="background:'+tierColor(x.tier)+'22">'+x.tier+'</span> <span class="pc-sc">'+x.o+' · '+esc(CAT[x.category].label)+'</span></div>';
+      if (GUIDE[x.id]) h+='<div class="pc-guide">'+GUIDE[x.id]+'</div>';
+      else h+='<div class="pc-do"><b>Do:</b> '+esc(x.dose)+'</div>';
+      if (why) h+='<div class="pc-why">'+esc(why)+'</div>';
+      if (z.g.key==="rx"||z.g.key==="adv") h+='<div class="pc-note">&#9888; '+esc(x.caveats)+'</div>';
+      h+='</div></div>';
+    });
+    h+='</div>';
+  });
+  h+='<div class="pc-foot">Source: Geroscope · 42-apps.github.io/longevity — full evidence, key studies and citations for every item are on the site. Promise scores are a curated synthesis, not measured values. Not medical advice; consult a clinician.</div>';
+  $("printDoc").innerHTML=h;
+  toast("Opening print dialog — pick “Save as PDF”");
+  setTimeout(function(){ try{ window.print(); }catch(e){} }, 150);
+}
+
 function openOv(id){ $(id).classList.remove("hidden"); }
 function closeOv(id){ $(id).classList.add("hidden"); }
 
@@ -478,6 +542,8 @@ function wire(){
   const mclose=function(){ menu.classList.add("hidden"); };
   $("miMethod").onclick=function(){ mclose(); openOv("methodology"); };
   $("miStats").onclick=function(){ mclose(); buildStats(); openOv("stats"); };
+  $("miChecklist").onclick=function(){ mclose(); printChecklist(); };
+  $("checklistBtn").onclick=printChecklist;
   $("miTop").onclick=function(){ mclose(); select(DATA[0].id); toast("#1: "+DATA[0].name); };
   $("miShare").onclick=function(){ mclose(); navigator.clipboard && navigator.clipboard.writeText(location.href); toast("Link copied"); };
   $("miReset").onclick=function(){ mclose(); $("resetBtn").onclick(); };
