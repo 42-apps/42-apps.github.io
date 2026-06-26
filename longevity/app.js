@@ -452,6 +452,30 @@ function printChecklist(){
   setTimeout(function(){ try{ window.print(); }catch(e){} }, 150);
 }
 
+function printCheatSheet(){
+  let pool=filtered().filter(function(x){return x.o>=68;});   // S + A tiers only
+  if(!pool.length) pool=filtered().slice(0,15);
+  const groups=ACCESS_GROUPS.map(function(g){
+    return {g:g, list:pool.filter(function(x){return g.match.indexOf(x.accessibility)>=0;}).sort(function(a,b){return b.o-a.o;})};
+  }).filter(function(z){return z.list.length;});
+  let dt=""; try{dt=new Date().toLocaleDateString();}catch(e){}
+  let h="";
+  h+='<h1>Geroscope — 1-Page Longevity Cheat Sheet</h1>';
+  h+='<p class="pc-sub">The highest-evidence essentials (S &amp; A tier) · '+esc(dt)+'</p>';
+  h+='<div class="pc-meta">The best-supported interventions, grouped by how you get them, ranked by promise score. <b>Educational only — not medical advice.</b> Full list, scores, guidance &amp; sources at 42-apps.github.io/longevity.</div>';
+  groups.forEach(function(z){
+    h+='<div class="pc-grp"><h2>'+z.g.icon+' '+esc(z.g.label)+'</h2>';
+    z.list.forEach(function(x){
+      h+='<div class="pc-item"><div class="pc-box"></div><div class="pc-main"><span class="pc-h">'+esc(x.name)+'</span> <span class="pc-tier" style="background:'+tierColor(x.tier)+'22">'+x.tier+'·'+x.o+'</span> <span style="color:#555">— '+esc(x.dose)+'</span></div></div>';
+    });
+    h+='</div>';
+  });
+  h+='<div class="pc-foot">Geroscope · 42-apps.github.io/longevity — not medical advice; consult a clinician. For the full 135-item checklist with how-to guidance, use “Full checklist” in the menu.</div>';
+  $("printDoc").innerHTML=h;
+  toast("Opening print dialog — pick “Save as PDF”");
+  setTimeout(function(){ try{ window.print(); }catch(e){} }, 150);
+}
+
 function openOv(id){ $(id).classList.remove("hidden"); }
 function closeOv(id){ $(id).classList.add("hidden"); }
 
@@ -543,7 +567,9 @@ function wire(){
   $("miMethod").onclick=function(){ mclose(); openOv("methodology"); };
   $("miStats").onclick=function(){ mclose(); buildStats(); openOv("stats"); };
   $("miChecklist").onclick=function(){ mclose(); printChecklist(); };
-  $("checklistBtn").onclick=printChecklist;
+  $("miProvenance").onclick=function(){ mclose(); openOv("provenance"); };
+  var _apl=$("aboutProvLink"); if(_apl) _apl.onclick=function(e){ e.preventDefault(); closeOv("about"); openOv("provenance"); };
+  $("checklistBtn").onclick=printCheatSheet;
   $("miTop").onclick=function(){ mclose(); select(DATA[0].id); toast("#1: "+DATA[0].name); };
   $("miShare").onclick=function(){ mclose(); navigator.clipboard && navigator.clipboard.writeText(location.href); toast("Link copied"); };
   $("miReset").onclick=function(){ mclose(); $("resetBtn").onclick(); };

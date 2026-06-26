@@ -9,7 +9,7 @@
 <meta property="og:description" content="135 longevity interventions, ranked by evidence. See what works, what's promising, and what's hype — on one interactive map.">
 <meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Crect width='256' height='256' rx='58' fill='%230a1426'/%3E%3Cpath d='M70 196 C70 130 186 126 186 60' fill='none' stroke='%2337dcc4' stroke-width='13' stroke-linecap='round'/%3E%3Cpath d='M70 60 C70 126 186 130 186 196' fill='none' stroke='%23f4c44e' stroke-width='13' stroke-linecap='round'/%3E%3Cg stroke='%23cfe0ea' stroke-width='7' stroke-linecap='round'%3E%3Cline x1='92' y1='78' x2='164' y2='78'/%3E%3Cline x1='110' y1='128' x2='146' y2='128'/%3E%3Cline x1='92' y1='178' x2='164' y2='178'/%3E%3C/g%3E%3C/svg%3E">
-<link rel="stylesheet" href="app.css?v=5">
+<link rel="stylesheet" href="app.css?v=6">
 </head>
 <body>
 
@@ -41,8 +41,9 @@
       <button id="menuBtn" class="iconbtn" title="Menu" aria-label="Menu">☰</button>
       <div id="menu" class="hidden">
         <button class="mi" id="miMethod"><span class="mi-ic">⚖️</span><span class="mi-tx">How it's scored</span></button>
+        <button class="mi" id="miProvenance"><span class="mi-ic">🎓</span><span class="mi-tx">How this was made</span></button>
         <button class="mi" id="miStats"><span class="mi-ic">📊</span><span class="mi-tx">State of the field</span></button>
-        <button class="mi" id="miChecklist"><span class="mi-ic">🖨</span><span class="mi-tx">Printable checklist (PDF)</span></button>
+        <button class="mi" id="miChecklist"><span class="mi-ic">🖨</span><span class="mi-tx">Full checklist (PDF)</span></button>
         <button class="mi" id="miTop"><span class="mi-ic">⭐</span><span class="mi-tx">Jump to #1</span></button>
         <button class="mi" id="miShare"><span class="mi-ic">🔗</span><span class="mi-tx">Copy link to this view</span></button>
         <div class="mi-sep"></div>
@@ -72,7 +73,7 @@
         <option value="name">Sort: A–Z</option>
       </select>
       <button class="minibtn" id="filterBtn" title="Filters">⚙ Filters</button>
-      <button class="minibtn" id="checklistBtn" title="Printable checklist (PDF) — respects current filters">🖨 Checklist</button>
+      <button class="minibtn" id="checklistBtn" title="1-page cheat sheet (PDF) — the top-tier essentials">🖨 Cheat sheet</button>
       <button class="minibtn" id="resetBtn" title="Reset filters">↺</button>
     </div>
     <div class="ctl-row r2">
@@ -197,13 +198,65 @@
       <p>Each of the <b id="aboutCount">135</b> interventions was researched across the 2023–2026 literature and scored on four dimensions — evidence strength, human translation, impact and safety (see <b>How it's scored</b>). Sources are linked on every card.</p>
       <p class="ov-cav">⚠ This is an educational tool, <b>not medical advice</b>. Evidence summaries are simplifications and the science moves fast. Nothing here is a recommendation to take, stop, or combine any intervention — talk to a qualified clinician first. Several listed items are experimental, unregulated, or carry real risks.</p>
       <p class="ov-src"><b>Open data &amp; independent review:</b> the full dataset is public — <a href="data/interventions.json" target="_blank" rel="noopener">interventions.json</a> · <a href="data/interventions.csv" target="_blank" rel="noopener">CSV</a> (every key study links to its source, with the scoring methodology embedded). Fact-checking and corrections are welcome.</p>
+      <p class="ov-src">How this was built, who verified it, references &amp; the equivalent human effort: <a href="#" id="aboutProvLink">How this was made →</a></p>
       <p class="ov-src">Part of the <a href="https://42-apps.github.io/" target="_blank" rel="noopener">42-apps</a> collection.</p>
+    </div>
+  </div>
+
+  <div id="provenance" class="overlay hidden">
+    <div class="ov-box wide">
+      <button class="ov-close" data-close="provenance" aria-label="Close">×</button>
+      <h2>🎓 How this was made — provenance &amp; methodology</h2>
+      <p><b>What it is.</b> Geroscope is an evidence-ranked atlas of <b>135 interventions</b> people use to try to slow aging — drugs, supplements, botanicals, diet, exercise, thermal/light, hormones/peptides and frontier biotech — each scored on the strength of the science behind it. It was conceived to cut through longevity hype with one transparent, comparable read on evidence quality, deliberately rewarding what is proven <i>in humans</i> over what is merely promising in mice or in marketing.</p>
+
+      <h3>How it was researched</h3>
+      <p>Compiled and audited through a structured multi-stage pipeline, with primary-source web research at each step (prioritising 2023–2026 literature — randomised trials, prospective cohorts, meta-analyses, and the NIA Interventions Testing Program):</p>
+      <ol style="color:#cfdae6;line-height:1.6;padding-left:20px;font-size:13px;margin:0 0 12px">
+        <li><b>Research sweep</b> — parallel domain agents gathered and summarised the best available evidence for each intervention, with citations.</li>
+        <li><b>Curated scoring</b> — every item scored 0–100 on four dimensions (evidence strength · human translation · impact · safety) against one consistent rubric, so items compare fairly across categories.</li>
+        <li><b>Adversarial fact-check</b> — a second, independent fleet of 10 “skeptic” agents re-verified every claim, number and citation against primary sources, hunting for fabricated studies, wrong effect sizes, mis-grading and overstatement.</li>
+        <li><b>Citation resolution</b> — a third 10-agent pass linked 190 of 193 cited studies to a canonical, verified source (DOI / PubMed / official), each confirmed to match the stated finding.</li>
+      </ol>
+
+      <h3>Who built &amp; verified it</h3>
+      <p><b>Built by AI — stated plainly.</b> Geroscope was compiled and written by an AI system (Anthropic’s Claude, orchestrating the agent fleets above), not by a named panel of human researchers or clinicians.</p>
+      <p><b>Verification.</b> Internally, the adversarial fact-check and citation passes cross-examined the data. Externally, the public dataset was then independently fact-checked by three leading AI models — <b>Google Gemini, xAI Grok and OpenAI GPT</b> — each of which reviewed citations, effect sizes and grading and <b>reported no factual errors</b> (Gemini: “exceptionally accurate”; Grok: “one of the better-curated public syntheses available”). Their feedback was incorporated: 95% confidence intervals on headline figures, and six additional well-evidenced interventions.</p>
+      <p class="ov-cav"><b>No human clinician or formal peer reviewer has signed off on this work.</b> AI cross-checking is not a substitute for expert human review. Treat the scores as an informed synthesis, not a clinical guideline — and consult a qualified professional before acting on anything here.</p>
+
+      <h3>Equivalent human effort <span style="font-weight:400;color:var(--muted)">(estimate)</span></h3>
+      <p>For transparency, a rough estimate of the effort an equivalent evidence-synthesis-plus-web-build would normally take a small specialist team — i.e. what it <i>would</i> require, not a claim that such a team did it. The AI pipeline produced it in a few hours of wall-clock time across dozens of parallel agents.</p>
+      <div class="method-grid">
+        <div class="mg-row"><div class="mg-w"><b>~30h</b></div><div class="mg-d">Scope &amp; taxonomy — defining 135 interventions across 12 categories.</div></div>
+        <div class="mg-row"><div class="mg-w"><b>~450h</b></div><div class="mg-d">Literature search &amp; appraisal — finding, reading and summarising the best evidence for each of 135 interventions.</div></div>
+        <div class="mg-row"><div class="mg-w"><b>~100h</b></div><div class="mg-d">Evidence grading &amp; scoring — designing the rubric and applying it consistently.</div></div>
+        <div class="mg-row"><div class="mg-w"><b>~150h</b></div><div class="mg-d">Citation verification — resolving &amp; checking 193 studies to canonical sources.</div></div>
+        <div class="mg-row"><div class="mg-w"><b>~110h</b></div><div class="mg-d">Independent fact-check / peer-review pass.</div></div>
+        <div class="mg-row"><div class="mg-w"><b>~75h</b></div><div class="mg-d">Writing lay summaries, dosing, safety and caveats.</div></div>
+        <div class="mg-row"><div class="mg-w"><b>~130h</b></div><div class="mg-d">Interactive web app — design &amp; build (landscape, table, tiers, filters, exports, checklist).</div></div>
+        <div class="mg-row"><div class="mg-w"><b>~55h</b></div><div class="mg-d">Coordination &amp; revision.</div></div>
+      </div>
+      <p style="margin-top:10px">≈ <b>900–1,400 human-hours</b> (~5–8 person-months) for a small specialist team.</p>
+
+      <h3>Skills a human team would normally need</h3>
+      <div class="method-grid">
+        <div class="mg-row"><div class="mg-d"><b>Biogerontologist / geroscientist</b> (PhD or MD-PhD) — domain framing, mechanisms, biological plausibility.</div></div>
+        <div class="mg-row"><div class="mg-d"><b>Clinical epidemiologist / evidence-synthesis methodologist</b> (MSc–PhD, GRADE-trained) — study appraisal and evidence grading.</div></div>
+        <div class="mg-row"><div class="mg-d"><b>Biostatistician</b> (MSc–PhD) — effect sizes, confidence intervals, meta-analytic interpretation.</div></div>
+        <div class="mg-row"><div class="mg-d"><b>Medical librarian / information specialist</b> (MLIS) — systematic literature searching and citation management.</div></div>
+        <div class="mg-row"><div class="mg-d"><b>Clinician &amp; clinical pharmacologist</b> (MD / PharmD) — safety, dosing, regulatory status, clinical relevance.</div></div>
+        <div class="mg-row"><div class="mg-d"><b>Science writer–editor</b> — clear, accurate lay summaries.</div></div>
+        <div class="mg-row"><div class="mg-d"><b>Front-end / data-visualisation engineer</b> (senior) — the interactive application.</div></div>
+      </div>
+
+      <h3>References &amp; open data</h3>
+      <p>Every intervention links its key studies to canonical sources. The complete dataset — 193 cited studies, scoring methodology embedded — is open for independent review: <a href="data/interventions.json" target="_blank" rel="noopener">interventions.json</a> · <a href="data/interventions.csv" target="_blank" rel="noopener">CSV</a>. Landmark trials anchoring the top tiers include Jha (NEJM 2013), Arem (JAMA Intern Med 2015), Mandsager (JAMA Netw Open 2018), PREDIMED (NEJM 2018), the NIA ITP, EMPA-REG / DAPA-CKD, SELECT (NEJM 2023) and CALERIE-2.</p>
+      <p class="ov-src">Offered in the spirit of transparency about how AI-assisted evidence synthesis is produced. Corrections and expert review are warmly welcomed via the open data above. Educational only — not medical advice.</p>
     </div>
   </div>
 
   <div id="printDoc"></div>
 
-  <script src="data/interventions.js?v=5"></script>
-  <script src="app.js?v=5"></script>
+  <script src="data/interventions.js?v=6"></script>
+  <script src="app.js?v=6"></script>
 </body>
 </html>
