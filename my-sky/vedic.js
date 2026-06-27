@@ -52,8 +52,9 @@ const FRIEND = {Sun:['Moon','Mars','Jupiter'],Moon:['Sun','Mercury'],Mars:['Sun'
  Mercury:['Sun','Venus'],Jupiter:['Sun','Moon','Mars'],Venus:['Mercury','Saturn'],Saturn:['Mercury','Venus']};
 const ENEMY = {Sun:['Venus','Saturn'],Moon:[],Mars:['Mercury'],Mercury:['Moon'],
  Jupiter:['Mercury','Venus'],Venus:['Sun','Moon'],Saturn:['Sun','Moon','Mars']};
-// combustion orb (deg from Sun)
+// combustion orb (deg from Sun); retrograde orbs differ for Mercury/Venus
 const COMBUST = {Moon:12,Mars:17,Mercury:14,Jupiter:11,Venus:10,Saturn:15};
+const COMBUST_RETRO = {Mercury:12, Venus:8};
 // natural benefic/malefic (Mercury & Moon are conditional; simplified)
 const NAT_BENEFIC = {Jupiter:1,Venus:1,Mercury:1,Moon:1};
 
@@ -173,8 +174,9 @@ function activePeriod(mds, atMs){                          // walk to the runnin
 /* ===========================================================================
    dignity, combustion, relationships
    =========================================================================== */
-function dignity(planet, lon, sunLon){
+function dignity(planet, lon, sunLon, retro){
   const s=rasi(lon), d=degInSign(lon), out={sign:s, status:'', combust:false};
+  if(planet==='Rahu'||planet==='Ketu') return out;   // node exaltation/ownership disputed -> excluded by default (BPHS)
   const ex=EXALT[planet];
   if(ex){ if(ex[0]===s) out.status='Exalted'; else if((ex[0]+6)%12===s) out.status='Debilitated'; }
   if(!out.status && MOOLA[planet]){ const [ms,a,b]=MOOLA[planet]; if(ms===s && d>=a && d<b) out.status='Moolatrikona'; }
@@ -187,7 +189,8 @@ function dignity(planet, lon, sunLon){
     else out.status='Neutral';
   }
   if(sunLon!=null && COMBUST[planet]){ let sep=Math.abs(norm(lon-sunLon)); if(sep>180)sep=360-sep;
-    out.combust = sep <= COMBUST[planet]; }
+    const orb=(retro && COMBUST_RETRO[planet]) ? COMBUST_RETRO[planet] : COMBUST[planet];
+    out.combust = sep <= orb; }
   return out;
 }
 
@@ -278,9 +281,11 @@ function yogas(ctx){
   // Chandra-Mangala: Moon & Mars same sign
   if(S.Moon===S.Mars) found.push({name:'Chandra-Mangala Yoga', note:'Moon & Mars together — wealth/drive'});
   // Kemadruma: nothing in 2nd or 12th from Moon (Sun..Saturn)
-  const around=['Sun','Mars','Mercury','Jupiter','Venus','Saturn'].some(p=>{const h=houseFrom(S.Moon,S[p]);return h===2||h===12;});
-  const withMoon=['Sun','Mars','Mercury','Jupiter','Venus','Saturn'].some(p=>S[p]===S.Moon);
-  if(!around && !withMoon) found.push({name:'Kemadruma Yoga', note:'Moon isolated (no planets in 2nd/12th) — a difficult yoga'});
+  const KEM=['Sun','Mars','Mercury','Jupiter','Venus','Saturn'];
+  const around=KEM.some(p=>{const h=houseFrom(S.Moon,S[p]);return h===2||h===12;});
+  const withMoon=KEM.some(p=>S[p]===S.Moon);
+  const kendraMoon=KEM.some(p=>KENDRA.includes(houseFrom(S.Moon,S[p])));   // kendra from Moon cancels Kemadruma
+  if(!around && !withMoon && !kendraMoon) found.push({name:'Kemadruma Yoga', note:'Moon isolated (nothing in the 2nd/12th, with, or in a kendra from it) — a difficult yoga'});
   return found;
 }
 

@@ -597,6 +597,8 @@ function wire(){
 
   // header home -> reset
   const home=()=>{ document.querySelectorAll('.overlay').forEach(o=>o.classList.add('hidden'));
+    setView('charts');                                   // house rule: logo fully resets to the home view
+    if(window.resetVedicUI) resetVedicUI();
     $('#welcomeOverlay').classList.remove('hidden');
     window.scrollTo({top:0,behavior:'smooth'}); markGlobe(true); };
   $('#brandHome').addEventListener('click',home);
@@ -1152,7 +1154,7 @@ function init(){
   // if we restored a shared / last sky, reveal it instead of the welcome overlay
   if(restored) $('#welcomeOverlay').classList.add('hidden');
   // restore last view (after first render so lastR exists)
-  if(['sky3d','solar3d'].includes(prefs.lastView)) setView(prefs.lastView);
+  if(['sky3d','solar3d','vedic'].includes(prefs.lastView)) setView(prefs.lastView);
 
   // keep the active 3D view sized on window resize (sizeSpace re-renders)
   window.addEventListener('resize',()=>{ if(activeView==='sky3d')sizeSpace(sky3d); else if(activeView==='solar3d')sizeSpace(solar3d); });

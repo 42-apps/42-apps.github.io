@@ -23,7 +23,7 @@ const pColor = p => ({Sun:'#ff9e4d',Moon:'#dfe6ff',Mars:'#ff6b53',Mercury:'#7bd8
 function vedicData(r){
   const rot = AZ.Rotation_EQJ_ECT(r.date);
   const lahiri = V.norm(spicaTropLon(r.date, rot) - 180);
-  const ayan = (S.zodiac==='tropical') ? lahiri : r.ayan;   // Vedic stays sidereal
+  const ayan = (S.zodiac==='tropical' || !r.ayan) ? lahiri : r.ayan;   // Vedic stays sidereal (custom 0 -> Lahiri)
   const sid = trop => V.norm(trop - ayan);
   const g = {};
   for(const b of r.bodies){ if(['Uranus','Neptune','Pluto'].includes(b.key)) continue; g[b.key]=sid(b.lon); }
@@ -107,7 +107,7 @@ function planetTable(d, r){
   let rows='';
   const sunLon=d.g.Sun;
   for(const p of PLANETS){
-    const L=d.g[p], nk=V.nakshatra(L), dg=V.dignity(p, L, sunLon), dd=V.dms(L);
+    const L=d.g[p], nk=V.nakshatra(L), dg=V.dignity(p, L, sunLon, d.retro[p]), dd=V.dms(L);
     const navs=V.varga(L,9);
     const flags=[]; if(d.retro[p]) flags.push('<span class="vt-r">R</span>'); if(dg.combust) flags.push('<span class="vt-c">c</span>');
     const dignClass = /Exalt|Own|Moola/.test(dg.status)?'good':/Debil|Enemy/.test(dg.status)?'bad':'';
@@ -115,7 +115,7 @@ function planetTable(d, r){
       `<td>${SG[dd.sign]} ${SI[dd.sign]} <span class="tag">${dd.label}</span></td>`+
       `<td>${nk.name} <span class="tag">pada ${nk.pada}</span></td>`+
       `<td>${nk.lord}</td><td>${SG[navs]} ${SI[navs]}</td>`+
-      `<td class="${dignClass}">${dg.status}</td></tr>`;
+      `<td class="${dignClass}">${dg.status||'—'}</td></tr>`;
   }
   return `<div class="vtable-wrap"><table class="vtable"><thead><tr><th>Graha</th><th>Rāśi (deg)</th><th>Nakṣatra</th><th>Nak lord</th><th>Navāṃśa</th><th>Dignity</th></tr></thead><tbody>${rows}</tbody></table></div>`;
 }
@@ -150,10 +150,10 @@ function panelDashas(d, r){
   h += `<div class="dasha-tree">`;
   for(const md of vim.mds){
     const cur = now>=md.start && now<md.end;
-    h += `<details class="dnode lvl0 ${cur?'cur':''}" ${cur?'open':''}><summary><span class="dl" style="color:${pColor(md.lord)}">${GL[md.lord]||''} ${md.lord}</span><span class="dr">${fmtDate(md.start)} – ${fmtDate(md.end)}</span></summary>`;
+    h += `<details class="dnode lvl0 ${cur?'cur':''}" data-dk="m${md.start}" ${cur?'open':''}><summary><span class="dl" style="color:${pColor(md.lord)}">${GL[md.lord]||''} ${md.lord}</span><span class="dr">${fmtDate(md.start)} – ${fmtDate(md.end)}</span></summary>`;
     for(const ad of md.children){
       const curA = now>=ad.start && now<ad.end;
-      h += `<details class="dnode lvl1 ${curA?'cur':''}" ${curA?'open':''}><summary><span class="dl">${ad.lord}</span><span class="dr">${fmtDate(ad.start)} – ${fmtDate(ad.end)}</span></summary>`;
+      h += `<details class="dnode lvl1 ${curA?'cur':''}" data-dk="a${ad.start}" ${curA?'open':''}><summary><span class="dl">${ad.lord}</span><span class="dr">${fmtDate(ad.start)} – ${fmtDate(ad.end)}</span></summary>`;
       for(const pd of ad.children){ const curP=now>=pd.start && now<pd.end;
         h += `<div class="dnode lvl2 ${curP?'cur':''}"><span class="dl">${pd.lord}</span><span class="dr">${fmtDate(pd.start)} – ${fmtDate(pd.end)}</span></div>`; }
       h += `</details>`;
@@ -167,7 +167,7 @@ function panelDashas(d, r){
 /* ---- Panchanga ---- */
 function varaIndex(r){
   const civ = new Date(Date.UTC(S.y,S.mo-1,S.d)).getUTCDay();
-  try{ const sr=AZ.SearchRiseSet(AZ.Body.Sun, r.obs, +1, new Date(Date.UTC(S.y,S.mo-1,S.d,0,0,0)), 1);
+  try{ const sr=AZ.SearchRiseSet(AZ.Body.Sun, r.obs, +1, zonedToUTC(S.y,S.mo,S.d,0,0,S.tz), 1);  // true UTC instant of local midnight
     if(sr && r.date.getTime() < sr.date.getTime()) return (civ+6)%7; }catch(e){}
   return civ;
 }
@@ -258,8 +258,12 @@ function renderVedic(r){
     body = sub==='charts'?panelCharts(d,r): sub==='dashas'?panelDashas(d,r): sub==='panchanga'?panelPanchanga(d,r):
            sub==='strengths'?panelStrengths(d,r): sub==='yogas'?panelYogas(d,r): sub==='kp'?panelKP(d,r): panelTransits(d,r);
   }catch(e){ body=`<p class="vc-note">Error rendering this panel: ${e.message}</p>`; }
+  if(S.timeKnown===false) body = `<p class="vc-warn">⚠ Birth time unknown — the <b>Lagna</b>, whole-sign <b>houses</b> and <b>Arudha Lagna</b> are computed at local noon and are not reliable. Sign placements, nakṣatras, dignities, divisional charts, pañchāṅga, the Moon-based daśā and transits remain valid.</p>` + body;
+  const openKeys=[...document.querySelectorAll('#vedicPanel details[open]')].map(x=>x.getAttribute('data-dk')).filter(Boolean);
   $('#vedicPanel').innerHTML = `<div class="vedic-head">🕉 Sidereal Jyotish · whole-sign houses · ayanāṃśa ${d.ayan.toFixed(2)}°</div>` + body;
+  openKeys.forEach(k=>{ const el=$('#vedicPanel').querySelector('details[data-dk="'+k+'"]'); if(el) el.open=true; });
 }
+function resetVedicUI(){ sub='charts'; chartStyle='north'; vargaN=9; if(typeof lastR!=='undefined' && lastR) renderVedic(lastR); }
 
 function initVedicUI(){
   const panel=$('#vedicPanel'), tabs=$('#vedicSubtabs');
@@ -272,4 +276,5 @@ function initVedicUI(){
 }
 window.renderVedic = renderVedic;
 window.initVedicUI = initVedicUI;
+window.resetVedicUI = resetVedicUI;
 })();
