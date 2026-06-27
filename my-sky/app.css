@@ -254,12 +254,77 @@ figcaption{display:flex;flex-direction:column;margin-bottom:8px}
 .sky-empty{font-size:12px;color:var(--faint);padding:6px 2px;line-height:1.5}
 .now-showing{font-size:9px;color:var(--gold);border:1px solid var(--gold);border-radius:20px;padding:0 6px}
 
+/* ===== Vedic / Jyotish dashboard ===== */
+#vedic{min-width:0}
+.vedic-subtabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+.vedic-subtabs button{background:var(--card);border:1px solid var(--card-b);color:var(--dim);
+  padding:7px 13px;border-radius:9px;font-size:12.5px;cursor:pointer}
+.vedic-subtabs button:hover{border-color:var(--line2);color:var(--ink)}
+.vedic-subtabs button.on{border-color:var(--gold);color:var(--gold);background:rgba(244,213,141,.1)}
+.vedic-head{font-size:11.5px;color:var(--faint);letter-spacing:.04em;margin-bottom:14px}
+.vc-controls{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:14px}
+.vc-note{font-size:12px;color:var(--dim);margin:6px 0 14px}
+.vc-note b{color:var(--gold)}
+.seg{display:inline-flex;border:1px solid var(--card-b);border-radius:9px;overflow:hidden}
+.seg button{background:rgba(10,8,28,.6);border:none;color:var(--dim);padding:7px 13px;font-size:12.5px;cursor:pointer}
+.seg button.on{background:linear-gradient(180deg,var(--gold),var(--gold-d));color:#2a1d05;font-weight:700}
+.vc-sel{font-size:12px;color:var(--dim);display:flex;gap:6px;align-items:center}
+.vc-sel select{background:var(--card);border:1px solid var(--card-b);color:var(--ink);border-radius:8px;padding:6px 8px;color-scheme:dark}
+
+.vchart-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:18px}
+.vchart-row figure{margin:0;background:var(--card);border:1px solid var(--card-b);border-radius:16px;padding:12px;box-shadow:var(--shadow)}
+.vchart-row figcaption{font-size:12.5px;font-weight:600;color:var(--ink);margin-bottom:8px;text-align:center}
+.vchart{width:100%;height:auto;display:block;max-width:360px;margin:0 auto}
+
+.vtable-wrap{background:var(--card);border:1px solid var(--card-b);border-radius:14px;overflow:auto;box-shadow:var(--shadow);margin-bottom:16px}
+.vtable{width:100%;border-collapse:collapse;font-size:13px}
+.vtable th{text-align:left;padding:9px 12px;color:var(--dim);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.06em;background:rgba(10,8,28,.5);border-bottom:1px solid var(--line)}
+.vtable td{padding:8px 12px;border-bottom:1px solid var(--line)}
+.vtable tr:last-child td{border-bottom:none}
+.vtable td.good{color:var(--earth)}.vtable td.bad{color:var(--fire)}
+.vt-r{color:var(--fire);font-weight:700;font-size:10px;border:1px solid var(--fire);border-radius:4px;padding:0 3px;margin-left:3px}
+.vt-c{color:var(--air);font-weight:700;font-size:10px;border:1px solid var(--air);border-radius:4px;padding:0 3px;margin-left:3px}
+
+.avakhada{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:8px;margin-bottom:16px}
+.ava{background:var(--card);border:1px solid var(--card-b);border-radius:11px;padding:9px 12px;display:flex;flex-direction:column;gap:2px}
+.ava-k{font-size:10.5px;color:var(--faint);text-transform:uppercase;letter-spacing:.06em}
+.ava-v{font-size:14px;color:var(--ink);font-weight:600}
+
+.dasha-tree{display:flex;flex-direction:column;gap:4px}
+.dnode{border-radius:9px}
+.dnode summary{display:flex;justify-content:space-between;gap:10px;cursor:pointer;padding:8px 12px;border:1px solid var(--line);border-radius:9px;list-style:none;font-size:13.5px}
+.dnode summary::-webkit-details-marker{display:none}
+.dnode.lvl0>summary{background:rgba(40,32,86,.5);font-weight:650}
+.dnode.lvl1{margin-left:16px}
+.dnode.lvl1>summary{background:rgba(10,8,28,.5);font-size:12.5px}
+.dnode.lvl2{margin-left:32px;display:flex;justify-content:space-between;gap:10px;padding:6px 12px;font-size:12px;color:var(--dim)}
+.dnode.cur>summary,.dnode.lvl2.cur{border-color:var(--gold);background:rgba(244,213,141,.12);color:var(--ink)}
+.dl{font-weight:600}.dr{color:var(--faint);font-size:11.5px;white-space:nowrap}
+
+.panchanga{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.pan-card{background:linear-gradient(180deg,rgba(36,28,82,.6),rgba(18,14,48,.6));border:1px solid var(--card-b);border-radius:14px;padding:14px;box-shadow:var(--shadow)}
+.pan-k{font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--gold-d)}
+.pan-v{font-size:18px;font-weight:700;color:var(--gold);margin:3px 0}
+.pan-s{font-size:11px;color:var(--faint)}
+
+.av-tab{width:100%;border-collapse:collapse;font-size:12px}
+.av-tab th{padding:6px 8px;color:var(--dim);font-weight:600;background:rgba(10,8,28,.5)}
+.av-tab td{padding:6px 8px;text-align:center;color:var(--ink);border:1px solid var(--line)}
+
+.vh{font-size:15px;color:var(--gold);margin:18px 0 8px}
+.yoga-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.yoga-card{background:var(--card);border:1px solid var(--card-b);border-radius:14px;padding:14px;box-shadow:var(--shadow)}
+.yoga-card.warn{border-color:var(--fire)}
+.yoga-name{font-weight:700;color:var(--gold);margin-bottom:4px}
+.yoga-note{font-size:12.5px;color:var(--dim)}
+
 /* ===== Responsive ===== */
 @media (max-width:980px){
   #stage{grid-template-columns:1fr}
   #charts{grid-template-columns:1fr}
   #charts figure{max-width:520px;margin:0 auto;width:100%}
   #viewTabs{justify-content:center}
+  .vchart-row{grid-template-columns:1fr}
 }
 @media (max-width:520px){
   .brand-sub{display:none}

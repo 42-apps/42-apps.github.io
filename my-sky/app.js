@@ -223,6 +223,7 @@ const VIEW_CAPS = {
   charts:'Your sky as a dome (left) and the zodiac wheel (right) · directions, altitudes & signs',
   sky3d:'Standing at your birthplace, looking out — day or night, every planet where it truly stood',
   solar3d:'The whole solar system that day, seen from above — Earth in gold (distances compressed)',
+  vedic:'Vedic / Jyotish — sidereal charts, daśās, pañchāṅga, ashtakavarga, yogas, KP & Jaimini',
 };
 function render(){
   const r = compute();
@@ -234,6 +235,7 @@ function render(){
   // feed the active 3D view (build-once, update-only)
   if(activeView==='sky3d'  && sky3d)  updateSky3D(r);
   if(activeView==='solar3d'&& solar3d) updateSolar(r);
+  if(activeView==='vedic'  && window.renderVedic) renderVedic(r);
   const cap = $('#viewCaption'); if(cap) cap.textContent = VIEW_CAPS[activeView] || '';
 }
 
@@ -675,6 +677,7 @@ function setView(name){
   $('#charts').classList.toggle('hidden', name!=='charts');
   $('#sky3d').classList.toggle('hidden',  name!=='sky3d');
   $('#solar3d').classList.toggle('hidden',name!=='solar3d');
+  $('#vedic').classList.toggle('hidden',  name!=='vedic');
   document.querySelectorAll('#viewTabs .toolbtn').forEach(b=>{ const on=b.dataset.view===name;
     b.classList.toggle('on',on); b.setAttribute('aria-selected',on?'true':'false'); b.tabIndex=on?0:-1; });
   $('#miAspects').disabled = (name!=='charts');   // aspect lines only exist in the Charts wheel
@@ -682,6 +685,7 @@ function setView(name){
   $('#viewCaption').textContent = VIEW_CAPS[name] || '';
   if(name==='sky3d'){ if(!sky3d) initSky3D(); sizeSpace(sky3d); if(lastR) updateSky3D(lastR); renderSpace(sky3d); }
   else if(name==='solar3d'){ if(!solar3d) initSolar(); sizeSpace(solar3d); if(lastR) updateSolar(lastR); renderSpace(solar3d); }
+  else if(name==='vedic' && window.renderVedic && lastR){ renderVedic(lastR); }
 }
 // Render-on-demand: every camera move / state change renders once (no idle rAF loop;
 // also works when the tab is backgrounded, where requestAnimationFrame is paused).
@@ -1135,6 +1139,7 @@ function init(){
   updatePlaceReadout(); markGlobe(true);
   syncDaySlider(); syncInputs();
   renderSkyList();
+  if(window.initVedicUI) initVedicUI();
   wire();
   try { render(); }
   catch(e){                                  // a malformed/edited share link slipped through -> never blank the page

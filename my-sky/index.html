@@ -9,7 +9,7 @@
 <meta property="og:description" content="Stand under the real sky of the moment and place you were born — in 3D. Save skies for the people you love.">
 <meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Crect width='256' height='256' rx='58' fill='%23090720'/%3E%3Ccircle cx='128' cy='128' r='80' fill='none' stroke='%23f4d58d' stroke-width='5' stroke-opacity='.85'/%3E%3Ccircle cx='128' cy='128' r='30' fill='%23f4d58d'/%3E%3Cpath d='M188 92a44 44 0 1 0 0 72 36 36 0 0 1 0-72z' fill='%23cdd6ff'/%3E%3Ccircle cx='70' cy='66' r='4' fill='%23cdd6ff'/%3E%3Ccircle cx='196' cy='196' r='3' fill='%23cdd6ff'/%3E%3Ccircle cx='66' cy='190' r='2.5' fill='%23cdd6ff'/%3E%3C/svg%3E">
-<link rel="stylesheet" href="app.css?v=3">
+<link rel="stylesheet" href="app.css?v=4">
 </head>
 <body>
 
@@ -109,6 +109,7 @@
         <button class="toolbtn on" data-view="charts" role="tab" aria-selected="true">🧭 Charts</button>
         <button class="toolbtn" data-view="sky3d" role="tab" aria-selected="false" tabindex="-1">🌌 Stand under your sky</button>
         <button class="toolbtn" data-view="solar3d" role="tab" aria-selected="false" tabindex="-1">🪐 Solar system</button>
+        <button class="toolbtn" data-view="vedic" role="tab" aria-selected="false" tabindex="-1">🕉 Vedic</button>
       </div>
 
       <div id="summary" class="hidden"></div>
@@ -143,6 +144,12 @@
         <div id="solar3d" class="view3d hidden">
           <div class="v3d-host" id="solar3dHost"></div>
           <div class="v3d-hud">the whole solar system that day · drag to orbit · scroll to zoom · distances compressed</div>
+        </div>
+
+        <!-- View: Vedic / Jyotish dashboard -->
+        <div id="vedic" class="hidden">
+          <div id="vedicSubtabs" class="vedic-subtabs" role="tablist"></div>
+          <div id="vedicPanel"></div>
         </div>
       </div>
 
@@ -210,6 +217,8 @@
   <script src="lib/astronomy.browser.js"></script>
   <script src="lib/tz.js"></script>
   <script src="data/cities.js?v=2"></script>
-  <script src="app.js?v=3"></script>
+  <script src="vedic.js?v=1"></script>
+  <script src="app.js?v=4"></script>
+  <script src="vedic-ui.js?v=1"></script>
 </body>
 </html>
