@@ -16,19 +16,31 @@ const byId = new Map(ENTRIES.map(e => [e.id, e]));
 const CATCOLOR = {
   'solar-system':'#ffd166', 'nearby-star':'#7ee6ff', 'famous-star':'#ff9e6d',
   'exoplanet':'#88ff9b', 'galactic-structure':'#c79bff', 'nebula-cluster':'#ff8fd0',
-  'exotic-object':'#ff5d6c', 'concept-artifact':'#b8c3d9'
+  'exotic-object':'#ff5d6c', 'concept-artifact':'#b8c3d9',
+  'canon-place':'#ffd24a', 'canon-species':'#9be37d', 'canon-tech':'#b69cff',
+  'canon-character':'#ff9ecf', 'canon-article':'#ffb86b'
 };
 const CATLABEL = Object.fromEntries((DATA.categories||[]).map(c => [c.key, c.label]));
 const CATEMOJI = Object.fromEntries((DATA.categories||[]).map(c => [c.key, c.emoji]));
 
+/* realm = which Guide an entry belongs to: the REAL galaxy, or THE BOOK (canon). */
+const CANON_CATS = new Set(['canon-place','canon-species','canon-tech','canon-character','canon-article']);
+const entryRealm = e => (e && CANON_CATS.has(e.category)) ? 'book' : 'real';
+const catRealm = k => CANON_CATS.has(k) ? 'book' : 'real';
+let mode = 'real';
+const realmEntries = () => ENTRIES.filter(e => entryRealm(e) === mode);
+const realmCats = () => (DATA.categories||[]).filter(c => catRealm(c.key) === mode);
+
 /* objects whose labels are always drawn (the headline sights) */
 const MAJOR = new Set(['sol','sagittarius-a-star','betelgeuse','sirius-a','vega','polaris',
   'alpha-centauri-a','proxima-centauri','orion-nebula','pleiades','rigel','arcturus',
-  'crab-nebula','antares','aldebaran','deneb','milky-way','galactic-center']);
+  'crab-nebula','antares','aldebaran','deneb','milky-way','galactic-center',
+  'bk-earth-mk2','bk-betelgeuse-vicinity','bk-ursa-minor-beta','bk-magrathea','bk-milliways','bk-vogsphere']);
 
 /* focus stand-off distance (ly) by category — how close the camera parks */
 const STANDOFF = { 'solar-system':14, 'nearby-star':5, 'exoplanet':5, 'famous-star':70,
-  'nebula-cluster':900, 'exotic-object':500, 'galactic-structure':11000, 'concept-artifact':18 };
+  'nebula-cluster':900, 'exotic-object':500, 'galactic-structure':11000, 'concept-artifact':18,
+  'canon-place':7, 'canon-species':7, 'canon-tech':7, 'canon-character':7, 'canon-article':7 };
 
 const R0 = 26000;        // Sun → galactic centre, light-years
 const LY_PER_LY = 1;     // scene units are light-years
@@ -51,6 +63,21 @@ function entryPos(e){
   if(e.id === 'sol') return new THREE.Vector3(0,0,0);
   if(e.ra_deg==null || e.dec_deg==null || e.distance_ly==null || e.distance_ly<=0) return null;
   return galacticXYZ(e.ra_deg, e.dec_deg, e.distance_ly);
+}
+/* deterministic stylized position for a purely-fictional canon place (a loose,
+ * flattened cloud of story-worlds 90–430 ly around Sol — clearly "imagined") */
+function strHash(s){ let h=2166136261; for(let i=0;i<s.length;i++){ h^=s.charCodeAt(i); h=Math.imul(h,16777619);} return (h>>>0)/4294967295; }
+function fictionalPos(id){
+  const a = strHash(id)*Math.PI*2, rad = 90 + strHash(id+'~r')*340, hz = (strHash(id+'~h')-0.5)*130;
+  return new THREE.Vector3(rad*Math.cos(a), rad*Math.sin(a), hz);
+}
+/* map position for ANY entry (real or canon), or null if unplottable */
+function mapPos(e){
+  if(entryRealm(e) === 'real') return entryPos(e);
+  if(e.category !== 'canon-place') return null;          // only canon PLACES go on the map
+  if(e.id === 'bk-earth-mk2') return new THREE.Vector3(0,0,0);
+  if(e.ra_deg!=null && e.dec_deg!=null && e.distance_ly>0) return galacticXYZ(e.ra_deg, e.dec_deg, e.distance_ly);
+  return fictionalPos(e.id);
 }
 
 /* ============================================================
@@ -180,15 +207,17 @@ scene.add(solGlow);
 /* ============================================================
  * Catalogue markers (custom shader points, screen-space sized)
  * ============================================================ */
-const mapObjs = [];   // {entry,pos,base,screen:{x,y,vis}}
+const mapObjs = [];   // {entry,pos,base,realm,screen:{x,y,vis}}
 ENTRIES.forEach(e => {
-  const p = entryPos(e); if(!p) return;
+  const p = mapPos(e); if(!p) return;
   let base = 11;
   if(e.id==='sol') base = 22; else if(e.id==='sagittarius-a-star') base = 24;
   else if(MAJOR.has(e.id)) base = 16;
-  else if(e.category==='galactic-structure'||e.category==='nebula-cluster') base = 14;
-  mapObjs.push({ entry:e, pos:p, base, screen:{x:0,y:0,vis:false} });
+  else if(e.category==='galactic-structure'||e.category==='nebula-cluster'||e.category==='canon-place') base = 14;
+  mapObjs.push({ entry:e, pos:p, base, realm:entryRealm(e), screen:{x:0,y:0,vis:false} });
 });
+const posById = new Map(mapObjs.map(o => [o.entry.id, o.pos]));
+const plottedIds = new Set(mapObjs.map(o => o.entry.id));
 
 const cN = mapObjs.length;
 const cPos = new Float32Array(cN*3), cCol = new Float32Array(cN*3), cSize = new Float32Array(cN);
@@ -246,7 +275,7 @@ function project(){
     _v.copy(o.pos).project(camera);
     const inFront = _v.z < 1;
     const x = (_v.x*0.5+0.5)*w, y = (-_v.y*0.5+0.5)*h;
-    o.screen.vis = inFront && x>=-40 && x<=w+40 && y>=-20 && y<=h+20 && !hiddenCats.has(o.entry.category);
+    o.screen.vis = inFront && x>=-40 && x<=w+40 && y>=-20 && y<=h+20 && !hiddenCats.has(o.entry.category) && o.realm===mode;
     o.screen.x = x; o.screen.y = y; o.screen.ndcz = _v.z;
   }
 }
@@ -357,11 +386,19 @@ function distLine(e){
 }
 function renderEntry(e){
   const color = CATCOLOR[e.category]||'#fff';
+  const canon = entryRealm(e)==='book';
   const facts = (e.facts||[]).map(f=>`<dt>${esc(f.label)}</dt><dd>${esc(f.value)}</dd>`).join('');
   const tags = (e.tags||[]).map(t=>`<span>${esc(t)}</span>`).join('');
   const aka = (e.aka&&e.aka.length)?`<div class="e-aka">also: ${e.aka.map(esc).join(' · ')}</div>`:'';
-  const plottable = !!entryPos(e);
+  const plottable = plottedIds.has(e.id);
+  let locNote = '';
+  if(canon && e.category==='canon-place'){
+    locNote = e.fictional===false
+      ? `<div class="e-fiction">★ Anchored to a real star — shown at its true position.</div>`
+      : `<div class="e-fiction">A place from the books — its spot on the map is for show, not from any star chart.</div>`;
+  }
   screenBody.innerHTML = `
+    ${canon?`<div class="e-realm">★ From the Books</div>`:''}
     <div class="e-cat"><span class="ed" style="background:${color};box-shadow:0 0 8px ${color}"></span>${esc(CATLABEL[e.category]||e.category)}</div>
     <div class="e-name">${esc(e.name)}</div>
     ${aka}
@@ -369,21 +406,23 @@ function renderEntry(e){
     <div class="e-verdict">${esc(e.verdict||'')}</div>
     <div class="e-body">${esc(e.guide||'')}</div>
     ${distLine(e)}
+    ${locNote}
     ${facts?`<dl class="e-facts">${facts}</dl>`:''}
     ${e.panic?`<div class="e-panic"><span class="pk">▸ DON'T PANIC</span><span class="pv">${esc(e.panic)}</span></div>`:''}
     ${tags?`<div class="e-tags">${tags}</div>`:''}
-    ${plottable?`<div class="e-fly"><button id="flyHere">🚀 Fly here</button><button id="flySol">☀️ Back to Sol</button></div>`:''}
+    ${plottable?`<div class="e-fly"><button id="flyHere">🚀 Fly here</button><button id="flyBack">${canon?'📖 The Book':'☀️ Back to Sol'}</button></div>`:''}
   `;
   screenBody.scrollTop = 0;
   if(plottable){
     document.getElementById('flyHere').onclick = () => focusEntry(e, true);
-    document.getElementById('flySol').onclick = () => setView('sol');
+    document.getElementById('flyBack').onclick = () => setView(canon?'book':'sol');
   }
 }
 function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
 
 function openEntry(id, fly){
   const e = byId.get(id); if(!e) return;
+  if(entryRealm(e) !== mode) setMode(entryRealm(e));
   selectedId = id;
   renderEntry(e);
   guide.classList.remove('closed');
@@ -393,7 +432,7 @@ function openEntry(id, fly){
   rotateStatus();
 }
 function focusEntry(e, close){
-  const p = entryPos(e); if(!p) return;
+  const p = posById.get(e.id); if(!p) return;
   flyTo(p, STANDOFF[e.category]||40);
 }
 document.getElementById('guideClose').onclick = () => { guide.classList.add('closed'); selectedId=null; pushURL(); };
@@ -420,6 +459,7 @@ const VIEWS = {
     tween=null; controls.target.set(8000,0,0); camera.position.set(9000,-40000,30000); },
   sol:  ()=>flyTo(new THREE.Vector3(0,0,0), 17),
   core: ()=>{ const s=byId.get('sagittarius-a-star'); flyTo(s?entryPos(s):new THREE.Vector3(R0,0,0), 11000); },
+  book: ()=>{ tween=null; controls.target.set(60,0,0); camera.position.set(180,-820,520); },
 };
 function setView(v){
   document.querySelectorAll('#mapctl .mbtn[data-view]').forEach(b=>b.classList.toggle('on', b.dataset.view===v));
@@ -430,6 +470,33 @@ const btnSpin = document.getElementById('btnSpin');
 function syncSpin(){ btnSpin.classList.toggle('on', controls.autoRotate); }
 btnSpin.onclick = ()=>{ controls.autoRotate=!controls.autoRotate; syncSpin(); };
 
+/* ---------- Guide mode (Real galaxy ⟷ The Book) ---------- */
+function updateBanner(){
+  const el = document.getElementById('modeBanner');
+  if(mode==='book'){
+    el.innerHTML = `<b>📖 The Book.</b> The Guide as Douglas Adams wrote it — Earth, Ford's home near Betelgeuse &amp; Megadodo on Ursa Minor Beta sit at their real stars; the rest exist only in the books.`;
+    el.classList.remove('hidden');
+  } else el.classList.add('hidden');
+}
+function syncModePills(){
+  document.querySelectorAll('#modeToggle .mode-pill').forEach(b=>{
+    const on = b.dataset.mode===mode; b.classList.toggle('on', on); b.setAttribute('aria-selected', on?'true':'false');
+  });
+}
+function setMode(m){
+  if((m!=='real' && m!=='book') || m===mode) return;
+  mode = m;
+  document.body.classList.toggle('mode-book', m==='book');
+  syncModePills();
+  if(selectedId && entryRealm(byId.get(selectedId))!==m){ guide.classList.add('closed'); selectedId=null; }
+  closeSearch(); endTour();
+  hiddenCats.clear();
+  buildLegend(); buildBrowse(); applyCatFilter(); updateBanner();
+  setView(m==='book'?'book':'home');
+  pushURL();
+}
+document.querySelectorAll('#modeToggle .mode-pill').forEach(b => b.onclick = ()=>setMode(b.dataset.mode));
+
 /* ============================================================
  * Search
  * ============================================================ */
@@ -439,7 +506,7 @@ let srActive = -1, srItems = [];
 function runSearch(q){
   q = q.trim().toLowerCase();
   if(!q){ searchResults.classList.add('hidden'); return; }
-  const hits = ENTRIES.map(e=>{
+  const hits = realmEntries().map(e=>{
     const hay = (e.name+' '+(e.aka||[]).join(' ')+' '+(e.tags||[]).join(' ')+' '+(CATLABEL[e.category]||'')+' '+(e.objtype||'')).toLowerCase();
     let s=-1;
     if(e.name.toLowerCase().startsWith(q)) s=0;
@@ -483,8 +550,8 @@ const browse = document.getElementById('browse');
 const browseList = document.getElementById('browseList');
 function buildBrowse(){
   const counts = {};
-  ENTRIES.forEach(e=>counts[e.category]=(counts[e.category]||0)+1);
-  browseList.innerHTML = (DATA.categories||[]).map(c=>`
+  realmEntries().forEach(e=>counts[e.category]=(counts[e.category]||0)+1);
+  browseList.innerHTML = realmCats().map(c=>`
     <div class="cat" data-key="${c.key}">
       <span class="ce">${c.emoji||'•'}</span>
       <span style="min-width:0"><div class="cl">${esc(c.label)}</div><div class="cb">${esc(c.blurb||'')}</div></span>
@@ -501,8 +568,9 @@ document.addEventListener('click', ev=>{ if(!ev.target.closest('#browse') && !ev
 
 const legend = document.getElementById('legend');
 function buildLegend(){
-  legend.innerHTML = (DATA.categories||[]).map(c=>`
-    <div class="lg" data-key="${c.key}"><span class="d" style="background:${CATCOLOR[c.key]};color:${CATCOLOR[c.key]}"></span>${esc(c.label)}</div>`).join('');
+  legend.innerHTML = realmCats().map(c=>`
+    <div class="lg" data-key="${c.key}"><span class="d" style="background:${CATCOLOR[c.key]};color:${CATCOLOR[c.key]}"></span>${esc(c.label)}</div>`).join('')
+    + (mode==='book'?`<div class="lg-note">Only places appear on the map.</div>`:'');
   legend.querySelectorAll('.lg').forEach(el=>el.onclick=()=>{
     const k=el.dataset.key;
     if(hiddenCats.has(k)){ hiddenCats.delete(k); el.classList.remove('off'); }
@@ -512,7 +580,7 @@ function buildLegend(){
 }
 function applyCatFilter(){
   const sz = cGeo.getAttribute('size');
-  mapObjs.forEach((o,i)=> sz.array[i] = hiddenCats.has(o.entry.category)?0:o.base );
+  mapObjs.forEach((o,i)=> sz.array[i] = (o.realm!==mode || hiddenCats.has(o.entry.category)) ? 0 : o.base );
   sz.needsUpdate = true;
 }
 
@@ -520,21 +588,23 @@ function applyCatFilter(){
  * Tour
  * ============================================================ */
 const tourbar = document.getElementById('tourbar');
-const TOUR = (DATA.tour||[]).filter(s=>byId.has(s.id));
+const TOUR_REAL = (DATA.tour||[]).filter(s=>byId.has(s.id));
+const TOUR_BOOK = (DATA.canonTour||[]).filter(s=>byId.has(s.id));
+const tourList = () => mode==='book' ? TOUR_BOOK : TOUR_REAL;
 let tourIdx = -1;
 function startTour(){
-  if(!TOUR.length) return;
+  const T = tourList(); if(!T.length) return;
   hideSplash(); tourIdx=0; tourbar.classList.remove('hidden'); showTour();
 }
 function showTour(){
-  const s = TOUR[tourIdx]; if(!s) return;
+  const T = tourList(); const s = T[tourIdx]; if(!s) return;
   openEntry(s.id, true);
-  document.getElementById('tourLine').textContent = s.line;
-  document.getElementById('tourCount').textContent = `Stop ${tourIdx+1} of ${TOUR.length}`;
+  document.getElementById('tourLine').textContent = s.line || byId.get(s.id)?.verdict || '';
+  document.getElementById('tourCount').textContent = `Stop ${tourIdx+1} of ${T.length}`;
 }
 function endTour(){ tourbar.classList.add('hidden'); tourIdx=-1; }
-document.getElementById('tourPrev').onclick=()=>{ tourIdx=(tourIdx-1+TOUR.length)%TOUR.length; showTour(); };
-document.getElementById('tourNext').onclick=()=>{ tourIdx=(tourIdx+1)%TOUR.length; showTour(); };
+document.getElementById('tourPrev').onclick=()=>{ const n=tourList().length; if(n){ tourIdx=(tourIdx-1+n)%n; showTour(); } };
+document.getElementById('tourNext').onclick=()=>{ const n=tourList().length; if(n){ tourIdx=(tourIdx+1)%n; showTour(); } };
 document.getElementById('tourEnd').onclick=endTour;
 document.getElementById('btnTour').onclick=startTour;
 
@@ -542,18 +612,21 @@ document.getElementById('btnTour').onclick=startTour;
  * Random / share / help / splash / home
  * ============================================================ */
 document.getElementById('btnRandom').onclick = ()=>{
-  const plot = mapObjs.length?mapObjs[Math.floor(Math.random()*mapObjs.length)].entry : ENTRIES[Math.floor(Math.random()*ENTRIES.length)];
-  if(plot) openEntry(plot.id, true);
+  const pool = realmEntries(); if(!pool.length) return;
+  const pick = pool[Math.floor(Math.random()*pool.length)];
+  if(pick) openEntry(pick.id, true);
 };
 
-function pushURL(){
+function shareURL(){
   const u = new URL(location.href); u.search='';
+  if(mode==='book') u.searchParams.set('mode','book');
   if(selectedId) u.searchParams.set('e', selectedId);
-  history.replaceState(null,'',u);
+  return u;
 }
+function pushURL(){ history.replaceState(null,'',shareURL()); }
 document.getElementById('btnShare').onclick = ()=>{
-  const u = new URL(location.href); u.search=''; if(selectedId) u.searchParams.set('e', selectedId);
-  navigator.clipboard?.writeText(u.toString()).then(()=>toast('Link copied — share and enjoy.'), ()=>toast(u.toString()));
+  const u = shareURL().toString();
+  navigator.clipboard?.writeText(u).then(()=>toast('Link copied — share and enjoy.'), ()=>toast(u));
 };
 function toast(msg){
   const t=document.getElementById('toast'); t.textContent=msg; t.classList.remove('hidden');
@@ -564,6 +637,8 @@ function toast(msg){
 const help = document.getElementById('help');
 document.getElementById('helpBody').innerHTML = `
   <p>${esc(DATA.meta.howto||'')}</p>
+  <h3>Two Guides in one</h3>
+  <p>Use the toggle up top to switch between <b>🔭 Real Galaxy</b> — a true map of the Milky Way — and <b>📖 The Book</b>, the Guide as Douglas Adams wrote it: Magrathea, the Vogons, Marvin, 42 and the rest. In The Book, a few places that genuinely tie to real stars (Earth, Ford's home near Betelgeuse, Megadodo on Ursa Minor Beta) sit at their true positions; everything else lives only in the story, so it's there to read rather than to fly to.</p>
   <h3>The map</h3>
   <p>Every glowing dot is a <b>real object</b>, placed at its true position from Earth's coordinates (J2000 right ascension &amp; declination) and distance. The bright core is <b>Sagittarius A*</b>, the galaxy's central black hole; the yellow dot you start beside is the <b>Sun</b>. Drag to orbit, scroll to zoom, click anything that glows.</p>
   <h3>The Guide</h3>
@@ -590,8 +665,9 @@ function goHome(){
   guide.classList.add('closed');
   browse.classList.add('hidden'); help.classList.add('hidden');
   closeSearch(); endTour();
-  hiddenCats.clear(); applyCatFilter();
-  legend.querySelectorAll('.lg').forEach(el=>el.classList.remove('off'));
+  mode='real'; document.body.classList.remove('mode-book'); syncModePills(); updateBanner();
+  hiddenCats.clear();
+  buildLegend(); buildBrowse(); applyCatFilter();
   controls.autoRotate=false; syncSpin();
   setView('home');
   history.replaceState(null,'',location.pathname);
@@ -617,6 +693,7 @@ setView('home');
 
 (function deepLink(){
   const p = new URLSearchParams(location.search);
+  if(p.get('mode')==='book') setMode('book');
   if(p.get('tour')!=null){ hideSplash(); setTimeout(startTour,300); return; }
   const e = p.get('e');
   if(e && byId.has(e)){ hideSplash(); setTimeout(()=>openEntry(e,true),250); }

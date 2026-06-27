@@ -59,6 +59,26 @@ button{font-family:inherit}
 .brand-name{font-weight:800; font-size:16px; letter-spacing:.2px}
 .brand-sub{font-size:11.5px; color:var(--acc); letter-spacing:.22em; text-transform:uppercase}
 
+/* mode toggle */
+#modeToggle{display:flex; gap:4px; margin-left:16px; padding:4px; border-radius:13px; background:rgba(4,9,22,.7); border:1px solid var(--line)}
+.mode-pill{padding:7px 13px; border-radius:9px; border:none; background:transparent; color:var(--dim); font:700 12.5px var(--sans); cursor:pointer; white-space:nowrap; transition:.15s}
+.mode-pill:hover{color:var(--ink)}
+.mode-pill.on[data-mode="real"]{background:var(--acc); color:#03110a; box-shadow:0 0 16px rgba(71,240,160,.4)}
+.mode-pill.on[data-mode="book"]{background:var(--gold); color:#1c1403; box-shadow:0 0 16px rgba(255,224,107,.4)}
+
+#modeBanner{position:fixed; top:62px; left:50%; transform:translateX(-50%); z-index:19;
+  max-width:90vw; padding:7px 16px; border-radius:0 0 13px 13px; font-size:12px; color:#1c1403;
+  background:linear-gradient(180deg,var(--gold),#e8c84e); box-shadow:var(--shadow); font-weight:600; text-align:center}
+#modeBanner b{font-weight:800}
+
+/* book mode: warm the galaxy + gold UI accents */
+body.mode-book{background:radial-gradient(120% 90% at 70% -10%, #19120a 0%, #0c0904 48%, #040302 100%)}
+body.mode-book #vignette{background:radial-gradient(120% 100% at 50% 50%, transparent 52%, rgba(20,10,0,.5) 100%)}
+body.mode-book .brand-sub{color:var(--gold)}
+body.mode-book .brand-badge{background:var(--gold); box-shadow:0 0 18px rgba(255,224,107,.5), inset 0 -3px 0 rgba(0,0,0,.18)}
+body.mode-book #mapctl .mbtn[data-view]{display:none}   /* real-galaxy nav hidden in book mode */
+.lg-note{font-size:10px; color:var(--faint); margin-top:5px; font-style:italic; max-width:160px; line-height:1.3}
+
 .tools{margin-left:auto; display:flex; align-items:center; gap:8px}
 #searchWrap{position:relative}
 #search{width:230px; max-width:42vw; padding:9px 13px; border-radius:11px;
@@ -135,6 +155,10 @@ button{font-family:inherit}
   color:#bdf6d6; font-family:var(--mono); text-shadow:0 0 6px rgba(71,240,160,.25);}
 #screenBody::-webkit-scrollbar{width:8px} #screenBody::-webkit-scrollbar-thumb{background:rgba(71,240,160,.25); border-radius:8px}
 
+.e-realm{display:inline-flex; align-items:center; gap:6px; margin-bottom:10px; padding:4px 10px; border-radius:20px;
+  font:800 9.5px/1 var(--sans); letter-spacing:.16em; text-transform:uppercase;
+  color:var(--gold); border:1px solid rgba(255,224,107,.5); background:rgba(255,224,107,.1)}
+.e-fiction{margin:10px 0 0; font-size:11.5px; color:#c7a86a; font-style:italic}
 .e-cat{font-size:10.5px; letter-spacing:.22em; text-transform:uppercase; color:var(--acc); display:flex; align-items:center; gap:7px}
 .e-cat .ed{width:8px;height:8px;border-radius:50%}
 .e-name{font:800 23px/1.1 var(--sans); color:#e9fff4; margin:7px 0 2px; text-shadow:0 0 14px rgba(71,240,160,.35)}

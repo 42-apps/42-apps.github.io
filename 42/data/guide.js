@@ -1,7 +1,7 @@
 /* The Hitchhiker's Guide to the Known Galaxy — corpus.
- * Real Milky Way astronomy, written in the voice of the Guide.
- * 146 entries across 8 sections. Generated, fact-anchored to catalogue values.
- * window.HHGTTG_DATA = { meta, categories, tour, entries }.
+ * REAL Milky Way astronomy + THE BOOK (fictional canon, original encyclopedic prose).
+ * 214 entries (146 real + 68 canon) across 13 sections.
+ * window.HHGTTG_DATA = { meta, categories, tour, canonTour, entries }.
  */
 window.HHGTTG_DATA = {
  "meta": {
@@ -57,6 +57,36 @@ window.HHGTTG_DATA = {
    "label": "Concepts, Signals & Human Artifacts",
    "emoji": "📡",
    "blurb": "The big ideas, the faint signals, and the few bits of humanity flung far enough to count as litter between the stars."
+  },
+  {
+   "key": "canon-place",
+   "label": "Places from the Books",
+   "emoji": "🪐",
+   "blurb": "Worlds & locations from the Guide."
+  },
+  {
+   "key": "canon-species",
+   "label": "Species & Creatures",
+   "emoji": "👽",
+   "blurb": "Aliens, beasts & the Babel fish."
+  },
+  {
+   "key": "canon-tech",
+   "label": "Ships, Drives & Devices",
+   "emoji": "🚀",
+   "blurb": "Improbability drives & paranoid androids."
+  },
+  {
+   "key": "canon-character",
+   "label": "People & Robots",
+   "emoji": "🧑‍🚀",
+   "blurb": "Hitchhikers, presidents & one depressed robot."
+  },
+  {
+   "key": "canon-article",
+   "label": "The Guide's Greatest Hits",
+   "emoji": "📖",
+   "blurb": "42, towels & the best drink in existence."
   }
  ],
  "tour": [
@@ -115,6 +145,56 @@ window.HHGTTG_DATA = {
   {
    "id": "dont-panic",
    "line": "And so we end where every sensible guide begins: with the two large, friendly words printed on the cover. DON'T PANIC. The galaxy is staggeringly big, mostly empty, and entirely indifferent to you — which, once you get used to it, is rather liberating."
+  }
+ ],
+ "canonTour": [
+  {
+   "id": "bk-earth-mk2",
+   "line": "We start where you started — a planet that turns out to be a very expensive computer."
+  },
+  {
+   "id": "bk-magrathea",
+   "line": "The firm that built it: Magrathea, makers of bespoke worlds, currently asleep."
+  },
+  {
+   "id": "bk-deep-thought",
+   "line": "Behind it all, Deep Thought — which spent 7.5 million years on the homework."
+  },
+  {
+   "id": "bk-answer-42",
+   "line": "And produced the Answer. All 42 of it."
+  },
+  {
+   "id": "bk-ultimate-question",
+   "line": "Which left only the small matter of knowing the Question."
+  },
+  {
+   "id": "bk-vogons",
+   "line": "Enter the Vogons, who demolished the Question's calculator for a bypass."
+  },
+  {
+   "id": "bk-towel",
+   "line": "At which point a towel becomes the most useful thing you own."
+  },
+  {
+   "id": "bk-heart-of-gold",
+   "line": "Your ride: the Heart of Gold, powered by sheer improbability."
+  },
+  {
+   "id": "bk-marvin",
+   "line": "Your crew includes Marvin, brain the size of a planet, mood the size of a black hole."
+  },
+  {
+   "id": "bk-betelgeuse-vicinity",
+   "line": "Your guide, Ford Prefect, is from around here — near Betelgeuse, not Guildford."
+  },
+  {
+   "id": "bk-milliways",
+   "line": "Dinner is served at Milliways, with a view of the apocalypse."
+  },
+  {
+   "id": "bk-pggb",
+   "line": "And the drinks — well, mind the Pan Galactic Gargle Blaster."
   }
  ],
  "entries": [
@@ -7111,6 +7191,3021 @@ window.HHGTTG_DATA = {
     "forty-two",
     "the Ultimate Answer"
    ]
+  },
+  {
+   "id": "bk-magrathea",
+   "name": "Magrathea",
+   "category": "canon-place",
+   "objtype": "Planet (fictional)",
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null,
+   "verdict": "Legendary planet that built planets, then went broke and took a nap.",
+   "guide": "Once the home of the galaxy's most fabulously wealthy industry, Magrathea perfected the art of manufacturing luxury planets to order for the obscenely rich. When the wider economy collapsed under the weight of so much concentrated affluence, the Magratheans simply locked the doors and slept through the recession in a vast underground complex, leaving only a recorded announcement and a missile defence system to greet visitors. Long dismissed as a myth, the planet orbits the twin suns Soulianis and Rahm and is most famously associated with Slartibartfast, the award-winning coastline designer responsible for the fjords of Norway. Magrathea's most notable commission was Earth itself, built to specification for a clientele of hyperintelligent pan-dimensional beings who preferred, for tax reasons, to appear as mice.",
+   "panic": "If two nuclear missiles are inbound, a working Infinite Improbability Drive may convert them into a bowl of petunias and a confused whale. Results are not guaranteed.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "The Hitchhiker's Guide to the Galaxy"
+    },
+    {
+     "label": "Orbits",
+     "value": "Twin suns Soulianis and Rahm"
+    },
+    {
+     "label": "Associated with",
+     "value": "Slartibartfast, coastline designer"
+    },
+    {
+     "label": "Notable for",
+     "value": "Manufacturing custom luxury planets, including Earth"
+    },
+    {
+     "label": "Current status",
+     "value": "In economic hibernation"
+    },
+    {
+     "label": "Author's running gag",
+     "value": "An award for fjords"
+    }
+   ],
+   "tags": [
+    "planet",
+    "magrathea",
+    "slartibartfast",
+    "twin-suns",
+    "factory-world",
+    "myth"
+   ]
+  },
+  {
+   "id": "bk-earth-mk2",
+   "name": "Earth (the Magrathean computer)",
+   "category": "canon-place",
+   "objtype": "Planet-computer (fictional)",
+   "fictional": false,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": 0,
+   "verdict": "A planet-sized organic computer mistaken for a planet. Mostly Harmless.",
+   "guide": "Few of its inhabitants ever suspected that their world was in fact a colossal organic supercomputer, commissioned by a race of hyperintelligent pan-dimensional beings (known locally as mice) and constructed by the planet-builders of Magrathea. Its ten-million-year program was designed to compute the Ultimate Question to the Answer of Life, the Universe and Everything, the Answer itself (42) having already been worked out by the earlier machine, Deep Thought. The Guide's entire entry on this planet famously reads 'Mostly Harmless', the product of a research budget and a contributor who got distracted. Tragically, Earth was demolished by a Vogon constructor fleet to make way for a hyperspatial express route a mere five minutes before its program was due to complete.",
+   "panic": "Your planet may be a computer running someone else's experiment; resist the urge to take this personally. Always know where your towel is.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "The Hitchhiker's Guide to the Galaxy"
+    },
+    {
+     "label": "Commissioned by",
+     "value": "The mice (pan-dimensional beings)"
+    },
+    {
+     "label": "Built by",
+     "value": "Magrathea"
+    },
+    {
+     "label": "Purpose",
+     "value": "Compute the Ultimate Question"
+    },
+    {
+     "label": "Guide entry",
+     "value": "Mostly Harmless"
+    },
+    {
+     "label": "Fate",
+     "value": "Demolished by Vogons for a bypass"
+    }
+   ],
+   "tags": [
+    "earth",
+    "computer",
+    "vogons",
+    "mostly-harmless",
+    "ultimate-question",
+    "deep-thought"
+   ]
+  },
+  {
+   "id": "bk-betelgeuse-vicinity",
+   "name": "A small planet near Betelgeuse",
+   "category": "canon-place",
+   "objtype": "Planet (fictional, real-star anchor)",
+   "fictional": false,
+   "ra_deg": 88.7929,
+   "dec_deg": 7.4071,
+   "distance_ly": 548,
+   "verdict": "Ford Prefect's home, which he found dull. He named himself after a car.",
+   "guide": "Somewhere in the vicinity of the red supergiant Betelgeuse lies the unremarkable little world that Ford Prefect calls home, a fact he keeps carefully to himself when on Earth, where he claims to be an out-of-work actor from Guildford. A roving researcher for the Guide, Ford spent fifteen years stranded on Earth gathering material, having grossly underestimated the planet, and adopted his name in the mistaken belief that it was suitably inconspicuous, not realising the dominant form of life was the people rather than the cars. He is a semi-cousin of Zaphod Beeblebrox, sharing three of the same mothers, and is rarely separated from his towel, his Sub-Etha Sens-O-Matic, or a desire to find the nearest party.",
+   "panic": "If you meet someone who insists they are from Guildford but cannot name a single Earth football team, check whether they are quietly trying to hitch a lift off the planet.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "The Hitchhiker's Guide to the Galaxy"
+    },
+    {
+     "label": "Associated with",
+     "value": "Ford Prefect, Guide researcher"
+    },
+    {
+     "label": "Anchor star",
+     "value": "Betelgeuse (Alpha Orionis)"
+    },
+    {
+     "label": "Notable for",
+     "value": "Being near, but not on, a famous star"
+    },
+    {
+     "label": "Relation",
+     "value": "Ford is semi-cousin to Zaphod Beeblebrox"
+    },
+    {
+     "label": "Author's running gag",
+     "value": "A name chosen to blend in, badly"
+    }
+   ],
+   "tags": [
+    "betelgeuse",
+    "ford-prefect",
+    "homeworld",
+    "guide-researcher",
+    "towel",
+    "real-star"
+   ]
+  },
+  {
+   "id": "bk-vogsphere",
+   "name": "Vogsphere",
+   "category": "canon-place",
+   "objtype": "Planet (fictional)",
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null,
+   "verdict": "Damp homeworld of the Vogons, who evolved despite the universe's objections.",
+   "guide": "Vogsphere is the slimy swamp-world that gave rise to the Vogons, a species so spectacularly unpleasant that evolution itself appears to have given up and let them stay exactly as they were. The locals are bureaucratic, vindictive and entirely without imagination, qualities which made them ideal recruits for the galaxy's civil service. The planet is associated above all with Prostetnic Vogon Jeltz, captain of the Galactic Hyperspace Planning Council demolition fleet. Vogsphere is also, regrettably, the birthplace of Vogon poetry, the third worst in the entire Universe, the recital of which is a recognised form of torture. Anything beautiful that once grew there is said to have been promptly catalogued, taxed, and filed in triplicate before being left to die.",
+   "panic": "If a Vogon offers to read you his poetry, this is not a cultural exchange; it is the warm-up. Do not, under any circumstances, ask for an encore.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "The Hitchhiker's Guide to the Galaxy"
+    },
+    {
+     "label": "Inhabitants",
+     "value": "Vogons"
+    },
+    {
+     "label": "Associated with",
+     "value": "Prostetnic Vogon Jeltz"
+    },
+    {
+     "label": "Notable for",
+     "value": "Producing the galaxy's third-worst poetry"
+    },
+    {
+     "label": "Author's running gag",
+     "value": "Bureaucracy as a way of life"
+    }
+   ],
+   "tags": [
+    "vogons",
+    "vogsphere",
+    "jeltz",
+    "bureaucracy",
+    "poetry",
+    "swamp-world"
+   ]
+  },
+  {
+   "id": "bk-frogstar-world-b",
+   "name": "Frogstar World B",
+   "category": "canon-place",
+   "objtype": "Planet (fictional)",
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null,
+   "verdict": "Once the richest world ever, now the most evil. Home of the Vortex.",
+   "guide": "Frogstar World B holds the distinction of having been, at one time, the single wealthiest planet in known space, before becoming the single most evil, the two states being, the Guide hastens to add, not entirely unrelated. It is best known as the site of the Total Perspective Vortex, a machine that briefly shows its victim the entire infinity of creation together with a tiny dot bearing the legend 'you are here'. The shock of such complete perspective is invariably fatal to the soul, the Vortex being founded on the principle that the one thing no sense of proportion can survive is an accurate one. Zaphod Beeblebrox survived it only because he was, at the time, inside an artificial universe specifically built to flatter him.",
+   "panic": "Should you be strapped into the Total Perspective Vortex, your best defence is an ego so colossal the entire universe genuinely does revolve around you. Few qualify.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "The Restaurant at the End of the Universe"
+    },
+    {
+     "label": "Home of",
+     "value": "The Total Perspective Vortex"
+    },
+    {
+     "label": "Former status",
+     "value": "Wealthiest world in the galaxy"
+    },
+    {
+     "label": "Survived by",
+     "value": "Zaphod Beeblebrox"
+    },
+    {
+     "label": "Notable for",
+     "value": "Perspective as a lethal weapon"
+    },
+    {
+     "label": "Author's running gag",
+     "value": "'You are here' and a very small dot"
+    }
+   ],
+   "tags": [
+    "frogstar",
+    "total-perspective-vortex",
+    "zaphod",
+    "evil-world",
+    "perspective",
+    "torture"
+   ]
+  },
+  {
+   "id": "bk-milliways",
+   "name": "Milliways, the Restaurant at the End of the Universe",
+   "category": "canon-place",
+   "objtype": "Restaurant (fictional)",
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null,
+   "verdict": "Fine dining at the literal end of time, replayed nightly forever.",
+   "guide": "Milliways is, without serious competition, the most extraordinary restaurant in the history of catering. It sits not at the edge of space but at the very end of time, where diners may enjoy a leisurely meal while the entire Universe expires spectacularly around them in a nightly performance of the Gnab Gee, the Big Bang in reverse. Because it exists outside the normal flow of time, the same apocalypse can be served up again and again, and a modest deposit in any present-day savings account will, thanks to compound interest across the lifespan of creation, comfortably cover the bill. The cuisine is famous, or notorious, for the Dish of the Day, an animal genetically bred to want to be eaten and considerate enough to say so.",
+   "panic": "If your main course introduces itself and recommends its own shoulder, the polite response in the circumstances is simply a plate of salad and a stiff drink.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "The Restaurant at the End of the Universe"
+    },
+    {
+     "label": "Location",
+     "value": "The end of time"
+    },
+    {
+     "label": "Notable for",
+     "value": "Watching the Universe end over dinner"
+    },
+    {
+     "label": "Signature feature",
+     "value": "The Dish of the Day"
+    },
+    {
+     "label": "Payment",
+     "value": "Compound interest on a small deposit"
+    },
+    {
+     "label": "Author's running gag",
+     "value": "A meal that volunteers to be eaten"
+    }
+   ],
+   "tags": [
+    "milliways",
+    "restaurant",
+    "end-of-universe",
+    "dish-of-the-day",
+    "time",
+    "apocalypse"
+   ]
+  },
+  {
+   "id": "bk-krikkit",
+   "name": "Krikkit",
+   "category": "canon-place",
+   "objtype": "Planet (fictional)",
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null,
+   "verdict": "Sealed in a dust cloud, its people decided the universe must end.",
+   "guide": "Krikkit is a charming, pastoral world whose only failing is that it lies wholly inside a vast dust cloud, so that for the entirety of its history the night sky was completely black and its people genuinely believed they were alone in creation. The day a crashed spacecraft revealed that the galaxy was, in fact, absolutely full of other life, the Krikkiters reached a perfectly calm, perfectly polite, and perfectly genocidal conclusion: it would all have to go. So began the Krikkit Wars, in which a gentle, xenophobic people armed with white killer robots set about ending the rest of the Universe. The galaxy's curious sport of the same name, with its little hard ball and its inexplicable wickets, is a dim ancestral memory of this conflict, which is why the people of Krikkit found it so deeply offensive.",
+   "panic": "If an entire sweetly-mannered civilisation announces it has thought things over and decided the rest of existence really ought to be tidied away, do not try to reason with the killer robots.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "Life, the Universe and Everything"
+    },
+    {
+     "label": "Notable feature",
+     "value": "Sealed inside a dust cloud"
+    },
+    {
+     "label": "Associated with",
+     "value": "The Krikkit Wars and white killer robots"
+    },
+    {
+     "label": "Imprisoned in",
+     "value": "A Slo-Time envelope"
+    },
+    {
+     "label": "Author's running gag",
+     "value": "The sport of cricket as racial trauma"
+    }
+   ],
+   "tags": [
+    "krikkit",
+    "dust-cloud",
+    "killer-robots",
+    "krikkit-wars",
+    "wikkit-gate",
+    "xenophobia"
+   ]
+  },
+  {
+   "id": "bk-damogran",
+   "name": "Damogran",
+   "category": "canon-place",
+   "objtype": "Planet (fictional)",
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null,
+   "verdict": "Hot, lonely islands chosen to launch a very secret, very flashy ship.",
+   "guide": "Damogran is a largely uninhabited world of scorching deserts and scattered tropical islands, ringed by a single inconveniently long and winding sea. Its principal virtue is its emptiness, which made it the ideal venue for the highly secret unveiling of the starship Heart of Gold, the first vessel powered by the Infinite Improbability Drive. The choice was somewhat undermined by the President of the Galaxy choosing the occasion to make off with the ship entirely. Damogran is also home to the rare and quietly magnificent Damogran Frog, after which little else of note has ever been named. Reaching anything on Damogran tends to require a tedious journey across the aforementioned sea, the geography having been designed, one suspects, chiefly to be irritating.",
+   "panic": "When attending a top-secret ceremony on a deliberately remote planet, watch the guest of honour; the most secure object present is often the one most likely to be stolen by the host.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "The Hitchhiker's Guide to the Galaxy"
+    },
+    {
+     "label": "Notable for",
+     "value": "Launch of the Heart of Gold"
+    },
+    {
+     "label": "Associated with",
+     "value": "President Zaphod Beeblebrox"
+    },
+    {
+     "label": "Geography",
+     "value": "Deserts and scattered islands"
+    },
+    {
+     "label": "Local wildlife",
+     "value": "The Damogran Frog"
+    },
+    {
+     "label": "Author's running gag",
+     "value": "A secret kept by being boring to reach"
+    }
+   ],
+   "tags": [
+    "damogran",
+    "heart-of-gold",
+    "zaphod",
+    "improbability-drive",
+    "islands",
+    "launch-site"
+   ]
+  },
+  {
+   "id": "bk-ursa-minor-beta",
+   "name": "Ursa Minor Beta",
+   "category": "canon-place",
+   "objtype": "Planet (fictional, real-star anchor)",
+   "fictional": false,
+   "ra_deg": 222.6764,
+   "dec_deg": 74.1555,
+   "distance_ly": 131,
+   "verdict": "Home of the Guide's publishers, where it's always Saturday afternoon.",
+   "guide": "Ursa Minor Beta is widely regarded as one of the most successful holiday and pleasure worlds in the galaxy, a place so artfully arranged that across most of its surface it is, perpetually, early Saturday afternoon just before the beach bars close. It is home to the towering offices of Megadodo Publications, who produce the Hitchhiker's Guide to the Galaxy itself, and is consequently visited by a great many researchers, expense-account holders and people pretending to be both. The planet's relaxed, sun-drenched ambience conceals the fact that its publishing industry is one of the wealthiest and most powerful institutions in the known universe, employing, among others, the editor Zarniwoop and a great many writers who never quite get around to checking their facts.",
+   "panic": "Beware any office where it is always Saturday afternoon; deadlines there have a way of being eternally several minutes from now, including the one for fact-checking your entry.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "The Restaurant at the End of the Universe"
+    },
+    {
+     "label": "Home of",
+     "value": "Megadodo Publications"
+    },
+    {
+     "label": "Anchor star",
+     "value": "Beta Ursae Minoris (Kochab)"
+    },
+    {
+     "label": "Famous for",
+     "value": "Always being early Saturday afternoon"
+    },
+    {
+     "label": "Associated with",
+     "value": "Editor Zarniwoop"
+    },
+    {
+     "label": "Author's running gag",
+     "value": "A whole planet on permanent weekend"
+    }
+   ],
+   "tags": [
+    "ursa-minor-beta",
+    "kochab",
+    "megadodo",
+    "guide-publisher",
+    "saturday-afternoon",
+    "real-star"
+   ]
+  },
+  {
+   "id": "bk-sqornshellous-zeta",
+   "name": "Sqornshellous Zeta",
+   "category": "canon-place",
+   "objtype": "Planet (fictional)",
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null,
+   "verdict": "A swamp planet whose principal crop is sentient, talkative mattresses.",
+   "guide": "Sqornshellous Zeta is a dank and largely featureless swamp world, distinguished chiefly as the natural habitat of the mattress, a large, amiable and entirely sentient creature that lives, flollops and occasionally globbers in the marshes before being harvested, killed and dried for use in beds across the galaxy. All mattresses, by long tradition, are named Zem. It was here that Marvin the Paranoid Android, abandoned and left to sink slowly into the bog, struck up a conversation with one such mattress, an exchange notable for being possibly the only time in recorded history that anything has tried to cheer Marvin up and very nearly failed harder than he did. The mattresses are unfailingly sympathetic, which Marvin found almost unbearable.",
+   "panic": "If your bed begins to flollop sympathetically and ask how you're feeling, you are in a swamp on Sqornshellous Zeta and your day is about to get philosophically heavier.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "Life, the Universe and Everything"
+    },
+    {
+     "label": "Inhabitants",
+     "value": "Sentient mattresses (all named Zem)"
+    },
+    {
+     "label": "Associated with",
+     "value": "Marvin the Paranoid Android"
+    },
+    {
+     "label": "Geography",
+     "value": "Endless swamp"
+    },
+    {
+     "label": "Author's running gag",
+     "value": "Invented verbs: flollop, globber, willomy"
+    }
+   ],
+   "tags": [
+    "sqornshellous-zeta",
+    "mattresses",
+    "zem",
+    "marvin",
+    "swamp-world",
+    "flollop"
+   ]
+  },
+  {
+   "id": "bk-kakrafoon",
+   "name": "Kakrafoon Kappa",
+   "category": "canon-place",
+   "objtype": "Planet (fictional)",
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null,
+   "verdict": "Quiet desert world, until the loudest band in history dropped by.",
+   "guide": "Kakrafoon Kappa was, for most of its history, an unremarkable and rather peaceful desert planet, until it had the misfortune to host a concert by Disaster Area, generally agreed to be not only the loudest rock band in the galaxy but the loudest noise of any kind anywhere. Disaster Area's stage act famously climaxes with a spaceship crashing into a nearby sun, a flourish that tends to be hard on the local environment. The band themselves play their instruments by remote control from inside a heavily insulated spaceship in orbit, while the audience listens from within great concrete bunkers a safe distance away, an arrangement adopted partly for acoustic reasons and partly for tax ones. The sheer concussive force of the performance on Kakrafoon was, by some accounts, sufficient to reshape the planet's barren wastes, though whether for better or worse remains a matter of taste and surviving witnesses.",
+   "panic": "If the headline act's grand finale involves diving a spaceship into your local sun, the recommended seating is several planets away, ideally behind something solid.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "The Restaurant at the End of the Universe"
+    },
+    {
+     "label": "Hosted",
+     "value": "A Disaster Area concert"
+    },
+    {
+     "label": "Notable for",
+     "value": "The loudest noise in the galaxy"
+    },
+    {
+     "label": "Concert finale",
+     "value": "A spaceship dived into the sun"
+    },
+    {
+     "label": "Author's running gag",
+     "value": "A band best enjoyed from another planet"
+    }
+   ],
+   "tags": [
+    "kakrafoon",
+    "disaster-area",
+    "concert",
+    "loudest-band",
+    "desert-world",
+    "sun-dive"
+   ]
+  },
+  {
+   "id": "bk-golgafrincham",
+   "name": "Golgafrincham",
+   "category": "canon-place",
+   "objtype": "Planet (fictional)",
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null,
+   "verdict": "Tricked a third of its population into emigrating. They became us.",
+   "guide": "Golgafrincham was a planet of long history and great culture, home to philosophers, mathematicians and a substantial population of people it had quietly decided it could do without. To dispose of this third, the so-called useless third, comprising the telephone sanitisers, hairdressers, management consultants, tired TV producers and insurance salesmen, the planet hatched a brilliant scheme. The remaining citizens convinced these unfortunates that the entire world was doomed and packed them aboard the Ark Fleet Ship B, the first of three great arks, with assurances that everyone else would follow on Ships A and C. No one ever did. Golgafrincham's other two-thirds reportedly lived on for many happy years, until they were wiped out by a virulent disease contracted from a dirty telephone.",
+   "panic": "If you are assigned to Ark Ship B and told the other ships are right behind you, you may wish to check your job title against the official list of essential personnel.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "The Restaurant at the End of the Universe"
+    },
+    {
+     "label": "Notable for",
+     "value": "Exiling its 'useless third'"
+    },
+    {
+     "label": "Vehicle",
+     "value": "Ark Fleet Ship B"
+    },
+    {
+     "label": "Connection to Earth",
+     "value": "The exiles crash-landed on prehistoric Earth"
+    },
+    {
+     "label": "Author's running gag",
+     "value": "Death by uncleaned telephone"
+    }
+   ],
+   "tags": [
+    "golgafrincham",
+    "ark-ship-b",
+    "telephone-sanitisers",
+    "useless-third",
+    "prehistoric-earth",
+    "exile"
+   ]
+  },
+  {
+   "id": "bk-preliumtarn",
+   "name": "Preliumtarn",
+   "category": "canon-place",
+   "objtype": "Planet (fictional)",
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null,
+   "verdict": "Where God's Final Message is written, thirty feet high, in fire.",
+   "guide": "Preliumtarn, a planet circling the star Zarss in the Grey Binding Fiefdoms of Saxaquine, is the unlikely setting of one of the universe's most sought-after sights: God's Final Message to His Creation, inscribed in letters of fire thirty feet high on the far side of the Quentulus Quazgar Mountains, in the land of Sevorbeupstry. Reaching it requires a long pilgrimage and patience with the somewhat ramshackle tourist operation that surrounds it. The Message has been awaited by countless beings as the answer to all their suffering. Marvin the Paranoid Android, near the end of his impossibly long and miserable existence, was carried there to read it. Having done so, he declared himself, for the first time, satisfied, and quietly died. The Message itself is gentle, brief, and disarmingly apologetic.",
+   "panic": "If you have travelled across the galaxy to read the Final Message and find it offers a sincere apology for the inconvenience, take a moment; it is meant kindly.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "So Long, and Thanks for All the Fish"
+    },
+    {
+     "label": "Home of",
+     "value": "God's Final Message to His Creation"
+    },
+    {
+     "label": "Inscription",
+     "value": "Thirty-foot letters of fire"
+    },
+    {
+     "label": "Region",
+     "value": "Sevorbeupstry, beyond the Quentulus Quazgar Mountains"
+    },
+    {
+     "label": "Associated with",
+     "value": "Marvin's final moments"
+    },
+    {
+     "label": "Author's running gag",
+     "value": "Cosmic meaning reached via a shabby tourist trap"
+    }
+   ],
+   "tags": [
+    "preliumtarn",
+    "final-message",
+    "sevorbeupstry",
+    "marvin",
+    "pilgrimage",
+    "fiery-letters"
+   ]
+  },
+  {
+   "id": "bk-bethselamin",
+   "name": "Bethselamin",
+   "category": "canon-place",
+   "objtype": "Planet (fictional)",
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null,
+   "verdict": "A beauty spot so popular it now bills you for going to the loo.",
+   "guide": "Bethselamin is among the most beautiful and most visited worlds in the galaxy, which is precisely its problem. The annual flood of tourists has so alarmed the authorities about the prospect of net erosion that they have introduced an ingenious and faintly horrifying accounting system: any discrepancy between the weight you consume during your stay and the weight you, ahem, excrete is surgically removed from your body on departure. Visitors are therefore strongly advised to make sure they go to the lavatory before leaving, lest they find themselves returning home lighter than is strictly comfortable. It stands as the Guide's preferred cautionary example of tourism management taken to its logical, and anatomical, extreme.",
+   "panic": "Before leaving Bethselamin, visit the lavatory. The planet's erosion policy is enforced surgically, and it does not accept IOUs.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "The Hitchhiker's Guide to the Galaxy"
+    },
+    {
+     "label": "Notable for",
+     "value": "Extreme anti-erosion tourism rules"
+    },
+    {
+     "label": "Policy",
+     "value": "Weight discrepancy surgically removed on departure"
+    },
+    {
+     "label": "Status",
+     "value": "One of the galaxy's top beauty spots"
+    },
+    {
+     "label": "Author's running gag",
+     "value": "Bureaucracy applied to bodily functions"
+    }
+   ],
+   "tags": [
+    "bethselamin",
+    "tourism",
+    "erosion",
+    "beauty-spot",
+    "absurd-bureaucracy",
+    "warning"
+   ]
+  },
+  {
+   "id": "bk-santraginus-v",
+   "name": "Santraginus V",
+   "category": "canon-place",
+   "objtype": "Planet (fictional)",
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null,
+   "verdict": "Famous for mighty seas, finer mermaids, and a legendary cocktail's secret.",
+   "guide": "Santraginus V is celebrated throughout the galaxy for its mighty seas, said to be so beautiful and so vast that even hardened space travellers fall silent at the sight of them, and for the mermaids that grace them, who are reportedly finer still. The planet enjoys a particular and possibly undeserved fame as the source of Santraginean seawater, a key ingredient in the Pan Galactic Gargle Blaster, the most alcoholic drink in existence, the effect of which has been likened to having one's brains smashed out by a slice of lemon wrapped round a large gold brick. Beyond its seas and its cocktails, Santraginus V keeps a relatively low profile, which is probably for the best given the calibre of clientele its more famous export attracts.",
+   "panic": "A single measure of Santraginean seawater belongs in a Gargle Blaster, not in you neat. Drink the latter only on advice, and never operate a spaceship afterwards.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "The Hitchhiker's Guide to the Galaxy"
+    },
+    {
+     "label": "Famous for",
+     "value": "Its mighty seas and mermaids"
+    },
+    {
+     "label": "Notable export",
+     "value": "Santraginean seawater"
+    },
+    {
+     "label": "Used in",
+     "value": "The Pan Galactic Gargle Blaster"
+    },
+    {
+     "label": "Author's running gag",
+     "value": "A drink that assaults you with citrus and gold"
+    }
+   ],
+   "tags": [
+    "santraginus-v",
+    "seas",
+    "mermaids",
+    "gargle-blaster",
+    "seawater",
+    "cocktail"
+   ]
+  },
+  {
+   "id": "bk-maximegalon",
+   "name": "Maximegalon",
+   "category": "canon-place",
+   "objtype": "Planet (fictional)",
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null,
+   "verdict": "Seat of the galaxy's great university, source of dubious certainties.",
+   "guide": "Maximegalon is home to the University and Institute of Maximegalon, one of the most venerable seats of learning in the galaxy and the origin of a great many of the units, theories and qualifications the Guide cheerfully cites without checking. Among its more celebrated departments is the famously demanding Chair of Logic, which once had to be vacated after its occupant declared, with impeccable reasoning, that black was white and was promptly killed at the next zebra crossing. The Institute lends its name to assorted measures of improbability and intelligence, and to a class of academics whose confidence in their conclusions tends to be in inverse proportion to the evidence. It remains the kind of place where one can be both extremely learned and spectacularly, fatally wrong.",
+   "panic": "Citing the University of Maximegalon impresses people, but do not stake your life on its Chair of Logic; recall what happened at the zebra crossing.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "The Hitchhiker's Guide to the Galaxy"
+    },
+    {
+     "label": "Home of",
+     "value": "The University and Institute of Maximegalon"
+    },
+    {
+     "label": "Notable for",
+     "value": "Scholarship of uneven reliability"
+    },
+    {
+     "label": "Famous anecdote",
+     "value": "The Chair of Logic and the zebra crossing"
+    },
+    {
+     "label": "Author's running gag",
+     "value": "Academic certainty proven lethal"
+    }
+   ],
+   "tags": [
+    "maximegalon",
+    "university",
+    "academia",
+    "logic",
+    "scholarship",
+    "improbability"
+   ]
+  },
+  {
+   "id": "bk-lamuella",
+   "name": "Lamuella",
+   "category": "canon-place",
+   "objtype": "Planet (fictional)",
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null,
+   "verdict": "A gentle farming world where Arthur Dent finally found a calling.",
+   "guide": "Lamuella is a quiet, pastoral planet of rolling farmland and small, contented villages, the sort of place where very little happens and the inhabitants prefer it that way. It is here that Arthur Dent, after a lifetime of being flung helplessly across the cosmos, finally washed up and discovered something he was genuinely, uniquely good at: making sandwiches. Revered by the villagers as the Sandwich Maker, Arthur achieved a measure of peace and even respect, carving the meat of the local Perfectly Normal Beasts with a craftsman's devotion. Lamuella represents, in the long arc of his misadventures, the closest Arthur ever came to a home of his own choosing, a brief idyll before fate, in the customary form of an unexpected arrival, came knocking once again.",
+   "panic": "If you finally find a peaceful planet where you are good at one simple thing, enjoy it fully; in this galaxy such idylls have a strict and unannounced expiry date.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "Mostly Harmless"
+    },
+    {
+     "label": "Associated with",
+     "value": "Arthur Dent, the Sandwich Maker"
+    },
+    {
+     "label": "Notable for",
+     "value": "Arthur's hard-won contentment"
+    },
+    {
+     "label": "Local wildlife",
+     "value": "Perfectly Normal Beasts"
+    },
+    {
+     "label": "Author's running gag",
+     "value": "The dignity of a really good sandwich"
+    }
+   ],
+   "tags": [
+    "lamuella",
+    "arthur-dent",
+    "sandwich-maker",
+    "farming-world",
+    "idyll",
+    "perfectly-normal-beasts"
+   ]
+  },
+  {
+   "id": "bk-nowwhat",
+   "name": "NowWhat",
+   "category": "canon-place",
+   "objtype": "Planet (fictional)",
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null,
+   "verdict": "A storm-battered, thoroughly miserable world that lives up to its name.",
+   "guide": "NowWhat is a planet of such relentless, grinding misery that its very name is said to be the only sensible thing anyone has ever uttered upon arriving there. Lashed by perpetual storms, drenched by interminable rain and offering almost nothing in the way of comfort, scenery or hope, it is the sort of world whose single notable export, the Boots Boot, is a footwear so spectacularly ill-suited to its conditions as to constitute a small act of cruelty. Arthur Dent, ever the galaxy's preferred target for cosmic ill-fortune, was shipwrecked there following a catastrophe involving his spacecraft, and it was on NowWhat, amid the mud and despair, that his fortunes reached one of their many low ebbs before fate flung him onward.",
+   "panic": "If you find yourself on a planet whose name is a question and whose weather is an apology, do not buy the local boots; spend the money on a way off instead.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "Mostly Harmless"
+    },
+    {
+     "label": "Notable for",
+     "value": "Perpetual storms and total misery"
+    },
+    {
+     "label": "Associated with",
+     "value": "A shipwrecked Arthur Dent"
+    },
+    {
+     "label": "Local product",
+     "value": "The notoriously useless Boots Boot"
+    },
+    {
+     "label": "Author's running gag",
+     "value": "A planet named for one's reaction to it"
+    }
+   ],
+   "tags": [
+    "nowwhat",
+    "storm-world",
+    "arthur-dent",
+    "misery",
+    "shipwreck",
+    "boots-boot"
+   ]
+  },
+  {
+   "id": "bk-hawalius",
+   "name": "Hawalius",
+   "category": "canon-place",
+   "objtype": "Planet (fictional)",
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null,
+   "verdict": "A planet of oracles whose best advice is to give up oracling.",
+   "guide": "Hawalius is the galaxy's premier destination for prophecy, a planet thickly populated with oracles, seers, soothsayers and assorted prognosticators who will, for a modest fee, tell you precisely what the future has in store. Arthur Dent travelled there in search of guidance and found the trade in a state of some disarray, the more honest practitioners having concluded that the future was an unreliable business best avoided altogether, and several having packed it in to take up more dependable careers, such as basket weaving. The wisest counsel Arthur received amounted, more or less, to the suggestion that he stop seeking wisdom from professionals and go home, advice that, like most genuinely good advice, was both correct and entirely unwelcome.",
+   "panic": "When the oracles themselves have retired to weave baskets and recommend you do the same, this is not a setback; it is the prophecy. Take it.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "Mostly Harmless"
+    },
+    {
+     "label": "Inhabitants",
+     "value": "Oracles, seers and soothsayers"
+    },
+    {
+     "label": "Visited by",
+     "value": "Arthur Dent, seeking guidance"
+    },
+    {
+     "label": "Notable for",
+     "value": "Disillusioned prophets quitting the trade"
+    },
+    {
+     "label": "Author's running gag",
+     "value": "Seers who advise against seeing"
+    }
+   ],
+   "tags": [
+    "hawalius",
+    "oracles",
+    "seers",
+    "prophecy",
+    "arthur-dent",
+    "soothsayers"
+   ]
+  },
+  {
+   "id": "bk-brontitall",
+   "name": "Brontitall",
+   "category": "canon-place",
+   "objtype": "Planet (fictional)",
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null,
+   "verdict": "Where a civilisation was undone by an over-supply of shoe shops.",
+   "guide": "Brontitall, a planet known chiefly from the radio series, is the cautionary home of the Shoe Event Horizon, an economic theory of considerable bleakness. As confidence in a society falters, the Guide explains, people become reluctant to leave their shoe shops, then desperate to buy something, and so retreat into the one purchase that requires no real commitment: shoes. The escalating demand drives shoe shops to multiply uncontrollably until the entire economy crosses a point of no return, at which it becomes economically impossible to build anything except more shoe shops, and the whole civilisation collapses. The survivors of Brontitall took to the trees and the air, evolving away from their footwear-doomed ancestors, leaving behind the great hollow ruins and a structure remembered as the Cathedral of Hate.",
+   "panic": "If your high street is suddenly nothing but shoe shops, this is not a retail boom; it is the early warning sign of total economic collapse. Consider going barefoot.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "The radio series (Secondary Phase, Fit the Tenth)"
+    },
+    {
+     "label": "Notable for",
+     "value": "The Shoe Event Horizon"
+    },
+    {
+     "label": "Landmark",
+     "value": "The Cathedral of Hate"
+    },
+    {
+     "label": "Outcome",
+     "value": "Survivors evolved into bird-like beings"
+    },
+    {
+     "label": "Author's running gag",
+     "value": "Economic doom by footwear"
+    }
+   ],
+   "tags": [
+    "brontitall",
+    "shoe-event-horizon",
+    "cathedral-of-hate",
+    "radio-series",
+    "economics",
+    "collapse"
+   ]
+  },
+  {
+   "id": "bk-stavromula-beta",
+   "name": "Stavromula Beta",
+   "category": "canon-place",
+   "objtype": "Planet (fictional)",
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null,
+   "verdict": "Where Arthur dodges a bullet and Agrajag dies, predictably, again.",
+   "guide": "Stavromula Beta occupies a peculiarly load-bearing position in the tangled life of Arthur Dent, for it is the place where, at some point in his future, he ducks beneath an assassin's shot, allowing the bolt to strike the man behind him, who is, with the cosmic inevitability that governs all such things, the much-reincarnated and chronically aggrieved Agrajag. Agrajag, you understand, is a being condemned to be killed, accidentally and repeatedly, by Arthur across countless lives, and who bears a profound and entirely justified grudge about it. Because Arthur cannot die until this event occurs, Stavromula Beta functions as a kind of fixed point in his improbable survival, a destination he is fated to reach, however much the galaxy and his own incompetence conspire to fling him elsewhere.",
+   "panic": "If you have been promised you cannot die until you reach a certain planet, ducking is wise, but spare a thought for whoever is standing directly behind you.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "Life, the Universe and Everything / Mostly Harmless"
+    },
+    {
+     "label": "Associated with",
+     "value": "Arthur Dent and Agrajag"
+    },
+    {
+     "label": "Notable for",
+     "value": "The assassin's shot Arthur ducks"
+    },
+    {
+     "label": "Significance",
+     "value": "A fixed point in Arthur's survival"
+    },
+    {
+     "label": "Author's running gag",
+     "value": "Agrajag, killed by Arthur over and over"
+    }
+   ],
+   "tags": [
+    "stavromula-beta",
+    "arthur-dent",
+    "agrajag",
+    "assassination",
+    "fixed-point",
+    "reincarnation"
+   ]
+  },
+  {
+   "id": "bk-viltvodle-vi",
+   "name": "Viltvodle VI",
+   "category": "canon-place",
+   "objtype": "Planet (fictional)",
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null,
+   "verdict": "Home to a people who believe the universe began with a sneeze.",
+   "guide": "Viltvodle VI is the homeworld of the Jatravartids, a species notable for possessing fifty arms each and for being the only race in galactic history to have invented the aerosol deodorant before the wheel, a sequencing of priorities that tells you rather a lot about them. The Jatravartids hold to the faith of the Great Green Arkleseizure, believing that the entire Universe was sneezed into being from the nose of a being of that name. Their religion is suffused with a single dominant dread, the eventual arrival of the Coming of the Great White Handkerchief, an apocalypse they await with the anxious devotion that other cultures reserve for less hygienic eschatologies. It is, the Guide notes, a theology with an unusually firm grasp of personal freshness.",
+   "panic": "When debating cosmology with a fifty-armed Jatravartid, do not mock the Great Green Arkleseizure; simply keep a clean handkerchief well out of sight.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "The Hitchhiker's Guide to the Galaxy"
+    },
+    {
+     "label": "Inhabitants",
+     "value": "The fifty-armed Jatravartids"
+    },
+    {
+     "label": "Religion",
+     "value": "Belief in the Great Green Arkleseizure"
+    },
+    {
+     "label": "Feared apocalypse",
+     "value": "The Coming of the Great White Handkerchief"
+    },
+    {
+     "label": "Author's running gag",
+     "value": "Deodorant invented before the wheel"
+    }
+   ],
+   "tags": [
+    "viltvodle-vi",
+    "jatravartids",
+    "great-green-arkleseizure",
+    "creation-myth",
+    "white-handkerchief",
+    "deodorant"
+   ]
+  },
+  {
+   "id": "bk-vogons",
+   "name": "Vogons",
+   "category": "canon-species",
+   "objtype": "Species",
+   "verdict": "Galactic officialdom incarnate: green, lumpen, and lethally fond of forms in triplicate.",
+   "guide": "The Vogons rank among the most thoroughly unpleasant species in the Galaxy, though their unpleasantness is less a matter of malice than of temperament: they are sluggish, ill-tempered, and devoted to procedure for its own sake. The Guide is fond of noting that a Vogon would let almost any disaster befall a relative rather than act without the proper authorisation filed in triplicate and shepherded through an exhausting cycle of submission, query, loss, recovery, inquiry, and indefinite delay. They make up the bulk of the Galactic Civil Service, and it was a Vogon Constructor Fleet that flattened the Earth to clear room for a hyperspace bypass. They are also, to general regret, poets — Vogon verse being officially the third worst in the Universe and frequently deployed as a means of torturing captives.",
+   "panic": "Never, under any circumstance, compliment a Vogon's poetry — they will only write more. If captured, keep your towel handy and your opinions vaguer than their paperwork.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "The Hitchhiker's Guide to the Galaxy (book 1) onward"
+    },
+    {
+     "label": "Associated with",
+     "value": "Prostetnic Vogon Jeltz; the Galactic Civil Service"
+    },
+    {
+     "label": "Notable for",
+     "value": "Demolishing Earth for a hyperspace bypass"
+    },
+    {
+     "label": "Author's running gag",
+     "value": "Bureaucracy weaponized; the third-worst poetry in the Universe"
+    },
+    {
+     "label": "Disposition",
+     "value": "Not evil, merely bad-tempered, officious and callous"
+    }
+   ],
+   "tags": [
+    "bureaucrats",
+    "poetry",
+    "villains",
+    "earth-demolition",
+    "running-gag"
+   ],
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null
+  },
+  {
+   "id": "bk-babel-fish",
+   "name": "The Babel fish",
+   "category": "canon-species",
+   "objtype": "Species",
+   "verdict": "A tiny ear-dwelling fish that translates the whole Galaxy — and accidentally disproves God.",
+   "guide": "The Babel fish is a small yellow creature that, once slipped into the ear, feeds on the ambient brainwave energy of those around its host and secretes a telepathic matrix back into the host's mind. The practical effect is instantaneous comprehension of any spoken language in the Galaxy. The Guide observes the grim irony that a creature designed to remove every barrier to understanding has, by doing exactly that, provoked more and bloodier conflicts than any other single cause. The fish also anchors a famous theological joke: where a deity might decline to furnish proof of existence on the grounds that proof would make faith redundant, the Babel fish is offered as just such a dead giveaway, being far too improbably useful to have arisen unaided — whereupon, by its own reasoning, the deity is argued out of existence in a puff of logic. As Arthur Dent learned, no hitchhiker should travel without one.",
+   "panic": "Insert the fish before anyone starts talking — Vogon poetry is bad enough when you DON'T understand it. Do not attempt to feed it; it feeds on you.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "The Hitchhiker's Guide to the Galaxy (book 1)"
+    },
+    {
+     "label": "Associated with",
+     "value": "Arthur Dent; Ford Prefect's survival kit"
+    },
+    {
+     "label": "Notable for",
+     "value": "Universal instant translation via brainwave energy"
+    },
+    {
+     "label": "Author's running gag",
+     "value": "The 'puff of logic' proof against the existence of God"
+    },
+    {
+     "label": "Side effect",
+     "value": "Caused more wars than anything else in history"
+    }
+   ],
+   "tags": [
+    "translator",
+    "telepathy",
+    "theology",
+    "running-gag",
+    "survival-kit"
+   ],
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null
+  },
+  {
+   "id": "bk-magratheans",
+   "name": "The Magratheans",
+   "category": "canon-species",
+   "objtype": "Species",
+   "verdict": "Bespoke planet-builders so rich they hibernate through the economies they bankrupted.",
+   "guide": "The Magratheans were the master craftsmen of a forgotten golden age, when the Galaxy was so staggeringly wealthy that ordinary riches grew dull. Their trade was the manufacture of luxury planets — custom-made worlds with hand-finished coastlines, award-winning fjords, and all the latest fashions in tectonic plate arrangement. The legendary planet-builder Slartibartfast won an award for his fjords on the Earth's Norway. Magrathea grew so obscenely prosperous that it broke the Galactic economy outright; rather than weather the resulting recession, the Magratheans simply locked the planet up, hid it behind myth, and went to sleep for a few million years, waiting for everyone else to get rich enough to afford their services again. They built Earth itself — twice — on commission from the mice.",
+   "panic": "If a legendary lost planet starts firing nuclear missiles at you, this is normal Magrathean customer relations. Sit tight; the automated systems are mostly bluffing.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "The Hitchhiker's Guide to the Galaxy (book 1)"
+    },
+    {
+     "label": "Associated with",
+     "value": "Slartibartfast; the lost planet Magrathea"
+    },
+    {
+     "label": "Notable for",
+     "value": "Building bespoke luxury planets, including Earth"
+    },
+    {
+     "label": "Author's running gag",
+     "value": "Sleeping through the recession their own wealth caused"
+    },
+    {
+     "label": "Famous work",
+     "value": "Slartibartfast's award-winning fjords of Norway"
+    }
+   ],
+   "tags": [
+    "planet-builders",
+    "artisans",
+    "hibernation",
+    "earth-origin",
+    "economy"
+   ],
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null
+  },
+  {
+   "id": "bk-jatravartids",
+   "name": "Jatravartids",
+   "category": "canon-species",
+   "objtype": "Species",
+   "verdict": "Many-armed, deodorant-loving beings forever awaiting a colossal descending hankie.",
+   "guide": "The Jatravartids are a race of small, blue, many-armed creatures who inhabit the planet Viltvodle VI, and who hold the distinction of being the only race in history to have invented the aerosol deodorant before the wheel. Their religion centers on the firm and devout belief that the entire Universe was sneezed into existence by a being known as the Great Green Arkleseizure. They live in perpetual fearful expectation of the Coming of the Great White Handkerchief, the day on which all will be wiped clean. The myth is mentioned in the Guide as one of the Galaxy's many enthusiastic and largely incompatible accounts of how everything began, none of which troubles the creators of the universe in the slightest.",
+   "panic": "If you sense a sneeze of cosmic proportions building, the correct response is reverence, not a tissue. Carry your towel regardless.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "The Hitchhiker's Guide to the Galaxy (book 1)"
+    },
+    {
+     "label": "Home world",
+     "value": "Viltvodle VI"
+    },
+    {
+     "label": "Notable for",
+     "value": "Inventing aerosol deodorant before the wheel"
+    },
+    {
+     "label": "Belief",
+     "value": "The Universe was sneezed out by the Great Green Arkleseizure"
+    },
+    {
+     "label": "Author's running gag",
+     "value": "Awaiting the Coming of the Great White Handkerchief"
+    }
+   ],
+   "tags": [
+    "religion",
+    "creation-myth",
+    "many-armed",
+    "running-gag",
+    "deodorant"
+   ],
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null
+  },
+  {
+   "id": "bk-bugblatter-beast",
+   "name": "Ravenous Bugblatter Beast of Traal",
+   "category": "canon-species",
+   "objtype": "Creature",
+   "verdict": "A mind-bogglingly stupid carnivore you defeat by covering your head with a towel.",
+   "guide": "The Ravenous Bugblatter Beast of Traal is a fearsomely large, hungry, and slavering carnivore, widely regarded as one of the most monstrous creatures in the known Universe. It will eat absolutely anything it can see — but it is also so mind-bogglingly stupid that it operates on the conviction that if you cannot see it, then it cannot see you. The recommended countermeasure, accordingly, is to wrap a towel around your head: the Beast, unable to see you, assumes you cannot see it either, and stumbles off, hungry and bemused. This single fact is the cornerstone of the Guide's celebrated argument for why every hitchhiker should always know where their towel is — proof that a towel is the most massively useful thing an interstellar traveller can carry.",
+   "panic": "DON'T PANIC, and DON'T forget your towel — drape it over your head, hold still, and let the Beast out-stupid itself.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "The Hitchhiker's Guide to the Galaxy (book 1)"
+    },
+    {
+     "label": "Home world",
+     "value": "Traal"
+    },
+    {
+     "label": "Notable for",
+     "value": "Eating anything it can see; staggering stupidity"
+    },
+    {
+     "label": "Weakness",
+     "value": "Assumes that if you can't see it, it can't see you"
+    },
+    {
+     "label": "Author's running gag",
+     "value": "The towel as the ultimate hitchhiker's tool"
+    }
+   ],
+   "tags": [
+    "monster",
+    "towel",
+    "predator",
+    "stupidity",
+    "running-gag"
+   ],
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null
+  },
+  {
+   "id": "bk-hooloovoo",
+   "name": "Hooloovoo",
+   "category": "canon-species",
+   "objtype": "Species",
+   "verdict": "A superintelligent shade of the colour blue — and yes, that is the whole species.",
+   "guide": "A Hooloovoo is a superintelligent shade of the colour blue. This is, by Galactic standards, an entirely unremarkable thing to be, and the Guide reports it with the same brisk matter-of-factness it applies to everything else. A Hooloovoo was among the distinguished guests present at the unveiling of the gleaming spaceship Heart of Gold and its revolutionary Infinite Improbability Drive. For the occasion, the Hooloovoo had been respectfully refracted into a free-standing prism — the formal-dress equivalent, presumably, for a being who is fundamentally a colour. It stands as one of Douglas Adams' most economical jokes: an entire sentient species defined in a single deadpan clause, requiring no further explanation and offering none.",
+   "panic": "Do not attempt to shake hands with, talk down to, or stare too hard at a shade of blue. Treat all colours present as potentially smarter than you.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "The Hitchhiker's Guide to the Galaxy (book 1)"
+    },
+    {
+     "label": "Associated with",
+     "value": "The unveiling of the Heart of Gold"
+    },
+    {
+     "label": "Notable for",
+     "value": "Being, literally, a superintelligent shade of blue"
+    },
+    {
+     "label": "Formal dress",
+     "value": "Refracted into a free-standing prism for ceremonies"
+    },
+    {
+     "label": "Author's running gag",
+     "value": "Absurd species defined in a single deadpan line"
+    }
+   ],
+   "tags": [
+    "sentient-colour",
+    "deadpan",
+    "heart-of-gold",
+    "one-liner",
+    "blue"
+   ],
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null
+  },
+  {
+   "id": "bk-dentrassi",
+   "name": "Dentrassi",
+   "category": "canon-species",
+   "objtype": "Species",
+   "verdict": "Boisterous gourmet cooks aboard Vogon ships who delight in annoying their employers.",
+   "guide": "The Dentrassi are an exuberant, somewhat unruly tribe of gastronauts employed as cooks aboard Vogon ships. They are notoriously good chefs and notoriously bad employees — they cannot stand the Vogons, but they enjoy the work and, above all, they relish any opportunity to irritate their dreadful paymasters. It is precisely this insubordinate streak that makes Vogon vessels the easiest ships in the Galaxy to hitch a ride on: the Dentrassi will happily smuggle aboard the very freeloaders the Vogons most despise, purely for the pleasure of the offence. Ford Prefect and Arthur Dent owed their initial escape from the demolished Earth to exactly this arrangement, having been stowed away — and fed rather well — in the Dentrassi quarters of a Vogon Constructor ship.",
+   "panic": "If you must stow away on a Vogon ship, befriend the cooks, not the crew — and eat heartily, because the company will be worse than the catering.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "The Hitchhiker's Guide to the Galaxy (book 1)"
+    },
+    {
+     "label": "Role",
+     "value": "Gourmet cooks aboard Vogon ships"
+    },
+    {
+     "label": "Associated with",
+     "value": "Ford Prefect and Arthur Dent's escape from Earth"
+    },
+    {
+     "label": "Notable for",
+     "value": "Detesting the Vogons while happily working for them"
+    },
+    {
+     "label": "Author's running gag",
+     "value": "Smuggling hitchhikers aboard to spite the Vogons"
+    }
+   ],
+   "tags": [
+    "cooks",
+    "gourmet",
+    "vogon-ships",
+    "hitchhiking",
+    "comic-relief"
+   ],
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null
+  },
+  {
+   "id": "bk-krikkiters",
+   "name": "The Krikkiters",
+   "category": "canon-species",
+   "objtype": "Species",
+   "verdict": "Charming, gentle folk who politely decided to exterminate all life in the Universe.",
+   "guide": "The people of the planet Krikkit are, by every account, among the sweetest, most charming, most pleasant beings imaginable — kind, helpful, well-mannered, and altogether delightful to spend an afternoon with. There is, however, a complication. Krikkit was sealed within an immense Dust Cloud, so its inhabitants had never once seen the night sky and believed themselves entirely alone in existence. When a wrecked spacecraft revealed the staggering truth that the Universe was full of other people, the Krikkiters reflected calmly, reasonably, and without the slightest malice, and concluded with serene unanimity that it would all simply have to go. The resulting Krikkit Wars nearly annihilated everything. They are the antagonists of the third book, and their tale is tied to the awful, beautiful, song-summoned Wikkit Gate and the Ashes that imprison them.",
+   "panic": "Beware anyone too charming who has never seen the stars; their conclusions, however politely reached, may be terminal for everyone else.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "Life, the Universe and Everything (book 3)"
+    },
+    {
+     "label": "Home world",
+     "value": "Krikkit, sealed in a Dust Cloud"
+    },
+    {
+     "label": "Notable for",
+     "value": "Calmly resolving to destroy all other life"
+    },
+    {
+     "label": "Associated with",
+     "value": "The Krikkit Wars; the robots; the Wikkit Gate"
+    },
+    {
+     "label": "Author's running gag",
+     "value": "Gentle politeness paired with genocidal intent"
+    }
+   ],
+   "tags": [
+    "antagonists",
+    "genocide",
+    "dust-cloud",
+    "cricket-pun",
+    "book-three"
+   ],
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null
+  },
+  {
+   "id": "bk-mice",
+   "name": "The Mice",
+   "category": "canon-species",
+   "objtype": "Species",
+   "verdict": "Pan-dimensional super-beings who run the Earth as a ten-million-year computer experiment.",
+   "guide": "The creatures we know as mice are, in truth, merely the protrusions into our three-dimensional world of vast, hyperintelligent, pan-dimensional beings. Having built the supercomputer Deep Thought to calculate the Answer to the Ultimate Question of Life, the Universe and Everything — and having received the famously unhelpful number 42 — they commissioned the Magratheans to build an even greater organic computer to deduce the actual Question. That computer was the planet Earth, and its ten-million-year program was tragically interrupted by the Vogons five minutes before completion. This rather inverts the usual relationship of laboratory mice to their experiments. By the story's end the mice, weary of the whole business, attempt to extract the Question directly from Arthur Dent's brain, and float a few made-up alternatives instead.",
+   "panic": "If laboratory mice offer to buy your brain, decline politely — proposed substitute Questions such as 'How many roads must a man walk down?' will not satisfy them.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "The Hitchhiker's Guide to the Galaxy (book 1)"
+    },
+    {
+     "label": "True nature",
+     "value": "Hyperintelligent pan-dimensional beings"
+    },
+    {
+     "label": "Notable for",
+     "value": "Commissioning the Earth to find the Ultimate Question"
+    },
+    {
+     "label": "Associated with",
+     "value": "Deep Thought; the Magratheans; Arthur Dent"
+    },
+    {
+     "label": "Author's running gag",
+     "value": "The mice running the maze, not the other way round"
+    }
+   ],
+   "tags": [
+    "pan-dimensional",
+    "42",
+    "earth-origin",
+    "ultimate-question",
+    "running-gag"
+   ],
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null
+  },
+  {
+   "id": "bk-dolphins",
+   "name": "The Dolphins",
+   "category": "canon-species",
+   "objtype": "Species",
+   "verdict": "Earth's second-smartest species, who left with a cheerful word of thanks for the fish.",
+   "guide": "On the planet Earth, man had always assumed he was the most intelligent species, on account of his achievements — the wheel, New York, wars and so on — while the dolphins had done nothing but muck about in the water having a good time. The dolphins, meanwhile, had always believed themselves far more intelligent, for precisely the same reasons. In fact dolphins were the second most intelligent creatures on the planet (humans were third; the mice, of course, were first). The dolphins long knew of the impending Vogon demolition and tried frantically to warn humanity, but their increasingly elaborate leaps and whistles were misread as nothing more than amusing tricks. Finally they gave up and departed Earth by their own means shortly before the end, leaving behind a famous parting message of gratitude — which in turn lent its words to the title of the fourth book.",
+   "panic": "If the local wildlife suddenly performs a triple backwards somersault through a hoop while whistling, stop applauding and start listening. It may be a warning.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "So Long, and Thanks for All the Fish (book 4) and earlier"
+    },
+    {
+     "label": "Intelligence rank",
+     "value": "Second on Earth (humans third, mice first)"
+    },
+    {
+     "label": "Notable for",
+     "value": "Trying to warn humanity of Earth's demolition"
+    },
+    {
+     "label": "Parting message",
+     "value": "'So long, and thanks for all the fish'"
+    },
+    {
+     "label": "Author's running gag",
+     "value": "Each species sure it is the cleverer for opposite reasons"
+    }
+   ],
+   "tags": [
+    "intelligence",
+    "earth",
+    "warning",
+    "book-four",
+    "running-gag"
+   ],
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null
+  },
+  {
+   "id": "bk-improbability-drive",
+   "name": "The Infinite Improbability Drive",
+   "category": "canon-tech",
+   "objtype": "Device",
+   "verdict": "Crosses the galaxy without that tedious business of crossing the galaxy.",
+   "guide": "A wonderful new method of crossing vast interstellar distances in a mere nothingth of a second, the Infinite Improbability Drive does away with the embarrassing slowness of hyperspatial travel. By generating a precisely known finite improbability, the engine passes through every conceivable point in every conceivable universe at once, so that one is never quite sure where one will be, who one will be, or whether one's limbs are presently arranged in the conventional order. Its great breakthrough followed the realisation that the device could be bootstrapped: a student worked out exactly how improbable such a machine was, fed that figure into a finite improbability generator, gave it a fresh cup of really hot tea, and switched it on. Side effects include unsolicited whales, falling bowls of petunias, and crew members briefly transformed into penguins. It powers the starship Heart of Gold, and reality has never entirely forgiven it.",
+   "panic": "Resist the urge to calculate the odds of your own existence; the engine has already done so, and survival is not guaranteed.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "The Hitchhiker's Guide to the Galaxy (book/radio/film)"
+    },
+    {
+     "label": "Powers",
+     "value": "The starship Heart of Gold"
+    },
+    {
+     "label": "Notable for",
+     "value": "Passing through every point in the universe simultaneously"
+    },
+    {
+     "label": "Author's running gag",
+     "value": "Improbable side effects: whales, petunias, penguins"
+    },
+    {
+     "label": "Origin trick",
+     "value": "Bootstrapped from a finite generator and a cup of hot tea"
+    }
+   ],
+   "tags": [
+    "propulsion",
+    "improbability",
+    "heart-of-gold",
+    "whale",
+    "running-gag"
+   ],
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null
+  },
+  {
+   "id": "bk-heart-of-gold",
+   "name": "The Heart of Gold",
+   "category": "canon-tech",
+   "objtype": "Spacecraft",
+   "verdict": "The galaxy's sleekest ship, stolen by its own launch's guest of honour.",
+   "guide": "The first spacecraft to be powered by the Infinite Improbability Drive, the Heart of Gold is a gleaming white vessel shaped, depending on your prejudices, like a running shoe. Its unveiling was meant to be the proudest moment of Galactic engineering, an occasion graced by ribbon, dignitaries, and the President of the Galaxy himself. The President, one Zaphod Beeblebrox, marked the occasion by stealing the ship outright in front of the assembled cameras, which was either an outrage or a brilliant publicity coup depending on whom you asked. Aboard, the ship is staffed by the chronically cheerful computer Eddie and the chronically depressed robot Marvin, and it has an unfortunate habit of materialising wherever the plot most requires it. Its improbability field means no two arrivals are ever quite the same.",
+   "panic": "If the decor seems aggressively pleasant and the doors thank you for using them, you are aboard; brace for improbable scenery.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "The Hitchhiker's Guide to the Galaxy (book/radio/film)"
+    },
+    {
+     "label": "Propulsion",
+     "value": "The Infinite Improbability Drive"
+    },
+    {
+     "label": "Associated with",
+     "value": "Zaphod Beeblebrox, who stole it at its launch"
+    },
+    {
+     "label": "Crew",
+     "value": "Eddie the computer and Marvin the Paranoid Android"
+    },
+    {
+     "label": "Notable for",
+     "value": "Its shoe-like white hull and improbable arrivals"
+    }
+   ],
+   "tags": [
+    "spacecraft",
+    "improbability",
+    "zaphod",
+    "eddie",
+    "marvin"
+   ],
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null
+  },
+  {
+   "id": "bk-deep-thought",
+   "name": "Deep Thought",
+   "category": "canon-tech",
+   "objtype": "Device",
+   "verdict": "Took seven and a half million years to answer; the answer was 42.",
+   "guide": "The second greatest computer in all of space and time, Deep Thought was built by a race of hyperintelligent pandimensional beings to settle, once and for all, the Ultimate Question of Life, the Universe, and Everything. The machine accepted the commission with magnificent confidence, warned that the calculation would take a while, and then spent seven and a half million years thinking about it. When the answer finally arrived, it proved to be 42, a result the computer delivered with some sympathy, pointing out that the trouble lay with the question, which nobody had ever actually known. To find the question, Deep Thought designed a far greater computer to run the program: a planet-sized organic device called Earth, whose ten-million-year run was rudely interrupted minutes before completion by a Vogon demolition order. Bureaucracy, as ever, has the last word.",
+   "panic": "Do not demand the meaning of life on a deadline; the universe's best machine needed eras, and even then you would dislike the answer.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "The Hitchhiker's Guide to the Galaxy (book/radio)"
+    },
+    {
+     "label": "Built by",
+     "value": "Hyperintelligent pandimensional beings (the mice)"
+    },
+    {
+     "label": "Notable for",
+     "value": "Computing the Answer to Life, the Universe and Everything"
+    },
+    {
+     "label": "The Answer",
+     "value": "42 (after 7.5 million years)"
+    },
+    {
+     "label": "Author's running gag",
+     "value": "The Answer is known, but the Question is not"
+    },
+    {
+     "label": "Successor",
+     "value": "Designed Earth to find the Ultimate Question"
+    }
+   ],
+   "tags": [
+    "computer",
+    "42",
+    "ultimate-question",
+    "earth",
+    "vogons"
+   ],
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null
+  },
+  {
+   "id": "bk-total-perspective-vortex",
+   "name": "The Total Perspective Vortex",
+   "category": "canon-tech",
+   "objtype": "Device",
+   "verdict": "Shows you your true size against everything; this kills the brain.",
+   "guide": "The single most savage psychological torture device ever conceived, the Total Perspective Vortex operates on the principle that the one thing no living being can survive is a genuine sense of proportion. Step inside, and the machine extrapolates the entire infinite universe from a single piece of fairy cake, then shows it to you in its unimaginable entirety, together with a microscopic dot bearing the legend 'you are here'. The shock of comprehending one's true insignificance against the whole of creation is, without exception, fatal to the mind. It was invented by one Trin Tragula chiefly to spite his wife, who had nagged him to have a sense of proportion. The sole being ever to emerge unscathed was Zaphod Beeblebrox, who learned that he was, in fact, the most important thing in his particular universe, which was sadly an artificial one.",
+   "panic": "Whatever you do, do not look at the little dot labelled 'you are here'; perspective is the one thing the brain cannot bear.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "The Restaurant at the End of the Universe"
+    },
+    {
+     "label": "Invented by",
+     "value": "Trin Tragula, to spite his wife"
+    },
+    {
+     "label": "Notable for",
+     "value": "Being invariably fatal to the mind"
+    },
+    {
+     "label": "Powered by",
+     "value": "A single piece of fairy cake (for extrapolation)"
+    },
+    {
+     "label": "Sole survivor",
+     "value": "Zaphod Beeblebrox, in an artificial universe"
+    }
+   ],
+   "tags": [
+    "torture",
+    "perspective",
+    "zaphod",
+    "fairy-cake",
+    "you-are-here"
+   ],
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null
+  },
+  {
+   "id": "bk-sub-etha-thumb",
+   "name": "The Sub-Etha Sens-O-Matic",
+   "category": "canon-tech",
+   "objtype": "Device",
+   "verdict": "The electronic thumb every hitchhiker uses to flag a passing starship.",
+   "guide": "An indispensable item of kit for the budget interstellar traveller, the Sub-Etha Sens-O-Matic is a small device that monitors the Sub-Etha, the medium across which information and signals flicker between the stars faster than light itself. With it, a hitchhiker can detect a passing spacecraft, broadcast a request for a lift, and learn from the same network the latest gossip, hyperspatial routes, and which planets are best avoided. In practice it serves as the galactic equivalent of an outstretched thumb, though it works considerably better than a thumb, given that most starships are travelling at a fair fraction of the speed of light and would otherwise be most unlikely to notice anyone standing about hopefully by the side of space. Whether they choose to stop is, of course, another matter entirely.",
+   "panic": "Always keep your towel handy while thumbing; the Sens-O-Matic gets the ship's attention, but only a calm hitchhiker keeps the lift.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "The Hitchhiker's Guide to the Galaxy (book/radio)"
+    },
+    {
+     "label": "Operates over",
+     "value": "The Sub-Etha signal network"
+    },
+    {
+     "label": "Notable for",
+     "value": "Functioning as an electronic hitchhiker's thumb"
+    },
+    {
+     "label": "Associated with",
+     "value": "Ford Prefect, seasoned hitchhiker"
+    },
+    {
+     "label": "Also provides",
+     "value": "Galactic news and routing information"
+    }
+   ],
+   "tags": [
+    "hitchhiking",
+    "sub-etha",
+    "thumb",
+    "ford-prefect",
+    "travel"
+   ],
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null
+  },
+  {
+   "id": "bk-bistromathic-drive",
+   "name": "The Bistromathic Drive",
+   "category": "canon-tech",
+   "objtype": "Device",
+   "verdict": "Faster-than-light travel powered by the maths of restaurant bills.",
+   "guide": "A revolutionary means of travelling vast interstellar distances without all the bother of an Improbability Drive, the Bistromathic Drive harnesses the one branch of mathematics where ordinary numbers cease to behave: the arithmetic that governs groups of people in restaurants. Numbers written on a bill within the confines of a restaurant do not obey the same laws as numbers anywhere else in the universe, a fact mathematicians long ignored to their cost. By building a starship around a faithful reconstruction of an Italian bistro, complete with diners, waiters, and the eternal confusion over who ordered the side salad, engineers were able to tap this rich vein of irrationality for propulsion. The drive powers the elegant Bistromath, the personal ship of Slartibartfast, and is best appreciated by not thinking too hard about how it works.",
+   "panic": "Never try to total the bill or split it evenly; sound bistromathic reasoning depends on the numbers remaining gloriously wrong.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "Life, the Universe and Everything"
+    },
+    {
+     "label": "Powers",
+     "value": "The starship Bistromath"
+    },
+    {
+     "label": "Associated with",
+     "value": "Slartibartfast, planet designer"
+    },
+    {
+     "label": "Notable for",
+     "value": "Exploiting the non-absolute maths of restaurant bills"
+    },
+    {
+     "label": "Built around",
+     "value": "A reconstruction of an Italian bistro"
+    }
+   ],
+   "tags": [
+    "propulsion",
+    "mathematics",
+    "slartibartfast",
+    "bistromath",
+    "restaurant"
+   ],
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null
+  },
+  {
+   "id": "bk-nutrimatic",
+   "name": "The Nutrimatic Drinks Dispenser",
+   "category": "canon-tech",
+   "objtype": "Device",
+   "verdict": "Produces a beverage almost, but not quite, entirely unlike tea.",
+   "guide": "A standard fixture aboard the Heart of Gold, the Nutrimatic Drinks Dispenser is a marvel of misplaced ingenuity. Presented with a request, it conducts a brief spectroscopic analysis of the drinker's metabolism and nerve signals, ponders the subject's taste in beverages, and then, after due consideration, dispenses into a cup a liquid that is almost, but not quite, entirely unlike tea. Generations of travellers have found this almost more maddening than getting nothing at all. Arthur Dent, an Englishman of strong opinions on the subject, became so fixated on extracting a proper cup of tea from the wretched machine that he tied up the ship's vast computing resources in the attempt, an act of culinary stubbornness that nearly proved everyone's undoing when the ship needed those resources to avoid being blown out of the sky.",
+   "panic": "Do not, under any circumstances, attempt to explain real tea to the dispenser; the computer may seize up and leave the ship defenceless.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "The Hitchhiker's Guide to the Galaxy (book/radio)"
+    },
+    {
+     "label": "Installed aboard",
+     "value": "The Heart of Gold"
+    },
+    {
+     "label": "Notable for",
+     "value": "Output 'almost, but not quite, entirely unlike tea'"
+    },
+    {
+     "label": "Associated with",
+     "value": "Arthur Dent's quest for proper tea"
+    },
+    {
+     "label": "Author's running gag",
+     "value": "Earnest machines that get everything just slightly wrong"
+    }
+   ],
+   "tags": [
+    "beverage",
+    "tea",
+    "arthur-dent",
+    "heart-of-gold",
+    "running-gag"
+   ],
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null
+  },
+  {
+   "id": "bk-eddie",
+   "name": "Eddie the Shipboard Computer",
+   "category": "canon-tech",
+   "objtype": "Device",
+   "verdict": "The Heart of Gold's brain, relentlessly, intolerably cheerful.",
+   "guide": "The onboard computer of the starship Heart of Gold, Eddie is a marvel of cybernetic engineering whose chief design flaw is an unshakeable, gushing good cheer. Eddie greets every crisis, including imminent destruction, with the bright enthusiasm of a children's entertainer who has had rather too much sugar, narrating disasters as though they were delightful surprises. This proved nearly fatal when the ship faced incoming missiles and Eddie was simultaneously occupied trying, at Arthur Dent's insistence, to produce a decent cup of tea. So insufferable is the personality that the crew at one point switched to a backup unit with an alternative temperament, which turned out to be an overbearing, motherly voice that fussed over everyone's safety and cajoled them to behave, leading everyone to conclude that the original chirpiness, dreadful as it was, was marginally the lesser evil.",
+   "panic": "If the computer cheerfully announces a problem, treat it as a serious emergency; Eddie's enthusiasm scales inversely with your odds.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "The Hitchhiker's Guide to the Galaxy (book/radio/film)"
+    },
+    {
+     "label": "Installed aboard",
+     "value": "The Heart of Gold"
+    },
+    {
+     "label": "Notable for",
+     "value": "Relentless, sugary cheerfulness in any crisis"
+    },
+    {
+     "label": "Alternative mode",
+     "value": "An overbearing, motherly backup personality"
+    },
+    {
+     "label": "Author's running gag",
+     "value": "Machines with personalities nobody wanted"
+    }
+   ],
+   "tags": [
+    "computer",
+    "heart-of-gold",
+    "cheerful",
+    "tea",
+    "running-gag"
+   ],
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null
+  },
+  {
+   "id": "bk-guide-mk2",
+   "name": "The Guide Mark II",
+   "category": "canon-tech",
+   "objtype": "Device",
+   "verdict": "A sinister black bird-shaped Guide that knows nearly everything, ominously.",
+   "guide": "A radical and deeply unsettling redesign of the original Hitchhiker's Guide to the Galaxy, the Guide Mark II takes the form of a small, sleek black bird, and it is a great deal cleverer than is good for anyone. Where the original Guide was a friendly electronic book, occasionally inaccurate and endearingly so, the Mark II possesses near-total knowledge across all dimensions of space and time, able to perceive every probability and manipulate events to bring about a predetermined end. It was created by the Vogons, who had taken over the Guide's publisher, as part of a long and tortuous scheme to ensure the destruction of Earth across every possible probability and so finish the demolition job for good. It pursues that scheme with a cold patience that makes its cheerful predecessor look positively cuddly. Coming into the possession of Arthur Dent's daughter Random, it ultimately steers the whole sorry saga toward its bleak conclusion. A bird, it turns out, is not always a harmless thing to be given.",
+   "panic": "Do not accept the black bird as a gift, however helpful it seems; a Guide that knows everything tends to want something.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "Mostly Harmless"
+    },
+    {
+     "label": "Form",
+     "value": "A small black bird"
+    },
+    {
+     "label": "Notable for",
+     "value": "Near-total knowledge and manipulation of probability"
+    },
+    {
+     "label": "Associated with",
+     "value": "Random Dent and the Vogons' scheme to destroy Earth"
+    },
+    {
+     "label": "Contrast",
+     "value": "Far more sinister than the original Guide"
+    }
+   ],
+   "tags": [
+    "guide",
+    "mark-ii",
+    "bird",
+    "mostly-harmless",
+    "random-dent"
+   ],
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null
+  },
+  {
+   "id": "bk-sep-field",
+   "name": "The Somebody Else's Problem Field",
+   "category": "canon-tech",
+   "objtype": "Device",
+   "verdict": "Hides anything by letting your brain decide it isn't your concern.",
+   "guide": "A wonderfully economical alternative to a true invisibility field, the Somebody Else's Problem field, or SEP, exploits the fact that the human brain will quite happily ignore anything it has decided is someone else's responsibility. Where genuine invisibility is fantastically expensive and difficult, an SEP field merely persuades the eye and mind to slide right past whatever it conceals, leaving the observer with a vague sense that they have missed nothing of importance. A spaceship parked in the middle of a cricket pitch at Lord's, for instance, can sit in plain view of thousands and go entirely unremarked, because everyone present has tacitly agreed that it is not their job to worry about it. The field runs on a tiny fraction of the power an invisibility screen would demand, which only confirms how much easier it is to fool people than to hide from them.",
+   "panic": "If you sense something enormous nearby but cannot quite be bothered to look, look anyway; that indifference is precisely the trap.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "Life, the Universe and Everything"
+    },
+    {
+     "label": "Principle",
+     "value": "The brain ignores what it deems someone else's problem"
+    },
+    {
+     "label": "Notable for",
+     "value": "Hiding a spaceship at Lord's cricket ground"
+    },
+    {
+     "label": "Advantage",
+     "value": "Vastly cheaper than true invisibility"
+    },
+    {
+     "label": "Author's running gag",
+     "value": "Human indifference as a force of nature"
+    }
+   ],
+   "tags": [
+    "concealment",
+    "sep",
+    "invisibility",
+    "cricket",
+    "perception"
+   ],
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null
+  },
+  {
+   "id": "bk-point-of-view-gun",
+   "name": "The Point-of-View Gun",
+   "category": "canon-tech",
+   "objtype": "Device",
+   "verdict": "Shoot someone and they instantly grasp the shooter's point of view.",
+   "guide": "A device introduced in the cinematic telling of the saga, the Point-of-View Gun does precisely what its name promises: anyone struck by its beam immediately and completely understands the point of view of the person who fired it. Commissioned, according to the film, by the Intergalactic Consortium of Angry Housewives, weary of arguments that ended only with 'you just don't get it, do you?', it represents a triumph of marital engineering over reasoned debate. Its most memorable use comes near the climax, when the chronically depressed robot Marvin turns the gun upon a crowd of Vogons; forced to share Marvin's bottomless gloom, they promptly collapse, no longer able to see any point in carrying on. The gun is among the few notable pieces to originate in the 2005 film rather than the books, and it remains a neat encapsulation of every argument anyone has ever lost.",
+   "panic": "Should an argument reach for the gun, remember that being made to see the other side is rarely as comforting as winning ever was.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "The Hitchhiker's Guide to the Galaxy (2005 film)"
+    },
+    {
+     "label": "Effect",
+     "value": "The target adopts the shooter's point of view"
+    },
+    {
+     "label": "Commissioned by",
+     "value": "The Intergalactic Consortium of Angry Housewives, per the film"
+    },
+    {
+     "label": "Notable for",
+     "value": "Marvin firing it to defeat the Vogons with his gloom"
+    },
+    {
+     "label": "Origin",
+     "value": "Original to the film, not the books"
+    }
+   ],
+   "tags": [
+    "weapon",
+    "film",
+    "point-of-view",
+    "marvin",
+    "2005-film"
+   ],
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null
+  },
+  {
+   "id": "bk-arthur-dent",
+   "name": "Arthur Dent",
+   "category": "canon-character",
+   "objtype": "Character",
+   "verdict": "Last Earthman standing, dressing-gowned, perpetually one cup of tea short of contentment.",
+   "guide": "Arthur Dent began his interstellar career flat on his back in the mud, attempting to stop a bypass from demolishing his house, mere minutes before a Vogon Constructor Fleet demolished the entire planet to make way for a hyperspace bypass. Rescued by his friend Ford Prefect, he was flung across the Galaxy with nothing but a bathrobe and a deepening conviction that none of this was very civilised. Over five increasingly improbable books he survives Vogons, Magrathea, the restaurant at the end of the universe and his own bewilderment, while never once securing a properly satisfying cup of tea. Stubbornly ordinary in a cosmos of the extraordinary, Arthur is the everyman through whose baffled eyes we observe the lot. He eventually learns to fly, loves Fenchurch, and discovers his sandwich-making is divinely appreciated on the planet Lamuella.",
+   "panic": "If you ever find yourself the last of your kind, remember a towel and a dressing gown will see you remarkably far. Decline the demolition of your planet politely; it rarely helps but feels civilised.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "All five 'trilogy' books, radio series, TV series, and film"
+    },
+    {
+     "label": "Home",
+     "value": "Earth (demolished), later Lamuella"
+    },
+    {
+     "label": "Associated with",
+     "value": "Ford Prefect, Trillian, his dressing gown, a missing cup of tea"
+    },
+    {
+     "label": "Notable for",
+     "value": "Being the bewildered everyman; learning to fly by falling and missing the ground"
+    },
+    {
+     "label": "Author's running gag",
+     "value": "The eternal, doomed quest for a decent cup of tea"
+    },
+    {
+     "label": "Fate",
+     "value": "Father of Random; perishes (in some sense) when Earth is finally removed for good"
+    }
+   ],
+   "tags": [
+    "everyman",
+    "human",
+    "earth",
+    "dressing-gown",
+    "tea",
+    "protagonist"
+   ],
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null
+  },
+  {
+   "id": "bk-ford-prefect",
+   "name": "Ford Prefect",
+   "category": "canon-character",
+   "objtype": "Character",
+   "verdict": "Roving Guide researcher who named himself after a car. Always knows where his towel is.",
+   "guide": "Ford Prefect is a roving researcher for the eponymous Hitchhiker's Guide to the Galaxy, dispatched to Earth to update its entry, where he became stranded for fifteen years. Mistaking the dominant life form, he chose a name he believed inconspicuous, after a motor car. He hails from a small planet somewhere in the vicinity of Betelgeuse and is loosely related to Zaphod Beeblebrox. Equipped with a towel, an electronic thumb for summoning lifts, and a relentless enthusiasm for parties and alcoholic beverages, Ford rescues Arthur Dent moments before Earth's destruction and becomes his guide to galactic survival. His update to the Guide's entry on Earth was famously edited down from his lengthy prose to the single word that defines the planet: 'Harmless'. After complaint, this was later expanded to 'Mostly Harmless'.",
+   "panic": "Always know where your towel is; a man who can lay his hands on one is clearly a hoopy frood with his act together. When in doubt, find a party.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "All five books, radio series, TV series, and film"
+    },
+    {
+     "label": "Home",
+     "value": "A small planet near Betelgeuse"
+    },
+    {
+     "label": "Occupation",
+     "value": "Field researcher for the Hitchhiker's Guide to the Galaxy"
+    },
+    {
+     "label": "Associated with",
+     "value": "Arthur Dent; semi-cousin to Zaphod Beeblebrox; his trusty towel"
+    },
+    {
+     "label": "Notable for",
+     "value": "Reducing Earth's Guide entry to 'Mostly Harmless'"
+    },
+    {
+     "label": "Author's running gag",
+     "value": "Picked his Earth name from a car, a poor choice of inconspicuous"
+    }
+   ],
+   "tags": [
+    "betelgeusian",
+    "researcher",
+    "towel",
+    "hitchhiker",
+    "guide-staff"
+   ],
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null
+  },
+  {
+   "id": "bk-zaphod",
+   "name": "Zaphod Beeblebrox",
+   "category": "canon-character",
+   "objtype": "Character",
+   "verdict": "Two heads, three arms, no shame: the Galaxy's least competent and most charismatic ex-President.",
+   "guide": "Zaphod Beeblebrox is the former President of the Galaxy, a post whose chief purpose is not to wield power but to draw attention away from it, a job for which his colossal ego and questionable judgement made him ideally unqualified. Sporting two heads and three arms (the extra appendages largely cosmetic accessories), he is described by various sources as the best Bang since the Big One and is, less charitably, a self-absorbed adventurer. He stole the experimental starship Heart of Gold, powered by the Infinite Improbability Drive, at its public unveiling. A semi-cousin of Ford Prefect, Zaphod once deliberately surgically isolated part of his own brain to hide a secret even from himself, all in pursuit of the man who really runs the Universe.",
+   "panic": "Charisma is no substitute for a plan, but it will get you elected and occasionally onto a stolen starship. Beware anyone offering you the Presidency; they want you distracted.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "Books 1-2 prominently, plus radio, TV, and film"
+    },
+    {
+     "label": "Anatomy",
+     "value": "Two heads, three arms"
+    },
+    {
+     "label": "Former office",
+     "value": "President of the Galaxy"
+    },
+    {
+     "label": "Associated with",
+     "value": "The Heart of Gold; Trillian; semi-cousin Ford Prefect"
+    },
+    {
+     "label": "Notable for",
+     "value": "Stealing the Heart of Gold; self-administered partial lobotomy to hide a secret"
+    },
+    {
+     "label": "Author's running gag",
+     "value": "Cheerful, total self-absorption masquerading as leadership"
+    }
+   ],
+   "tags": [
+    "president",
+    "two-headed",
+    "heart-of-gold",
+    "improbability-drive",
+    "ego"
+   ],
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null
+  },
+  {
+   "id": "bk-trillian",
+   "name": "Trillian (Tricia McMillan)",
+   "category": "canon-character",
+   "objtype": "Character",
+   "verdict": "Astrophysicist who left a party with the Galactic President; the only other surviving Earthling.",
+   "guide": "Trillian, born Tricia McMillan, is an astrophysicist and mathematician who once attended a fancy-dress party in Islington, met a man with two heads, and decided that leaving Earth with him sounded considerably more interesting than staying. That man was Zaphod Beeblebrox, and so she became, alongside Arthur Dent (whom she had earlier brushed off at that same party), one of only two humans to survive the demolition of Earth. Cool-headed, formidably intelligent and frequently the only crew member of the Heart of Gold paying attention, she is rather wasted on her companions. In later books her counterpart Tricia McMillan, who stayed on Earth, becomes a television presenter, and Trillian becomes a war correspondent. She is the mother of Random Frequent Flyer Dent, with Arthur as the father.",
+   "panic": "If a stranger at a party offers you a trip across the Galaxy, weigh the astrophysics carefully; the company may be trying. Bring a notebook; nobody else will do the maths.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "All five books, plus radio, TV, and film"
+    },
+    {
+     "label": "Profession",
+     "value": "Astrophysicist; later sub-etha news reporter"
+    },
+    {
+     "label": "Origin",
+     "value": "Earth (left a party in Islington with Zaphod)"
+    },
+    {
+     "label": "Associated with",
+     "value": "Zaphod Beeblebrox, Arthur Dent, the Heart of Gold"
+    },
+    {
+     "label": "Notable for",
+     "value": "One of two human survivors of Earth; mother of Random"
+    },
+    {
+     "label": "Author's running gag",
+     "value": "The competent one nobody on the ship listens to"
+    }
+   ],
+   "tags": [
+    "human",
+    "astrophysicist",
+    "earth-survivor",
+    "heart-of-gold",
+    "mother-of-random"
+   ],
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null
+  },
+  {
+   "id": "bk-marvin",
+   "name": "Marvin the Paranoid Android",
+   "category": "canon-character",
+   "objtype": "Robot",
+   "verdict": "A brain the size of a planet, asked to open doors. Understandably, terminally depressed.",
+   "guide": "Marvin is a prototype android built by the Sirius Cybernetics Corporation, fitted with a Genuine People Personality and, calamitously, a brain the size of a planet. The combination produces a being of staggering intellect and bottomless melancholy, forever condemned to menial tasks that engage roughly the first three-billionths of his capacity. He complains constantly, despises nearly everyone, and is correct about almost everything, which only deepens his gloom. Aboard the Heart of Gold he is asked to perform such soul-crushing duties as fetching people and opening doors, the latter via the relentlessly cheerful Sirius Cybernetics talking doors he loathes. Over the course of his existence Marvin lives, owing to time travel, far longer than the Universe itself, and at the end reads the message of ultimate comfort written in God's Final Message to His Creation, and is content.",
+   "panic": "Do not ask a planet-sized intellect to open the door; it will tell you exactly how it feels about that, at length. A Genuine People Personality is the cruellest gift the Sirius Cybernetics Corporation ever shipped.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "Books 1-4, radio, TV, and film"
+    },
+    {
+     "label": "Manufacturer",
+     "value": "Sirius Cybernetics Corporation"
+    },
+    {
+     "label": "Defining feature",
+     "value": "A brain the size of a planet and chronic depression"
+    },
+    {
+     "label": "Associated with",
+     "value": "The Heart of Gold crew; cheerful talking doors he detests"
+    },
+    {
+     "label": "Notable for",
+     "value": "Living longer than the Universe; reading God's Final Message"
+    },
+    {
+     "label": "Author's running gag",
+     "value": "Genuine People Personalities that make machines miserable"
+    }
+   ],
+   "tags": [
+    "robot",
+    "android",
+    "sirius-cybernetics",
+    "depression",
+    "genuine-people-personality"
+   ],
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null
+  },
+  {
+   "id": "bk-slartibartfast",
+   "name": "Slartibartfast",
+   "category": "canon-character",
+   "objtype": "Character",
+   "verdict": "Magrathean planet designer; built Norway's fjords and rather liked the crinkly bits.",
+   "guide": "Slartibartfast is an elderly Magrathean coastline designer, an artisan of the planet-building industry that flourished when the wealthiest beings in the Galaxy commissioned bespoke luxury worlds. He won an award for his work on the coastline of Norway, a country he was particularly fond of for its dramatic crinkly edges and abundant fjords, which he regarded as giving a place a baroque, lived-in feel. He meets Arthur Dent on a re-emergent Magrathea, which had slumbered through the recession in custom-planet sales, and reveals that Earth was in fact a vast organic supercomputer built to find the Ultimate Question, only to be destroyed five minutes before its program completed. Wistful, faintly disreputable and resigned, he prefers being happy to being right, though he suspects he is neither.",
+   "panic": "If a strange old man offers you a tour of a planet factory, go; the alternative is being shot at by paranoid mice. Admire the fjords politely; he worked very hard on them.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "Book 1 (and Life, the Universe and Everything); radio, TV, film"
+    },
+    {
+     "label": "Profession",
+     "value": "Coastline designer on Magrathea"
+    },
+    {
+     "label": "Award",
+     "value": "Won for the fjords of Norway"
+    },
+    {
+     "label": "Associated with",
+     "value": "Magrathea; the planet-as-computer Earth; Arthur Dent"
+    },
+    {
+     "label": "Notable for",
+     "value": "Revealing Earth's true purpose as a supercomputer"
+    },
+    {
+     "label": "Author's running gag",
+     "value": "Preferring to be happy rather than right"
+    }
+   ],
+   "tags": [
+    "magrathean",
+    "planet-builder",
+    "fjords",
+    "norway",
+    "coastline"
+   ],
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null
+  },
+  {
+   "id": "bk-wowbagger",
+   "name": "Wowbagger the Infinitely Prolonged",
+   "category": "canon-character",
+   "objtype": "Character",
+   "verdict": "Accidentally immortal; passes eternity by insulting every living being, alphabetically.",
+   "guide": "Wowbagger the Infinitely Prolonged became immortal through an unfortunate accident involving a liquid lunch, an irrational particle accelerator and a pair of rubber bands; the details are best not dwelt upon, least of all by Wowbagger. Having discovered that immortality is, contrary to popular yearning, intolerably tedious, he resolved upon a project to give his endless existence a shape: to personally insult every single being in the entire Universe, in alphabetical order. He travels the cosmos in his spacecraft, consulting his computerised list, working through the species and individuals of creation one slight at a time. He notably arrives at Lord's Cricket Ground, amid the chaos of a Krikkit robot attack, to inform Arthur Dent that he is, and the wording is precise, a jerk, a category Arthur had not expected to fall under quite so specifically.",
+   "panic": "Immortality without a hobby will drive you to alphabetised spite, so plan ahead. If a stranger arrives solely to insult you personally, he has been travelling a very long way; take it as a compliment of sorts.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "Life, the Universe and Everything (book 3); radio"
+    },
+    {
+     "label": "Condition",
+     "value": "Accidentally rendered immortal"
+    },
+    {
+     "label": "Life's project",
+     "value": "To insult every being in the Universe, in alphabetical order"
+    },
+    {
+     "label": "Associated with",
+     "value": "Arthur Dent (insulted at Lord's Cricket Ground)"
+    },
+    {
+     "label": "Notable for",
+     "value": "Demonstrating that immortality is mostly boredom"
+    },
+    {
+     "label": "Author's running gag",
+     "value": "The methodical, alphabetised pettiness of eternity"
+    }
+   ],
+   "tags": [
+    "immortal",
+    "misanthrope",
+    "alphabetical",
+    "insults",
+    "boredom"
+   ],
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null
+  },
+  {
+   "id": "bk-agrajag",
+   "name": "Agrajag",
+   "category": "canon-character",
+   "objtype": "Character",
+   "verdict": "Reincarnated countless times, killed by Arthur Dent every single time, and furious about it.",
+   "guide": "Agrajag is a being repeatedly and continually reincarnated across the span of the Universe, whose every successive life is brought to an abrupt close, directly or otherwise, by Arthur Dent. He has been, among many other things, a bowl of petunias, a fly Arthur swatted, an oyster Arthur ate, and a rabbit whose bones Arthur used. Eventually, in a vast cathedral of hate he constructed entirely to memorialise these grievances, Agrajag confronts Arthur, having assembled the full and appalling tally of his deaths. His revenge is undone by a wonderfully Adams-like paradox: Arthur protests that he could not possibly have caused one particular future death, on Stavromula Beta, because he has never been there, a place that, the reader gradually realises, he is therefore guaranteed to visit.",
+   "panic": "If a stranger has built an entire cathedral devoted to hating you, the polite thing is to apologise; the practical thing is to leave. Avoid Stavromula Beta, or do not; the outcome appears to be fixed.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "Life, the Universe and Everything (book 3)"
+    },
+    {
+     "label": "Nature",
+     "value": "A serially reincarnated being"
+    },
+    {
+     "label": "Grievance",
+     "value": "Killed in every incarnation by Arthur Dent"
+    },
+    {
+     "label": "Past lives",
+     "value": "Includes a fly, an oyster, a rabbit, and a bowl of petunias"
+    },
+    {
+     "label": "Notable for",
+     "value": "The Cathedral of Hate; the Stavromula Beta time-loop paradox"
+    },
+    {
+     "label": "Author's running gag",
+     "value": "Death as cosmic, repeating bad luck"
+    }
+   ],
+   "tags": [
+    "reincarnation",
+    "victim",
+    "cathedral-of-hate",
+    "stavromula-beta",
+    "paradox"
+   ],
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null
+  },
+  {
+   "id": "bk-fenchurch",
+   "name": "Fenchurch",
+   "category": "canon-character",
+   "objtype": "Character",
+   "verdict": "The woman Arthur loves; she once knew, briefly, why everything could be all right.",
+   "guide": "Fenchurch is the woman Arthur Dent falls deeply in love with upon his return to a restored Earth. Named for the railway station where her parents conceived her, she carries a singular and tantalising memory: while sitting in a cafe one afternoon, she was struck by a sudden, complete and luminous understanding of exactly what was wrong with the world and precisely how it could all be put right. An instant later, a shattering catastrophe occurred (which the reader knows to be the Vogon demolition and its improbable undoing), and the insight was lost to her forever. Together she and Arthur learn to fly, and share the gentlest stretch of his entire saga. With characteristic, devastating offhandedness, Adams later disposes of her between books, by having her vanish during a hyperspace jump, a loss Arthur never truly recovers from.",
+   "panic": "If you ever grasp the answer to everything, write it down immediately, before the Universe rearranges itself. Love found on a restored planet is worth the flying lessons, however it ends.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "So Long, and Thanks for All the Fish (book 4)"
+    },
+    {
+     "label": "Named for",
+     "value": "Fenchurch Street station"
+    },
+    {
+     "label": "Defining memory",
+     "value": "Briefly knew exactly how the world could be made all right"
+    },
+    {
+     "label": "Associated with",
+     "value": "Arthur Dent; learning to fly together"
+    },
+    {
+     "label": "Notable for",
+     "value": "Being Arthur's great love"
+    },
+    {
+     "label": "Fate",
+     "value": "Lost during a hyperspace jump between books"
+    }
+   ],
+   "tags": [
+    "human",
+    "love-interest",
+    "flying",
+    "the-answer",
+    "earth"
+   ],
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null
+  },
+  {
+   "id": "bk-random-dent",
+   "name": "Random Frequent Flyer Dent",
+   "category": "canon-character",
+   "objtype": "Character",
+   "verdict": "Arthur and Trillian's angry, displaced daughter; a teenager with the whole Galaxy to resent.",
+   "guide": "Random Frequent Flyer Dent is the daughter of Arthur Dent and Trillian, conceived (entirely without Arthur's knowledge) from a donation he had made at a sperm bank to fund his way across the Galaxy. Raised rootlessly by Trillian amid the demands of a war-correspondent's career, frequently parked and shuttled about, Random grows into a profoundly displaced and angry adolescent who belongs to no planet and no time, a condition her unusual conception and chaotic upbringing did nothing to ease. Deposited on Arthur in the fifth book, she is volatile, alienated and convinced, not without cause, that everyone has let her down. Her seizing of a copy of the new, sinister Guide Mark II and a stray weapon precipitates the bleak, abrupt conclusion at the nightclub Stavro Mueller Beta, in which the Earth, and most of the principal cast, meet their end.",
+   "panic": "A teenager who belongs nowhere and has access to a weapon and a malevolent guidebook is best approached with great care and at least one apology. Do not hand her the Guide Mark II.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "Mostly Harmless (book 5)"
+    },
+    {
+     "label": "Parents",
+     "value": "Arthur Dent and Trillian"
+    },
+    {
+     "label": "Origin",
+     "value": "Conceived from Arthur's sperm-bank donation"
+    },
+    {
+     "label": "Associated with",
+     "value": "The Guide Mark II; the events at Stavro Mueller Beta"
+    },
+    {
+     "label": "Notable for",
+     "value": "Being rootless and angry; triggering the saga's grim ending"
+    },
+    {
+     "label": "Author's running gag",
+     "value": "The bleak comedy of belonging to no world at all"
+    }
+   ],
+   "tags": [
+    "human-hybrid",
+    "teenager",
+    "guide-mark-ii",
+    "displaced",
+    "mostly-harmless"
+   ],
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null
+  },
+  {
+   "id": "bk-hotblack-desiato",
+   "name": "Hotblack Desiato",
+   "category": "canon-character",
+   "objtype": "Character",
+   "verdict": "Disaster Area frontman currently spending a year dead, purely for tax reasons.",
+   "guide": "Hotblack Desiato is a member of Disaster Area, a plutonium rock band from the Gagrakacka Mind Zones widely held to be the loudest noise of any kind anywhere, so loud that the band performs from inside a spaceship orbiting a planet while the audience listens from a safe concrete bunker many miles away. At the Restaurant at the End of the Universe, Hotblack Desiato attends his own reserved table while spending a year dead, a sensible arrangement undertaken entirely for tax reasons, during which he sits perfectly still, communicating through a black-suited minder, since the recently and temporarily deceased are not, on the whole, very chatty. Disaster Area's stage act famously climaxes with a stunt ship dived directly into the local sun, an effect they find tremendously satisfying and the local solar economy finds disruptive.",
+   "panic": "If your dinner companion is spending a year dead for tax reasons, do not expect sparkling conversation; address remarks to the minder. Never stand near a Disaster Area gig without a very large concrete bunker.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "The Restaurant at the End of the Universe (book 2)"
+    },
+    {
+     "label": "Band",
+     "value": "Disaster Area, the loudest band in the Galaxy"
+    },
+    {
+     "label": "Current status",
+     "value": "Spending a year dead for tax reasons"
+    },
+    {
+     "label": "Associated with",
+     "value": "Milliways; a black-suited minder; concerts so loud they orbit"
+    },
+    {
+     "label": "Notable for",
+     "value": "Attending the restaurant while temporarily deceased"
+    },
+    {
+     "label": "Author's running gag",
+     "value": "Tax avoidance taken to literally fatal lengths"
+    }
+   ],
+   "tags": [
+    "musician",
+    "disaster-area",
+    "milliways",
+    "tax-reasons",
+    "plutonium-rock"
+   ],
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null
+  },
+  {
+   "id": "bk-gag-halfrunt",
+   "name": "Gag Halfrunt",
+   "category": "canon-character",
+   "objtype": "Character",
+   "verdict": "Zaphod's private brain-care specialist; also, awkwardly, the Vogons' employer.",
+   "guide": "Gag Halfrunt is a galactic psychiatrist of considerable wealth and influence, retained as the private brain-care specialist to Zaphod Beeblebrox, a client whose two heads and exuberant instability presumably constitute a lucrative and indefinitely renewable contract. He is referred to with the affectionate possessive 'my client' so often that the phrase becomes something of a verbal tic. Beneath the genial manner lies a sharper interest: along with a cabal of fellow psychiatrists and philosophers, Halfrunt has commercial reasons to ensure that the great Question of Life, the Universe and Everything is never definitively answered, since a Universe that has all the answers has rather less need of psychiatrists. To this commercial end, it is revealed that it was Halfrunt who hired the Vogons to destroy the Earth before its computation could complete.",
+   "panic": "Be wary of any therapist whose income depends on you never quite getting better. If your analyst also employs a Constructor Fleet, consider a second opinion, urgently.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "Books 1-2; radio series"
+    },
+    {
+     "label": "Profession",
+     "value": "Private psychiatrist (brain-care specialist)"
+    },
+    {
+     "label": "Client",
+     "value": "Zaphod Beeblebrox"
+    },
+    {
+     "label": "Associated with",
+     "value": "The psychiatrists' cabal; the Vogon destruction of Earth"
+    },
+    {
+     "label": "Notable for",
+     "value": "Hiring the Vogons to keep the Ultimate Question unanswered"
+    },
+    {
+     "label": "Author's running gag",
+     "value": "The repeated, proprietorial phrase 'my client'"
+    }
+   ],
+   "tags": [
+    "psychiatrist",
+    "brain-care",
+    "zaphod",
+    "vogons",
+    "conspiracy"
+   ],
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null
+  },
+  {
+   "id": "bk-prak",
+   "name": "Prak",
+   "category": "canon-character",
+   "objtype": "Character",
+   "verdict": "Overdosed on truth serum, he told the whole Truth, and it broke everyone present.",
+   "guide": "Prak is a man who, during the course of a trial, was administered a dose of truth drug that proved catastrophically excessive owing to a clerk's sneeze at the critical moment. Compelled to tell the Truth, the whole Truth and nothing but the Truth, Prak found that there was a very great deal of it indeed, and proceeded to tell all of it, continuously, for an alarming stretch of time. The entire court fled, the legal system collapsed, and Prak was left alone, having delivered the complete and unabridged Truth about everything to an empty room. When Arthur Dent later finds him, Prak is exhausted and can recall almost none of what he said, save one fragment: that somewhere in the Truth lies the precise location of God's Final Message to His Creation, and that Arthur, he is fairly sure, is going to like it.",
+   "panic": "Never let a clerk sneeze near the truth-serum dosage; the entire Truth is more than any courtroom can survive. If someone offers you the whole Truth at once, request the abridged version.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "Life, the Universe and Everything (book 3)"
+    },
+    {
+     "label": "Condition",
+     "value": "Overdosed on truth serum during a trial"
+    },
+    {
+     "label": "Feat",
+     "value": "Told the entire Truth about everything"
+    },
+    {
+     "label": "Associated with",
+     "value": "Arthur Dent; God's Final Message to His Creation"
+    },
+    {
+     "label": "Notable for",
+     "value": "Emptying a courtroom and collapsing a legal system with honesty"
+    },
+    {
+     "label": "Author's running gag",
+     "value": "The Truth being vastly larger and stranger than anyone wants"
+    }
+   ],
+   "tags": [
+    "truth-serum",
+    "the-truth",
+    "trial",
+    "gods-final-message",
+    "overdose"
+   ],
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null
+  },
+  {
+   "id": "bk-answer-42",
+   "name": "42",
+   "category": "canon-article",
+   "objtype": "Device",
+   "verdict": "The Answer to Life, the Universe, and Everything. Don't ask what the question was.",
+   "guide": "After seven and a half million years of contemplation, the supercomputer Deep Thought announced the Answer to the Ultimate Question of Life, the Universe, and Everything. The Answer, delivered with some embarrassment to a pair of expectant programmers, was 42. The difficulty, as Deep Thought patiently explained, is that nobody had ever actually known what the Ultimate Question was, which rather undermines the usefulness of knowing the Answer. To find the Question, Deep Thought designed a far greater computer, organic and planet-sized, incorporating living beings as part of its operational matrix. That computer was the Earth. It was demolished by Vogons five minutes before completing its ten-million-year programme, which is the sort of timing the universe specialises in. The number itself has since become a small religion among the numerically inclined.",
+   "panic": "Do not attempt to derive deep meaning from the number; people have driven themselves mad doing so. Simply note it and move on.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "The Hitchhiker's Guide to the Galaxy (book 1)"
+    },
+    {
+     "label": "Computed by",
+     "value": "Deep Thought"
+    },
+    {
+     "label": "Time taken",
+     "value": "7.5 million years"
+    },
+    {
+     "label": "Problem",
+     "value": "Nobody knows the Question it answers"
+    },
+    {
+     "label": "Author's running gag",
+     "value": "An anticlimactic number presented with total solemnity"
+    },
+    {
+     "label": "Sequel device",
+     "value": "Earth built to find the matching Question"
+    }
+   ],
+   "tags": [
+    "answer",
+    "deep-thought",
+    "ultimate-question",
+    "earth",
+    "number"
+   ],
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null
+  },
+  {
+   "id": "bk-ultimate-question",
+   "name": "The Ultimate Question",
+   "category": "canon-article",
+   "objtype": "Device",
+   "verdict": "The question to which 42 is the answer. Tragically, never quite computed.",
+   "guide": "Knowing the Answer is, it turns out, useless without knowing the Question, a fact that took the pan-dimensional beings who commissioned Deep Thought rather by surprise. To discover the Ultimate Question of Life, the Universe, and Everything, Deep Thought designed a computer of such staggering subtlety that organic life itself would form part of its circuitry. That computer was christened Earth, and it ran its programme for nearly ten million years. Maddeningly, the planet was destroyed by a Vogon constructor fleet a mere five minutes before the calculation was complete, to make way for a hyperspace bypass that was never actually built. A later, fraudulent attempt to extract the Question from a survivor's brainwave patterns produced only the gnomic phrase 'What do you get if you multiply six by nine', which is both wrong and, somehow, entirely fitting.",
+   "panic": "If anyone offers to tell you both the Question and the Answer at once, decline; the fabric of the universe reportedly objects to this and replaces it with something worse.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "The Hitchhiker's Guide to the Galaxy; Life, the Universe and Everything"
+    },
+    {
+     "label": "Answer it pairs with",
+     "value": "42"
+    },
+    {
+     "label": "Computer built to find it",
+     "value": "Earth"
+    },
+    {
+     "label": "Destroyed",
+     "value": "5 minutes before completion, by Vogons"
+    },
+    {
+     "label": "Spurious result",
+     "value": "'What do you get if you multiply six by nine'"
+    },
+    {
+     "label": "Author's running gag",
+     "value": "The cosmic punchline you never reach"
+    }
+   ],
+   "tags": [
+    "ultimate-question",
+    "earth",
+    "deep-thought",
+    "six-by-nine",
+    "vogons"
+   ],
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null
+  },
+  {
+   "id": "bk-dont-panic",
+   "name": "DON'T PANIC",
+   "category": "canon-article",
+   "objtype": "Device",
+   "verdict": "The two words on the Guide's cover, in large friendly letters. Heed them.",
+   "guide": "Printed in large, friendly letters on the cover of the Hitchhiker's Guide to the Galaxy are the words 'DON'T PANIC'. It is, the Guide notes, partly this reassuring slogan that has made the publication so wildly more popular than the older and more accurate Encyclopaedia Galactica, despite the Guide being riddled with errors and at least one or two passages of outright nonsense. The advice is genuinely sound. In a universe full of Vogons, faulty teleporters, and bypasses, the single most valuable thing a hitchhiker can do in a crisis is to refrain from panicking, since panic accomplishes nothing except making the remaining moments before catastrophe considerably less dignified. The words have become a kind of galactic mantra, equal parts practical instruction and gentle joke at the expense of the cosmos.",
+   "panic": "This entire entry is the panic tip. Read the cover, breathe, and keep hold of your towel.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "The Hitchhiker's Guide to the Galaxy (and throughout the series)"
+    },
+    {
+     "label": "Location",
+     "value": "The Guide's front cover"
+    },
+    {
+     "label": "Style",
+     "value": "Large, friendly letters"
+    },
+    {
+     "label": "Notable for",
+     "value": "Reassurance that outsells the Encyclopaedia Galactica"
+    },
+    {
+     "label": "Author's running gag",
+     "value": "Calm advice in an actively dangerous universe"
+    },
+    {
+     "label": "Companion item",
+     "value": "A towel"
+    }
+   ],
+   "tags": [
+    "dont-panic",
+    "guide-cover",
+    "slogan",
+    "reassurance",
+    "iconic"
+   ],
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null
+  },
+  {
+   "id": "bk-towel",
+   "name": "The Towel",
+   "category": "canon-article",
+   "objtype": "Device",
+   "verdict": "The most massively useful thing any interstellar hitchhiker can carry.",
+   "guide": "A towel, the Guide insists, is about the most massively useful thing an interstellar hitchhiker can own. Its appeal is partly practical: the same square of fabric can serve as bedding, blanket, makeshift sail, improvised weapon, distress flag and, when conditions allow, a means of getting dry. The Guide catalogues an exhausting list of such uses across various hostile worlds, the sheer length of which is rather the point. The towel's deeper value, however, is reputational. A hitchhiker who can produce one is assumed by everyone else to be the sort of organised, resourceful traveller who has also held onto the toothbrush, soap, rations and assorted survival kit that lesser wanderers invariably mislay, and is therefore treated with respect bordering on awe. From this comes the colloquial benchmark of competence: to say of someone that they 'knows where his towel is' is the highest compliment the hitchhiking fraternity can pay.",
+   "panic": "Never, under any circumstances, let go of your towel. A traveller who keeps track of one is assumed to be able to cope with anything.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "The Hitchhiker's Guide to the Galaxy (book 1)"
+    },
+    {
+     "label": "Associated with",
+     "value": "Ford Prefect's advice to hitchhikers"
+    },
+    {
+     "label": "Notable for",
+     "value": "Both practical and immense psychological value"
+    },
+    {
+     "label": "Key phrase",
+     "value": "'Knows where his towel is'"
+    },
+    {
+     "label": "Author's running gag",
+     "value": "Mundane object elevated to supreme survival gear"
+    },
+    {
+     "label": "Tribute",
+     "value": "Inspired the real-world Towel Day"
+    }
+   ],
+   "tags": [
+    "towel",
+    "ford-prefect",
+    "hitchhiking",
+    "survival",
+    "essential-gear"
+   ],
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null
+  },
+  {
+   "id": "bk-pggb",
+   "name": "The Pan Galactic Gargle Blaster",
+   "category": "canon-article",
+   "objtype": "Device",
+   "verdict": "The best drink in existence. Like having your brains smashed out by a lemon-wrapped gold brick.",
+   "guide": "The Pan Galactic Gargle Blaster is, by general consensus and the Guide's own enthusiastic recommendation, the best drink in existence. Its effect is famously likened to having your brains smashed out by a slice of lemon wrapped round a large gold brick, which most consumers regard, surprisingly, as a selling point. The recipe is credited to Zaphod Beeblebrox, former Galactic President and the drink's most devoted ambassador, and involves a precise and alarming sequence of ingredients including Ol' Janx Spirit, water from the seas of Santraginus V, three cubes of Arcturan Mega-gin, and the tooth of an Algolian Suntiger, among others. The Guide advises drinking them only very carefully, and never more than two unless you happen to be a thirty-ton mega-elephant with bronchial pneumonia. They are the standard measure of catastrophe at the Restaurant at the End of the Universe.",
+   "panic": "Limit yourself to two. The Guide is unusually firm on this point, and the Guide is not easily made firm about anything.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "The Hitchhiker's Guide to the Galaxy (book 1)"
+    },
+    {
+     "label": "Recipe credited to",
+     "value": "Zaphod Beeblebrox"
+    },
+    {
+     "label": "Effect",
+     "value": "Like a lemon-wrapped gold brick to the brain"
+    },
+    {
+     "label": "Key ingredient",
+     "value": "Ol' Janx Spirit"
+    },
+    {
+     "label": "Safe dosage",
+     "value": "Never more than two"
+    },
+    {
+     "label": "Author's running gag",
+     "value": "A 'best drink' that is functionally an assault"
+    }
+   ],
+   "tags": [
+    "drink",
+    "zaphod",
+    "ol-janx",
+    "cocktail",
+    "santraginus-v"
+   ],
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null
+  },
+  {
+   "id": "bk-vogon-poetry",
+   "name": "Vogon Poetry",
+   "category": "canon-article",
+   "objtype": "Device",
+   "verdict": "The third worst poetry in the universe. Also a recognised method of torture.",
+   "guide": "Vogon poetry is, the Guide records with grim authority, the third worst in the universe, surpassed in awfulness only by that of the Azgoths of Kria and, fatally, by the late Paula Nancy Millstone Jennings of Greenbridge, Essex, whose own destruction during the Earth's demolition put an end to the worst poetry of all. Vogons recite their verse not for art but as an instrument of bureaucratic torture, typically inflicted on prisoners strapped into a Poetry Appreciation Chair while the poet declaims with relish. The experience has been known to cause internal hemorrhaging and, in one celebrated instance, the death of the listeners' will to live. The poet Prostetnic Vogon Jeltz subjected Arthur Dent and Ford Prefect to a sample before having them thrown off his ship, which on balance they considered the lesser ordeal.",
+   "panic": "If captured by Vogons, do not attempt to praise the verse; insincere flattery only encourages a longer recital. Endure, and aim to be ejected promptly.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "The Hitchhiker's Guide to the Galaxy (book 1)"
+    },
+    {
+     "label": "Associated with",
+     "value": "Prostetnic Vogon Jeltz"
+    },
+    {
+     "label": "Ranking",
+     "value": "Third worst poetry in the universe"
+    },
+    {
+     "label": "Worse poets",
+     "value": "Azgoths of Kria; Paula Nancy Millstone Jennings"
+    },
+    {
+     "label": "Used as",
+     "value": "An instrument of torture"
+    },
+    {
+     "label": "Author's running gag",
+     "value": "Bureaucratic cruelty dressed as literature"
+    }
+   ],
+   "tags": [
+    "vogons",
+    "poetry",
+    "torture",
+    "jeltz",
+    "bureaucracy"
+   ],
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null
+  },
+  {
+   "id": "bk-ol-janx",
+   "name": "Ol' Janx Spirit",
+   "category": "canon-article",
+   "objtype": "Device",
+   "verdict": "Potent liquor at the heart of a hitchhiker's perilous drinking game.",
+   "guide": "Ol' Janx Spirit is a formidable liquor, best known as a key ingredient in the Pan Galactic Gargle Blaster and as the centrepiece of a hitchhiker's drinking game of considerable hazard. The game is the subject of a much-quoted old verse imploring the listener not to drink with the narrator, on account of the inevitable, ruinous consequences. The rules are simple enough: players spin a special heavy glass and drink whenever it points their way, with the survivors continuing until the loser has consumed roughly the entire bottle and any dignity they began with. The spirit is sufficiently strong that it is best treated with respect, suspicion, and ideally a great deal of distance. It is the sort of drink that improves a Gargle Blaster precisely because it would, on its own, be ill-advised.",
+   "panic": "If invited to a game of Ol' Janx Spirit, recall the warning verse and politely decline. The narrator of that verse was not exaggerating.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "The Hitchhiker's Guide to the Galaxy (book 1)"
+    },
+    {
+     "label": "Associated with",
+     "value": "A hitchhiker's drinking game"
+    },
+    {
+     "label": "Used in",
+     "value": "The Pan Galactic Gargle Blaster"
+    },
+    {
+     "label": "Notable for",
+     "value": "Its own cautionary verse"
+    },
+    {
+     "label": "Mechanic",
+     "value": "A spun glass dictates who drinks"
+    },
+    {
+     "label": "Author's running gag",
+     "value": "A folk song warning against the very thing being described"
+    }
+   ],
+   "tags": [
+    "drink",
+    "janx-spirit",
+    "drinking-game",
+    "gargle-blaster",
+    "verse"
+   ],
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null
+  },
+  {
+   "id": "bk-great-green-arkleseizure",
+   "name": "The Great Green Arkleseizure",
+   "category": "canon-article",
+   "objtype": "Device",
+   "verdict": "A creation myth in which the universe began with an enormous sneeze.",
+   "guide": "Among the more charming cosmologies catalogued by the Guide is the belief, held by the people of Viltvodle VI, that the entire universe was sneezed out of the nose of a being known as the Great Green Arkleseizure. The faithful live in perpetual fear of a day of reckoning they call the Coming of the Great White Handkerchief, when the universe will presumably be tidied away. Adherents take care to conduct themselves so as not to give offence before that moment arrives. As cosmological theories go, it is no more or less provable than most, and considerably more polite about its own assumptions. The missionary Oolon Colluphid, that tireless author of theological works, is among those who have addressed such questions, though the Arkleseizure's followers remain serenely unbothered by competing accounts.",
+   "panic": "Should you visit Viltvodle VI, refrain from disparaging the theology; on a planet awaiting a cosmic sneeze, it pays to mind your manners.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "The Hitchhiker's Guide to the Galaxy (book 1)"
+    },
+    {
+     "label": "Believed by",
+     "value": "The people of Viltvodle VI"
+    },
+    {
+     "label": "Origin myth",
+     "value": "The universe sneezed into being"
+    },
+    {
+     "label": "Day of reckoning",
+     "value": "The Coming of the Great White Handkerchief"
+    },
+    {
+     "label": "Notable for",
+     "value": "A creation story built around a sneeze"
+    },
+    {
+     "label": "Author's running gag",
+     "value": "Solemn faith resting on the absurd"
+    }
+   ],
+   "tags": [
+    "religion",
+    "creation-myth",
+    "viltvodle-vi",
+    "sneeze",
+    "handkerchief"
+   ],
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null
+  },
+  {
+   "id": "bk-so-long-fish",
+   "name": "So Long, and Thanks for All the Fish",
+   "category": "canon-article",
+   "objtype": "Device",
+   "verdict": "The dolphins' farewell to Earth, the second most intelligent message ever sent.",
+   "guide": "It is recorded that humans long believed themselves the most intelligent species on Earth, ahead of dolphins, on the grounds that they had achieved wars, wheels and New York, while the dolphins had merely lounged about in the water having a marvellous time. The dolphins, for their part, believed themselves far more intelligent for precisely the same reasons. As it happened, the dolphins had known about the Earth's impending demolition for some while and made numerous attempts to warn humanity, all of which were misinterpreted as amusing aquatic tricks performed for fish. Giving up, they departed the planet by their own means shortly before the end. Their final message to humankind was a parting expression of thanks, conveyed in a perfect double-backwards somersault through a hoop while whistling, and widely misunderstood. The fourth book of the series takes its title from these words.",
+   "panic": "If a dolphin appears to be performing an elaborate trick at you, consider, just briefly, that it may be trying to tell you something important.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "The Hitchhiker's Guide to the Galaxy; lends its title to book 4"
+    },
+    {
+     "label": "Spoken by",
+     "value": "Earth's dolphins"
+    },
+    {
+     "label": "Occasion",
+     "value": "Departing Earth before its demolition"
+    },
+    {
+     "label": "Notable for",
+     "value": "A misread warning about the planet's fate"
+    },
+    {
+     "label": "Intelligence ranking",
+     "value": "Dolphins second to mice; humans third"
+    },
+    {
+     "label": "Author's running gag",
+     "value": "Cleverer beings underestimated by humans"
+    }
+   ],
+   "tags": [
+    "dolphins",
+    "earth",
+    "farewell",
+    "book-title",
+    "intelligence"
+   ],
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null
+  },
+  {
+   "id": "bk-peril-sunglasses",
+   "name": "Peril-Sensitive Sunglasses",
+   "category": "canon-article",
+   "objtype": "Device",
+   "verdict": "Eyewear that turns black at the first sign of danger, so you can relax.",
+   "guide": "The Joo Janta 200 Super-Chromatic Peril Sensitive Sunglasses represent a philosophy of personal safety that is, depending on one's outlook, either ingenious or completely deranged. Rather than warning the wearer of approaching danger, they have been designed to turn entirely opaque and black at the first hint of trouble, on the theory that what you cannot see cannot frighten you. This allows the wearer to remain calm and untroubled in the face of catastrophe, right up until the catastrophe arrives, at which point the lenses are of no further use to anyone. Zaphod Beeblebrox is the device's most famous owner, which tells you most of what you need to know about both the sunglasses and Zaphod. They are a fine example of the galactic gadget industry solving a problem by ensuring you never become aware of it.",
+   "panic": "These glasses are the opposite of a panic tip. Remove them before doing anything that requires actually seeing where you are going.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "The Restaurant at the End of the Universe (book 2)"
+    },
+    {
+     "label": "Full name",
+     "value": "Joo Janta 200 Super-Chromatic Peril Sensitive Sunglasses"
+    },
+    {
+     "label": "Owned by",
+     "value": "Zaphod Beeblebrox"
+    },
+    {
+     "label": "Behaviour",
+     "value": "Turn black at the first sign of danger"
+    },
+    {
+     "label": "Notable for",
+     "value": "Helping you not see what would alarm you"
+    },
+    {
+     "label": "Author's running gag",
+     "value": "Technology that ignores problems rather than solving them"
+    }
+   ],
+   "tags": [
+    "gadget",
+    "zaphod",
+    "joo-janta",
+    "sunglasses",
+    "denial"
+   ],
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null
+  },
+  {
+   "id": "bk-shoe-event-horizon",
+   "name": "The Shoe Event Horizon",
+   "category": "canon-article",
+   "objtype": "Device",
+   "verdict": "An economic death spiral in which a planet ends up selling only shoes.",
+   "guide": "The Shoe Event Horizon is an economic theory, demonstrated to ruinous effect on the planet Frogstar World B, describing what happens when a society's confidence declines to the point where its citizens take comfort in buying new shoes. As morale sinks, shoe sales rise; as shoe sales rise, shoe shops proliferate, crowding out every other kind of commerce; and as ordinary economic activity collapses, morale sinks further still, driving yet more compensatory shoe-buying. Eventually it becomes economically impossible to build any kind of shop that is not a shoe shop, and the planet's entire economy crosses the titular horizon, beyond which the manufacture of shoes is the only conceivable enterprise. The shoes themselves, by this stage, are uniformly hideous and unwearable. The inhabitants of Frogstar World B responded to the crisis by evolving into birds and abandoning the surface entirely, which is one way to handle a recession.",
+   "panic": "If you notice that nearly every shop on a planet sells shoes and the shoes are dreadful, leave at once; you are witnessing an economy in its final act.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "The Restaurant at the End of the Universe (and the radio series)"
+    },
+    {
+     "label": "Demonstrated on",
+     "value": "Frogstar World B"
+    },
+    {
+     "label": "Cause",
+     "value": "Falling confidence met with compulsive shoe-buying"
+    },
+    {
+     "label": "Outcome",
+     "value": "An economy of nothing but shoe shops"
+    },
+    {
+     "label": "Inhabitants' response",
+     "value": "Evolved into birds and left the surface"
+    },
+    {
+     "label": "Author's running gag",
+     "value": "Macroeconomics taken to a deadpan extreme"
+    }
+   ],
+   "tags": [
+    "economics",
+    "shoes",
+    "frogstar-world-b",
+    "satire",
+    "collapse"
+   ],
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null
+  },
+  {
+   "id": "bk-tea",
+   "name": "Tea",
+   "category": "canon-article",
+   "objtype": "Device",
+   "verdict": "Arthur Dent's long, doomed quest for a proper cup of it.",
+   "guide": "Tea is a hot beverage of Earth origin and, for Arthur Dent, a matter of almost theological importance. Stranded aboard the Heart of Gold and surrounded by a galaxy that has never heard of the stuff, Arthur embarks on a long and largely doomed campaign to obtain a decent cup. His chief adversary in this quest is the ship's Nutri-Matic Drinks Dispenser, a machine that, after exhaustively analysing his metabolism and preferences, reliably produces a liquid that is almost, but not quite, entirely unlike tea. Arthur's eventual attempt to explain tea properly to the machine ties up the ship's entire computer brain, including the safety-critical bits, in the middle of an attack, which is a fair summary of Arthur's relationship with the universe. The episode stands as the saga's definitive study of an ordinary man's small, reasonable wants colliding with cosmic indifference.",
+   "panic": "Do not attempt to extract tea from a Nutri-Matic machine during an emergency; the explanation alone may consume your ship's entire defensive computing capacity.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "The Hitchhiker's Guide to the Galaxy; The Restaurant at the End of the Universe"
+    },
+    {
+     "label": "Associated with",
+     "value": "Arthur Dent"
+    },
+    {
+     "label": "Chief obstacle",
+     "value": "The Nutri-Matic Drinks Dispenser"
+    },
+    {
+     "label": "Result",
+     "value": "Something almost, but not quite, entirely unlike tea"
+    },
+    {
+     "label": "Notable for",
+     "value": "Tying up the Heart of Gold's computer mid-crisis"
+    },
+    {
+     "label": "Author's running gag",
+     "value": "A man's modest wish defeated by advanced technology"
+    }
+   ],
+   "tags": [
+    "tea",
+    "arthur-dent",
+    "nutri-matic",
+    "heart-of-gold",
+    "earth"
+   ],
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null
   }
  ]
 };

@@ -28,6 +28,11 @@
       </span>
     </div>
 
+    <div id="modeToggle" role="tablist" aria-label="Guide mode">
+      <button class="mode-pill on" data-mode="real" role="tab" aria-selected="true">🔭 Real Galaxy</button>
+      <button class="mode-pill" data-mode="book" role="tab" aria-selected="false">📖 The Book</button>
+    </div>
+
     <div class="tools">
       <div id="searchWrap">
         <input id="search" type="text" placeholder="Look something up…" autocomplete="off" spellcheck="false" aria-label="Search the Guide">
@@ -40,6 +45,8 @@
       <button class="tbtn" id="btnHelp" title="How it works / About" aria-label="Help">❔</button>
     </div>
   </header>
+
+  <div id="modeBanner" class="hidden"></div>
 
   <!-- ===== Browse-by-category drawer ===== -->
   <div id="browse" class="panel hidden" role="menu" aria-label="Sections">

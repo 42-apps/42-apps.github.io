@@ -13,6 +13,15 @@ Part of the [42-apps](https://42-apps.github.io/) collection, built with
 
 🔗 **Live:** https://42-apps.github.io/42/
 
+## Two Guides in one
+
+A toggle switches between **🔭 Real Galaxy** (a true, fact-audited map of the
+Milky Way) and **📖 The Book** — the fictional Guide as Douglas Adams wrote it,
+with ~68 original encyclopedia-style entries on its places, species, technology,
+characters and famous articles. The handful of canon places that tie to real
+stars (Earth, Ford Prefect's home near Betelgeuse, Megadodo on Ursa Minor Beta)
+sit at their true positions; the rest live in the reader.
+
 ## What it does
 
 - **Fly the galaxy** — a real-scale barred-spiral Milky Way: **Sagittarius A***
