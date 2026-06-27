@@ -61,6 +61,14 @@ h2,h3{font-weight:650;letter-spacing:.2px}
 .toolbtn .state{color:var(--faint);font-size:11px}
 .toolbtn.on{border-color:var(--gold);color:var(--gold)}
 .toolbtn.on .state{color:var(--gold)}
+.zsel{display:flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--card-b);
+  border-radius:10px;padding:4px 8px;font-size:12px;color:var(--dim)}
+.zsel-l{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}
+#zodiacSel{background:transparent;border:none;color:var(--ink);font-size:12.5px;cursor:pointer;color-scheme:dark}
+#zodiacSel:focus{outline:none}
+#ayanCustom{width:64px;background:var(--card);border:1px solid var(--card-b);border-radius:9px;
+  color:var(--ink);padding:6px 8px;font-size:12.5px;color-scheme:dark}
+.zbadge{color:var(--gold);font-weight:600;letter-spacing:0;text-transform:none}
 
 /* ===== Layout ===== */
 #stage{position:relative;z-index:1;display:grid;grid-template-columns:390px 1fr;gap:18px;

@@ -97,12 +97,31 @@ function ascMC(date, lat, lon){
   const asc = norm(Math.atan2(Math.cos(ramc), -(Math.sin(ramc)*Math.cos(e)+Math.tan(phi)*Math.sin(e))) * R2D);
   return {asc, mc};
 }
-function eclToHorizon(date, obs, lonDeg){                                // a point on the ecliptic (lat 0)
-  const t = A.MakeTime(date), e = obliquity(t)*D2R, l = lonDeg*D2R;
-  const ra  = norm(Math.atan2(Math.cos(e)*Math.sin(l), Math.cos(l)) * R2D)/15;
-  const dec = Math.asin(Math.sin(e)*Math.sin(l)) * R2D;
-  const h = A.Horizon(date, obs, ra, dec, 'normal');
+function eclPointHorizon(date, obs, lonDeg, latDeg){                     // any ecliptic-of-date point -> az/alt
+  const t = A.MakeTime(date), e = obliquity(t)*D2R, l = lonDeg*D2R, b = (latDeg||0)*D2R;
+  const dec = Math.asin(Math.sin(b)*Math.cos(e) + Math.cos(b)*Math.sin(e)*Math.sin(l));
+  const ra  = norm(Math.atan2(Math.sin(l)*Math.cos(e) - Math.tan(b)*Math.sin(e), Math.cos(l)) * R2D)/15;
+  const h = A.Horizon(date, obs, ra, dec*R2D, 'normal');
   return {az:h.azimuth, alt:h.altitude};
+}
+function eclToHorizon(date, obs, lonDeg){ return eclPointHorizon(date, obs, lonDeg, 0); }
+
+/* ---- ayanamsa (tropical <-> sidereal) ------------------------------------ */
+// Lahiri computed rigorously: the bright star Spica (Chitra) sits at sidereal 180° (True Chitra Paksha).
+// sidereal longitude = tropical-of-date longitude − ayanamsa.  Other ayanamsas ~ constant offsets from Lahiri.
+const SPICA = {ra:(13+25/60+11.58/3600)*15, dec:-(11+9/60+40.8/3600)};   // J2000 deg
+const AYAN_OFFSET = {lahiri:0, fagan:0.90, raman:-1.38, kp:-0.08};       // approx degrees relative to True-Chitra Lahiri
+const ZODIAC_NAMES = {tropical:'Tropical', lahiri:'Sidereal · Lahiri', fagan:'Sidereal · Fagan/Bradley',
+  raman:'Sidereal · Raman', kp:'Sidereal · Krishnamurti', custom:'Sidereal · custom'};
+function spicaTropLon(date, rot){
+  const ra=SPICA.ra*D2R, dec=SPICA.dec*D2R;
+  const v={x:Math.cos(dec)*Math.cos(ra), y:Math.cos(dec)*Math.sin(ra), z:Math.sin(dec)};
+  return norm(A.SphereFromVector(A.RotateVector(rot||A.Rotation_EQJ_ECT(date), v)).lon);
+}
+function ayanamsaFor(date, rot){
+  if(S.zodiac==='tropical') return 0;
+  if(S.zodiac==='custom')   return +S.ayanCustom||0;
+  return norm(spicaTropLon(date, rot) - 180) + (AYAN_OFFSET[S.zodiac]||0);
 }
 
 /* ---- state --------------------------------------------------------------- */
@@ -116,6 +135,7 @@ const S = {
   lat:51.5074, lng:-0.1278, place:'London, United Kingdom', tz:'Europe/London',
   y:today.getFullYear(), mo:today.getMonth()+1, d:today.getDate(),
   h:12, mi:0, timeKnown:true, showAspects:false,
+  zodiac:'lahiri', ayanCustom:24,        // sidereal (Lahiri) by default — aligns the signs with the real stars
 };
 let activeView = 'charts';     // charts | sky3d | solar3d
 let lastR = null;              // last compute() result, reused by every view
@@ -154,21 +174,24 @@ function compute(){
   const date = zonedToUTC(S.y, S.mo, S.d, useH, useM, S.tz);
   const obs  = new A.Observer(S.lat, S.lng, 0);
   const rot  = A.Rotation_EQJ_ECT(date);
-  const out  = {date, obs, bodies:[]};
+  const ayan = ayanamsaFor(date, rot);                 // tropical -> sidereal offset (0 for tropical)
+  const out  = {date, obs, bodies:[], ayan};
+  const sid  = lon => norm(lon - ayan);                // tropical-of-date longitude -> displayed (sidereal) longitude
 
   for(const b of BODIES){
     const eq  = A.Equator(A.Body[b.key], date, obs, true, true);
     const hor = A.Horizon(date, obs, eq.ra, eq.dec, 'normal');
     const sph = eclSph(b.key, date, rot);
     out.bodies.push({...b, az:hor.azimuth, alt:hor.altitude,
-      lon:norm(sph.lon), eclLat:sph.lat, dist:sph.dist, retro:isRetro(b.key,date)});
+      lon:norm(sph.lon), zlon:sid(sph.lon), eclLat:sph.lat, dist:sph.dist, retro:isRetro(b.key,date)});
   }
   const nodeLon = trueNode(date, rot);
   out.nodeN = nodeLon; out.nodeS = norm(nodeLon+180);
+  out.znodeN = sid(nodeLon); out.znodeS = sid(nodeLon+180);
   out.nodeNh = eclToHorizon(date, obs, out.nodeN);
   out.nodeSh = eclToHorizon(date, obs, out.nodeS);
   const am = ascMC(date, S.lat, S.lng);
-  out.asc = am.asc; out.mc = am.mc;
+  out.asc = am.asc; out.mc = am.mc; out.zasc = sid(am.asc); out.zmc = sid(am.mc);
   out.ascH = eclToHorizon(date, obs, am.asc);
   out.mcH  = eclToHorizon(date, obs, am.mc);
 
@@ -220,14 +243,15 @@ function renderSummary(r){
   const dt = new Date(Date.UTC(S.y, S.mo-1, S.d));
   const wd = WD[dt.getUTCDay()];
   const timeStr = S.timeKnown ? fmtTime(S.h,S.mi) : 'an unknown time';
-  const sunSign = dms(sun.lon).sign, moonSign = dms(moon.lon).sign;
+  const sunSign = dms(sun.zlon).sign, moonSign = dms(moon.zlon).sign;
   const ph = PHASE_NAMES[r.phaseIx], em = PHASE_EMOJI[r.phaseIx];
-  let html = `<div class="lead">As above, so below</div>`;
+  const zbadge = ZODIAC_NAMES[S.zodiac] + (S.zodiac!=='tropical' ? ` · ayanāṃśa ${r.ayan.toFixed(2)}°` : '');
+  let html = `<div class="lead">As above, so below · <span class="zbadge">${zbadge}</span></div>`;
   html += `On <b>${wd} ${S.d} ${MONTHS[S.mo-1]} ${S.y}</b> at <b>${timeStr}</b> in <b>${esc(S.place)}</b>, `;
   html += `the Sun ${sky2(sun,'was')} in <b>${sunSign[0]}</b>, and the <span class="moon-emoji">${em}</span> Moon `;
   html += `(<b>${ph}</b>, ${Math.round(r.illum*100)}% lit) ${sky2(moon,'was')} in <b>${moonSign[0]}</b>. `;
   if(S.timeKnown){
-    const a = dms(r.asc).sign;
+    const a = dms(r.zasc).sign;
     html += `<b>${a[0]}</b> was rising on the eastern horizon — your Ascendant.`;
   } else {
     html += `<span style="color:var(--faint)">Birth time unknown, so the Ascendant &amp; houses are hidden.</span>`;
@@ -286,7 +310,7 @@ function renderSky(r){
     if(below){ const rr=R+11; x=C-rr*Math.sin(b.az*D2R); y=C-rr*Math.cos(b.az*D2R); }
     else { [x,y]=pos(b.az,b.alt); }
     const halo = b.key==='Sun'?12:(b.big?9:8);
-    s += `<g class="body-glyph ${below?'below':''}" data-tip="${b.key} ${b.retro?'℞':''}|${dms(b.lon).sign[0]} ${dms(b.lon).label} · ${skyPhrase(b)||'sign only'}">`;
+    s += `<g class="body-glyph ${below?'below':''}" data-tip="${b.key} ${b.retro?'℞':''}|${dms(b.zlon).sign[0]} ${dms(b.zlon).label} · ${skyPhrase(b)||'sign only'}">`;
     if(!below) s += `<circle cx="${x}" cy="${y}" r="${halo}" fill="${b.color}" opacity="${b.key==='Sun'?.28:.16}"/>`;
     s += `<text x="${x}" y="${y+5}" text-anchor="middle" font-size="${b.big?18:15}" fill="${b.color}">${b.glyph}</text></g>`;
   }
@@ -298,7 +322,7 @@ function renderSky(r){
 function renderWheel(r){
   const W=440, C=220;
   const Rsign=204, Rsign2=176, Rtick=176, Rplanet=150, Rasp=120, Rinner=108;
-  const ascLon = S.timeKnown ? r.asc : 0;
+  const ascLon = S.timeKnown ? r.zasc : 0;
   const ang = lon => (180 + (norm(lon)-ascLon)) * D2R;           // screen radians (math, y-up handled below)
   const P = (lon,rad) => [C + rad*Math.cos(ang(lon)), C - rad*Math.sin(ang(lon))];
 
@@ -326,7 +350,7 @@ function renderWheel(r){
 
   // angles: ASC / DSC / MC / IC spokes
   if(S.timeKnown){
-    const angles=[[r.asc,'Asc'],[norm(r.asc+180),'Dsc'],[r.mc,'MC'],[norm(r.mc+180),'IC']];
+    const angles=[[r.zasc,'Asc'],[norm(r.zasc+180),'Dsc'],[r.zmc,'MC'],[norm(r.zmc+180),'IC']];
     for(const [lon,lab] of angles){
       const [x0,y0]=P(lon,Rinner), [x1,y1]=P(lon,Rsign2);
       s += `<line x1="${x0}" y1="${y0}" x2="${x1}" y2="${y1}" stroke="${lab==='Asc'||lab==='MC'?'rgba(244,213,141,.8)':'rgba(244,213,141,.32)'}" stroke-width="${lab==='Asc'||lab==='MC'?2:1}"/>`;
@@ -339,9 +363,9 @@ function renderWheel(r){
   if(S.showAspects){ s += aspectLines(r,P,Rasp); }
 
   // planet glyphs (with simple de-collision)
-  const pts = r.bodies.map(b=>({lon:b.lon,glyph:b.glyph,color:b.color,retro:b.retro,name:b.key}));
-  pts.push({lon:r.nodeN,glyph:'☊',color:'#b6a8ff',name:'North Node'});
-  pts.push({lon:r.nodeS,glyph:'☋',color:'#8c82c4',name:'South Node'});
+  const pts = r.bodies.map(b=>({lon:b.zlon,glyph:b.glyph,color:b.color,retro:b.retro,name:b.key}));
+  pts.push({lon:r.znodeN,glyph:'☊',color:'#b6a8ff',name:'North Node'});
+  pts.push({lon:r.znodeS,glyph:'☋',color:'#8c82c4',name:'South Node'});
   pts.sort((a,b)=>a.lon-b.lon);
   let lastA=-99, tier=0;
   for(const p of pts){
@@ -359,16 +383,16 @@ function renderWheel(r){
          (p.retro?`<text x="${x+11}" y="${y-6}" font-size="9" fill="#ff7a59">℞</text>`:``)+`</g>`;
   }
   // center label
-  const sunSign=dms(r.bodies[0].lon).sign, moonSign=dms(r.bodies[1].lon).sign;
+  const sunSign=dms(r.bodies[0].zlon).sign, moonSign=dms(r.bodies[1].zlon).sign;
   s += `<text x="${C}" y="${C-6}" text-anchor="middle" font-size="11" fill="var(--dim)">☉ ${sunSign[1]} · ☽ ${moonSign[1]}</text>`;
-  if(S.timeKnown){ const a=dms(r.asc).sign; s += `<text x="${C}" y="${C+12}" text-anchor="middle" font-size="11" fill="#f4d58d">Asc ${a[1]}</text>`; }
+  if(S.timeKnown){ const a=dms(r.zasc).sign; s += `<text x="${C}" y="${C+12}" text-anchor="middle" font-size="11" fill="#f4d58d">Asc ${a[1]}</text>`; }
   s += `</svg>`;
   $('#wheelChart').innerHTML = s;
 }
 
 const ASPECTS = [[0,6,'#f4d58d'],[60,4,'#6cb6ff'],[90,5,'#ff7a59'],[120,5,'#7bd88f'],[180,6,'#ff6b53']];
 function aspectLines(r,P,rad){
-  const list = r.bodies.map(b=>({lon:b.lon,n:b.key})).concat([{lon:r.nodeN,n:'N.Node'}]);
+  const list = r.bodies.map(b=>({lon:b.zlon,n:b.key})).concat([{lon:r.znodeN,n:'N.Node'}]);
   let out='';
   for(let i=0;i<list.length;i++) for(let j=i+1;j<list.length;j++){
     let sep=Math.abs(list[i].lon-list[j].lon); if(sep>180) sep=360-sep;
@@ -383,7 +407,7 @@ function aspectLines(r,P,rad){
 function renderTable(r){
   let rows='';
   const row=(glyph,color,name,b,extra)=>{
-    const d=dms(b.lon);
+    const d=dms(b.zlon!=null?b.zlon:b.lon);
     const altTxt = (b.alt==null)?'—':(b.alt<0?`<span class="bt-down">${b.alt.toFixed(0)}°</span>`:`<span class="bt-up">+${b.alt.toFixed(0)}°</span>`);
     const dir = (b.az==null||!S.timeKnown)?'—':`${compass(b.az)} <span class="tag">${b.az.toFixed(0)}°</span>`;
     const sky = S.timeKnown ? (extra||skyPhrase(b)||'—') : '<span class="bt-down">time unknown</span>';
@@ -395,11 +419,11 @@ function renderTable(r){
   for(const b of r.bodies) rows += row(b.glyph,b.color,b.key,b);
   // angles & nodes
   if(S.timeKnown){
-    rows += row('Asc','#f4d58d','Ascendant',{lon:r.asc,az:r.ascH.az,alt:r.ascH.alt},'rising due east');
-    rows += row('MC','#f4d58d','Midheaven',{lon:r.mc,az:r.mcH.az,alt:r.mcH.alt},'on the meridian (highest point)');
+    rows += row('Asc','#f4d58d','Ascendant',{zlon:r.zasc,az:r.ascH.az,alt:r.ascH.alt},'rising due east');
+    rows += row('MC','#f4d58d','Midheaven',{zlon:r.zmc,az:r.mcH.az,alt:r.mcH.alt},'on the meridian (highest point)');
   }
-  rows += row('☊','#b6a8ff','North Node (Rahu)',{lon:r.nodeN,az:r.nodeNh.az,alt:r.nodeNh.alt});
-  rows += row('☋','#8c82c4','South Node (Ketu)',{lon:r.nodeS,az:r.nodeSh.az,alt:r.nodeSh.alt});
+  rows += row('☊','#b6a8ff','North Node (Rahu)',{zlon:r.znodeN,az:r.nodeNh.az,alt:r.nodeNh.alt});
+  rows += row('☋','#8c82c4','South Node (Ketu)',{zlon:r.znodeS,az:r.nodeSh.az,alt:r.nodeSh.alt});
   $('#bodyRows').innerHTML = rows;
 }
 
@@ -553,6 +577,14 @@ function wire(){
     $('#miAspects').classList.toggle('on',S.showAspects); $('#aspState').textContent=S.showAspects?'on':'off';
     prefs.showAspects=S.showAspects; savePrefs(); render(); });
 
+  // zodiac system / ayanāṃśa
+  const zsel=$('#zodiacSel'), zcustom=$('#ayanCustom');
+  zsel.value=S.zodiac; zcustom.value=S.ayanCustom; zcustom.classList.toggle('hidden', S.zodiac!=='custom');
+  zsel.addEventListener('change',()=>{ S.zodiac=zsel.value; zcustom.classList.toggle('hidden', S.zodiac!=='custom');
+    prefs.zodiac=S.zodiac; savePrefs(); render(); });
+  zcustom.addEventListener('input',()=>{ S.ayanCustom=+zcustom.value||0; prefs.ayanCustom=S.ayanCustom; savePrefs();
+    if(S.zodiac==='custom') render(); });
+
   // overlays
   $('#welStart').addEventListener('click',()=>$('#welcomeOverlay').classList.add('hidden'));
   $('#miHelp').addEventListener('click',()=>$('#helpOverlay').classList.remove('hidden'));
@@ -598,6 +630,7 @@ function wire(){
     if(k==='east'){ if(sky3d){ sky3d.ctl.yaw=90; sky3d.ctl.pitch=12; sky3d.ctl.fov=72; applySkyCam(sky3d,sky3d.ctl);} }
     else if(k==='labels'){ setTog('labels'); }
     else if(k==='ecliptic'){ setTog('ecliptic'); }
+    else if(k==='signs'){ setTog('signs'); }
     else if(k==='stars'){ setTog('stars'); }
   });
 
@@ -745,7 +778,7 @@ function pickSprite(v, sprites, cx, cy){ if(!_ndc) _ndc=new T3.Vector2();
    =========================================================================== */
 let sky3d=null;
 const SKY_R=460, STAR_R=485, SKY_DOME_R=500;
-const sky3dOpts={labels:true, ecliptic:false, stars:true};
+const sky3dOpts={labels:true, ecliptic:false, stars:true, signs:false};
 
 function initSky3D(){
   const host=$('#sky3dHost');
@@ -820,6 +853,16 @@ function initSky3D(){
   const nodeN=labelSprite('☊','#b6a8ff'), nodeS=labelSprite('☋','#8c82c4');
   nodeN.visible=nodeS.visible=false; scene.add(nodeN); scene.add(nodeS);
 
+  // 12 zodiac sign boundaries (lines across the ecliptic) + sign glyphs (toggle)
+  const signGroup=new T3.Group(); signGroup.visible=false; scene.add(signGroup);
+  const signBounds=[], signGlyphs=[];
+  for(let k=0;k<12;k++){
+    const bg=new T3.BufferGeometry(); bg.setAttribute('position',new T3.BufferAttribute(new Float32Array(13*3),3));
+    const line=new T3.Line(bg,new T3.LineBasicMaterial({color:0x9a86ff,transparent:true,opacity:.55}));
+    signGroup.add(line); signBounds.push(line);
+    const g=labelSprite(SIGNS[k][1], ELEM[SIGNS[k][2]]); g.scale.multiplyScalar(1.25); signGroup.add(g); signGlyphs.push(g);
+  }
+
   // body sprites + labels
   const bodies={};
   for(const b of BODIES){
@@ -839,7 +882,7 @@ function initSky3D(){
   const comp=document.createElement('div'); comp.className='v3d-compass'; comp.id='sky3dCompass';
   host.parentElement.appendChild(comp);
 
-  sky3d={scene,camera,renderer,host,skyMat,stars,ground,ecliptic,nodeN,nodeS,bodies,ctl,comp,raycaster:new T3.Raycaster()};
+  sky3d={scene,camera,renderer,host,skyMat,stars,ground,ecliptic,nodeN,nodeS,signGroup,signBounds,signGlyphs,bodies,ctl,comp,raycaster:new T3.Raycaster()};
   applySkyCam(sky3d,ctl);
   attachHover(sky3d);
   new ResizeObserver(()=>sizeSpace(sky3d)).observe(host);
@@ -894,6 +937,18 @@ function updateSky3D(r){
   const nS=dirFromAzAlt(r.nodeSh.az,r.nodeSh.alt).multiplyScalar(SKY_R*0.985);
   v.nodeN.position.copy(nN); v.nodeS.position.copy(nS);
   v.nodeN.visible=v.nodeS.visible=sky3dOpts.ecliptic;
+  // 12 zodiac sign boundaries + glyphs (sidereal boundary k*30 sits at tropical-of-date k*30 + ayanāṃśa)
+  if(sky3dOpts.signs){
+    for(let k=0;k<12;k++){
+      const bLon=k*30+r.ayan, arr2=v.signBounds[k].geometry.attributes.position.array;
+      for(let i=0;i<13;i++){ const h=eclPointHorizon(r.date,r.obs,bLon,-18+i*3); const d=dirFromAzAlt(h.az,h.alt).multiplyScalar(SKY_R*0.997);
+        arr2[i*3]=d.x; arr2[i*3+1]=d.y; arr2[i*3+2]=d.z; }
+      v.signBounds[k].geometry.attributes.position.needsUpdate=true;
+      const hm=eclPointHorizon(r.date,r.obs,k*30+15+r.ayan,0);
+      v.signGlyphs[k].position.copy(dirFromAzAlt(hm.az,hm.alt).multiplyScalar(SKY_R*0.95));
+    }
+  }
+  v.signGroup.visible=sky3dOpts.signs;
   $('#sky3dHud').innerHTML = S.timeKnown
     ? `facing <b>East</b> · drag to look · scroll to zoom · tilt down to see <b>through the Earth</b>`
     : `birth time unknown — shown at local noon · drag to look around`;
@@ -903,7 +958,7 @@ function skyTip(v, cx, cy){
   if(!lastR) return null;
   const key=pickSprite(v, Object.values(v.bodies).map(o=>o.sprite), cx, cy); if(!key) return null;
   const b=lastR.bodies.find(x=>x.key===key); if(!b) return null;
-  const d=dms(b.lon);
+  const d=dms(b.zlon);
   return `<div class="tt-h">${key} ${b.retro?'℞':''}</div><div class="tt-r">${d.sign[0]} ${d.label} · ${skyPhrase(b)||'sign only'}</div>`;
 }
 function attachHover(v){
@@ -974,7 +1029,7 @@ function solarTip(cx,cy){
   if(!solar3d||!lastR) return null;
   const key=pickSprite(solar3d, Object.values(solar3d.planets).map(o=>o.sprite), cx, cy); if(!key) return null;
   const hv=A.HelioVector(A.Body[key], lastR.date), dist=Math.hypot(hv.x,hv.y,hv.z);
-  const ang=dms(tropLon(key, lastR.date, A.Rotation_EQJ_ECT(lastR.date)));
+  const ang=dms(norm(tropLon(key, lastR.date, A.Rotation_EQJ_ECT(lastR.date)) - lastR.ayan));
   return `<div class="tt-h">${key}</div><div class="tt-r">${dist.toFixed(2)} AU from the Sun · ${ang.sign[0]}</div>`;
 }
 function applySolarCam(v,st){
@@ -1000,7 +1055,7 @@ function updateSolar(r){
    =========================================================================== */
 const LS={skies:'mysky.skies.v1', prefs:'mysky.prefs.v1'};
 const AVATARS=['👤','👩','👨','🧑','👵','👴','👶','❤️','⭐','🌙','☀️','🪷','🕉️','🐉'];
-let SKIES=[], prefs={lastView:'charts',showAspects:false,lastSkyId:null}, curAvatar='👤';
+let SKIES=[], prefs={lastView:'charts',showAspects:false,lastSkyId:null,zodiac:'lahiri',ayanCustom:24}, curAvatar='👤';
 
 const lsGet=k=>{ try{return JSON.parse(localStorage.getItem(k));}catch(e){return null;} };
 const lsSet=(k,v)=>{ try{localStorage.setItem(k,JSON.stringify(v));return true;}catch(e){return false;} };
@@ -1018,7 +1073,7 @@ function loadSaved(){
 }
 function captureSky(label,emoji){
   const r=lastR||compute();
-  const summ=`☉ ${dms(r.bodies[0].lon).sign[0]} · ☽ ${dms(r.bodies[1].lon).sign[0]}`+(S.timeKnown?` · Asc ${dms(r.asc).sign[0]}`:'');
+  const summ=`☉ ${dms(r.bodies[0].zlon).sign[0]} · ☽ ${dms(r.bodies[1].zlon).sign[0]}`+(S.timeKnown?` · Asc ${dms(r.zasc).sign[0]}`:'');
   return {id:uid(),schema:1,label:(label||S.place).slice(0,40),emoji:emoji||'👤',
     lat:S.lat,lng:S.lng,place:S.place,tz:S.tz,y:S.y,mo:S.mo,d:S.d,h:S.h,mi:S.mi,timeKnown:S.timeKnown,
     summary:summ,createdAt:nowMs()};
@@ -1065,8 +1120,10 @@ function init(){
   if(!A){ $('#summary').innerHTML='Astronomy engine failed to load.'; $('#summary').classList.remove('hidden'); return; }
   $('#daySlider').max = maxDaysBack;
   loadSaved();
-  // restore aspects pref
+  // restore aspects + zodiac prefs
   if(prefs.showAspects){ S.showAspects=true; $('#miAspects').classList.add('on'); $('#aspState').textContent='on'; }
+  if(prefs.zodiac) S.zodiac=prefs.zodiac;
+  if(prefs.ayanCustom!=null) S.ayanCustom=prefs.ayanCustom;
   // a shared #sky= link wins; else restore the last-viewed saved sky
   const hash=location.hash;
   let restored=false;

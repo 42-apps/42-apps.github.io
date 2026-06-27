@@ -9,7 +9,7 @@
 <meta property="og:description" content="Stand under the real sky of the moment and place you were born — in 3D. Save skies for the people you love.">
 <meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Crect width='256' height='256' rx='58' fill='%23090720'/%3E%3Ccircle cx='128' cy='128' r='80' fill='none' stroke='%23f4d58d' stroke-width='5' stroke-opacity='.85'/%3E%3Ccircle cx='128' cy='128' r='30' fill='%23f4d58d'/%3E%3Cpath d='M188 92a44 44 0 1 0 0 72 36 36 0 0 1 0-72z' fill='%23cdd6ff'/%3E%3Ccircle cx='70' cy='66' r='4' fill='%23cdd6ff'/%3E%3Ccircle cx='196' cy='196' r='3' fill='%23cdd6ff'/%3E%3Ccircle cx='66' cy='190' r='2.5' fill='%23cdd6ff'/%3E%3C/svg%3E">
-<link rel="stylesheet" href="app.css?v=2">
+<link rel="stylesheet" href="app.css?v=3">
 </head>
 <body>
 
@@ -36,6 +36,18 @@
       </div>
     </div>
     <div class="tools">
+      <label class="zsel" title="Tropical = seasons (Western); Sidereal = the real stars (Vedic). Ayanāṃśa is the offset between them.">
+        <span class="zsel-l">Zodiac</span>
+        <select id="zodiacSel" aria-label="Zodiac system">
+          <option value="lahiri">Sidereal · Lahiri</option>
+          <option value="fagan">Sidereal · Fagan/Bradley</option>
+          <option value="raman">Sidereal · Raman</option>
+          <option value="kp">Sidereal · Krishnamurti (KP)</option>
+          <option value="custom">Sidereal · custom°</option>
+          <option value="tropical">Tropical</option>
+        </select>
+      </label>
+      <input id="ayanCustom" class="hidden" type="number" step="0.1" min="0" max="30" title="Custom ayanāṃśa in degrees" aria-label="Custom ayanāṃśa degrees">
       <button class="toolbtn" id="miAspects" title="Show the lines between planets">✶ Aspects <span class="state" id="aspState">off</span></button>
       <button class="toolbtn" id="miHelp">❔ How it works</button>
       <button class="toolbtn" id="miAbout">ℹ About</button>
@@ -122,6 +134,7 @@
             <button class="v3d-btn" data-sky3d="east" title="Face east again">↻ East</button>
             <button class="v3d-btn on" data-sky3d="labels" aria-pressed="true" title="Toggle planet labels">🏷 Labels</button>
             <button class="v3d-btn" data-sky3d="ecliptic" aria-pressed="false" title="Show the Sun's path & the nodes">☊ Paths</button>
+            <button class="v3d-btn" data-sky3d="signs" aria-pressed="false" title="Mark the 12 zodiac signs along the ecliptic">♈ Signs</button>
             <button class="v3d-btn on" data-sky3d="stars" aria-pressed="true" title="Toggle stars">✦ Stars</button>
           </div>
         </div>
@@ -173,6 +186,8 @@
       <p>This is the familiar horoscope wheel. The <b>Ascendant</b> (the sign rising on the eastern horizon) sits on the left; signs run anticlockwise. Each planet is placed at its degree of the zodiac. <b>☊ / ☋</b> are the Moon's north and south <b>nodes</b> — the two points where the Moon's path crosses the Sun's path (the ecliptic). In Vedic astrology these are <b>Rahu</b> and <b>Ketu</b>. <b>℞</b> marks a planet that was <b>retrograde</b>.</p>
       <h3>⏳ Time &amp; place matter</h3>
       <p>The signs of the slow planets barely change in a day, but the <b>Ascendant and the whole sky wheel turn a full circle every 24 hours</b> — so the birth <b>time</b> and <b>place</b> decide what was rising and overhead. If you don't know the time, hit <b>“Time unknown”</b>; the signs stay reliable but ignore the Ascendant and houses.</p>
+      <h3>♈ Tropical vs sidereal — the ayanāṃśa</h3>
+      <p>Where each body actually stood in your sky (its compass direction &amp; height, and the 3D view) is <b>physically exact</b> either way — that never changes. What changes is only how the <b>signs</b> are measured. The <b>tropical</b> zodiac is tied to the seasons (the equinox); the <b>sidereal</b> zodiac is tied to the <b>real stars</b>. Over millennia, precession has slid them apart by the <b>ayanāṃśa</b> — about <b>24°</b> today. Choose <b>Sidereal · Lahiri</b> (the Vedic standard, here pinned to the star <b>Spica/Chitra</b> at sidereal Libra 0°) and the <b>♈ Signs</b> lines in the 3D sky line up with the actual constellations. Pick your system — or a custom ayanāṃśa — from the <b>Zodiac</b> menu, top-right.</p>
       <p class="ov-src">Positions are computed in the browser with the <a href="https://github.com/cosinekitty/astronomy" target="_blank" rel="noopener">Astronomy Engine</a> ephemeris (arc-minute accuracy), in the tropical zodiac. Time zones (including historical daylight saving) come from the IANA database; city coordinates from GeoNames.</p>
     </div>
   </div>
@@ -195,6 +210,6 @@
   <script src="lib/astronomy.browser.js"></script>
   <script src="lib/tz.js"></script>
   <script src="data/cities.js?v=2"></script>
-  <script src="app.js?v=2"></script>
+  <script src="app.js?v=3"></script>
 </body>
 </html>
