@@ -42,6 +42,15 @@ const STANDOFF = { 'solar-system':14, 'nearby-star':5, 'exoplanet':5, 'famous-st
   'nebula-cluster':900, 'exotic-object':500, 'galactic-structure':11000, 'concept-artifact':18,
   'canon-place':7, 'canon-species':7, 'canon-tech':7, 'canon-character':7, 'canon-article':7 };
 
+/* objects that exist in BOTH Guides — jump between the real thing and its book entry */
+const CROSSLINK = {
+  'earth':'bk-earth-mk2', 'bk-earth-mk2':'earth',
+  'betelgeuse':'bk-betelgeuse-vicinity', 'bk-betelgeuse-vicinity':'betelgeuse',
+  'the-towel':'bk-towel', 'bk-towel':'the-towel',
+  'the-answer-42':'bk-answer-42', 'bk-answer-42':'the-answer-42',
+  'dont-panic':'bk-dont-panic', 'bk-dont-panic':'dont-panic'
+};
+
 const R0 = 26000;        // Sun → galactic centre, light-years
 const LY_PER_LY = 1;     // scene units are light-years
 
@@ -387,6 +396,8 @@ function distLine(e){
 function renderEntry(e){
   const color = CATCOLOR[e.category]||'#fff';
   const canon = entryRealm(e)==='book';
+  const xl = CROSSLINK[e.id]; const xlOk = xl && byId.has(xl);
+  const xlLabel = canon ? '🔭 See the real one' : '📖 Find it in The Book';
   const facts = (e.facts||[]).map(f=>`<dt>${esc(f.label)}</dt><dd>${esc(f.value)}</dd>`).join('');
   const tags = (e.tags||[]).map(t=>`<span>${esc(t)}</span>`).join('');
   const aka = (e.aka&&e.aka.length)?`<div class="e-aka">also: ${e.aka.map(esc).join(' · ')}</div>`:'';
@@ -410,6 +421,7 @@ function renderEntry(e){
     ${facts?`<dl class="e-facts">${facts}</dl>`:''}
     ${e.panic?`<div class="e-panic"><span class="pk">▸ DON'T PANIC</span><span class="pv">${esc(e.panic)}</span></div>`:''}
     ${tags?`<div class="e-tags">${tags}</div>`:''}
+    ${xlOk?`<div class="e-link"><button id="xlink" class="${canon?'to-real':'to-book'}">${xlLabel} →</button></div>`:''}
     ${plottable?`<div class="e-fly"><button id="flyHere">🚀 Fly here</button><button id="flyBack">${canon?'📖 The Book':'☀️ Back to Sol'}</button></div>`:''}
   `;
   screenBody.scrollTop = 0;
@@ -417,6 +429,7 @@ function renderEntry(e){
     document.getElementById('flyHere').onclick = () => focusEntry(e, true);
     document.getElementById('flyBack').onclick = () => setView(canon?'book':'sol');
   }
+  if(xlOk) document.getElementById('xlink').onclick = () => openEntry(xl, true);
 }
 function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
 

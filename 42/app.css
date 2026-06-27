@@ -176,6 +176,12 @@ body.mode-book #mapctl .mbtn[data-view]{display:none}   /* real-galaxy nav hidde
 .e-dist b{color:#e9fff4}
 .e-tags{display:flex; flex-wrap:wrap; gap:6px; margin-top:14px}
 .e-tags span{font-size:11px; color:#7fd2ad; border:1px solid rgba(71,240,160,.25); padding:2px 9px; border-radius:20px}
+.e-link{margin:15px 0 2px}
+.e-link button{width:100%; padding:10px; border-radius:9px; cursor:pointer; font:700 12px var(--sans); background:transparent; text-shadow:none; transition:.15s}
+.e-link .to-book{border:1px solid rgba(255,224,107,.55); color:var(--gold)}
+.e-link .to-book:hover{background:rgba(255,224,107,.13)}
+.e-link .to-real{border:1px solid rgba(71,240,160,.5); color:var(--acc)}
+.e-link .to-real:hover{background:rgba(71,240,160,.13)}
 .e-fly{margin:16px 0 4px; display:flex; gap:8px}
 .e-fly button{flex:1; padding:9px; border-radius:9px; border:1px solid rgba(71,240,160,.4);
   background:rgba(71,240,160,.1); color:#d6ffe9; font:700 12px var(--sans); cursor:pointer}
@@ -236,6 +242,10 @@ body.mode-book #mapctl .mbtn[data-view]{display:none}   /* real-galaxy nav hidde
 #toast{position:fixed; left:50%; bottom:84px; transform:translateX(-50%); z-index:80;
   background:rgba(8,14,30,.95); border:1px solid var(--acc); color:#d6ffe9; font-size:13px;
   padding:10px 16px; border-radius:11px; box-shadow:var(--shadow); transition:opacity .3s}
+
+/* keep the tour bar clear of the open Guide device */
+@media (min-width:761px){ body:has(#guide:not(.closed)) #tourbar{ left:calc(50% - 230px) } }
+@media (max-width:760px){ body:has(#guide:not(.closed)) #tourbar{ bottom:auto; top:104px } }
 
 /* ===== Responsive ===== */
 @media (max-width:760px){
