@@ -420,7 +420,9 @@ function renderTape(trades) {
   let html = '';
   for (let i = 0; i < trades.length; i++) {
     const t = trades[i], prev = trades[i + 1];
-    const dir = prev ? (t.p > prev.p ? 'up' : t.p < prev.p ? 'down' : 'flat') : 'flat';
+    // Color by taker side (buy/sell) — same meaning as the large-prints panel.
+    // Fall back to price-tick (up/down) only if the feed didn't tag the side.
+    const dir = t.tks === 'B' ? 'buy' : t.tks === 'S' ? 'sell' : (prev ? (t.p > prev.p ? 'up' : t.p < prev.p ? 'down' : 'flat') : 'flat');
     const tm = new Date(t.t).toLocaleTimeString([], { hour12: false });
     html += `<li class="${dir}"><span class="tt">${tm}</span><span class="tp">${fmtUSD(t.p)}</span><span class="ts">${fmtNum(t.s)}</span></li>`;
   }
@@ -433,7 +435,8 @@ function renderTape(trades) {
     let fresh = 0;
     for (const t of trades) { if (t.t <= lastTapeTop) break; fresh++; }
     for (let i = 0; i < Math.min(fresh, 8); i++) {
-      const dir = (i + 1 < trades.length) ? Math.sign(trades[i].p - trades[i + 1].p) : 0;
+      const ti = trades[i];
+      const dir = ti.tks === 'B' ? 1 : ti.tks === 'S' ? -1 : ((i + 1 < trades.length) ? Math.sign(ti.p - trades[i + 1].p) : 0);
       tapeClick(i * 45, dir);
     }
   }
