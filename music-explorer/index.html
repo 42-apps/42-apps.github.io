@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Music Explorer · The greatest music of all time, mapped across the world</title>
+<meta name="description" content="An interactive 3D globe of the world's greatest and most popular music — best-sellers, most-streamed, most-awarded songs and artists, placed by country, across every era, language and genre.">
+<meta property="og:title" content="Music Explorer">
+<meta property="og:description" content="The greatest music of all time, mapped across the world.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ctext y='52' font-size='52'%3E%F0%9F%8E%B5%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="app.css?v=1">
+</head>
+<body>
+
+<!-- ===== Top bar ===== -->
+<header id="topbar">
+  <div class="brand" id="brandHome" title="Back to the world">
+    <span class="brand-logo">🎵</span>
+    <span class="brand-txt">
+      <b>Music Explorer</b>
+      <i>the greatest music of all time, mapped</i>
+    </span>
+  </div>
+
+  <div class="search-wrap">
+    <input id="search" type="text" autocomplete="off" spellcheck="false" placeholder="Search songs, artists, countries…">
+    <div id="searchResults" class="hidden"></div>
+  </div>
+
+  <nav class="tabs" id="tabs">
+    <button class="tab active" data-view="atlas">🌍 <span>Atlas</span></button>
+    <button class="tab" data-view="charts">🏆 <span>Charts</span></button>
+    <button class="tab" data-view="timemachine">⏳ <span>Time&nbsp;Machine</span></button>
+    <button class="tab ghost" id="aboutBtn" title="About">ⓘ</button>
+  </nav>
+</header>
+
+<!-- ===== Context bar (chips change per view) ===== -->
+<div id="viewbar"></div>
+
+<!-- ===== Globe ===== -->
+<div id="globeViz"></div>
+<div id="markerLayer"></div>
+<div id="tooltip" class="hidden"></div>
+<div id="spinToggle" class="mini-btn" title="Toggle auto-rotate">🌐</div>
+
+<!-- ===== Left ranking panel ===== -->
+<aside id="rankPanel">
+  <div class="rk-head">
+    <div>
+      <h2 id="rkTitle">Atlas</h2>
+      <div id="rkSub" class="rk-sub"></div>
+    </div>
+    <span id="rkCount" class="rk-count"></span>
+  </div>
+  <div id="rankList" class="rk-list"></div>
+  <div id="rkFoot" class="rk-foot"></div>
+</aside>
+
+<!-- ===== Right detail card ===== -->
+<section id="detailCard" class="hidden">
+  <button class="dc-close" id="dcClose">×</button>
+  <div id="detailBody"></div>
+</section>
+
+<!-- ===== Legend ===== -->
+<div id="legend" class="hidden"></div>
+
+<!-- ===== Time Machine bar ===== -->
+<div id="timebar" class="hidden">
+  <div class="tm-lead">
+    <span class="tm-tag">⏳ Population-adjusted reach</span>
+    <span id="tmExplain" class="tm-explain"></span>
+  </div>
+  <div class="tm-row">
+    <span class="tm-yearlab">Project to the world of</span>
+    <span id="tmYear" class="tm-year">2026</span>
+    <input id="tmSlider" type="range" min="1900" max="2026" step="1" value="2026">
+    <span id="tmPop" class="tm-pop"></span>
+  </div>
+</div>
+
+<!-- ===== About overlay ===== -->
+<div id="aboutOverlay" class="overlay hidden">
+  <div class="ov-box">
+    <button class="ov-close" id="aboutClose">×</button>
+    <h2>🎵 Music Explorer</h2>
+    <p class="ov-lead">The greatest and most popular music of all time, placed on the globe by the country of its artist or composer — across every era, language and genre.</p>
+    <div class="ov-grid">
+      <div><b>🌍 Atlas</b><span>Spin the world and tap any country to hear its signature songs. Flags mark every musical homeland — ABBA flies the Swedish flag, Bob Marley the Jamaican. Hit <b>▶</b> on any song to play it on YouTube.</span></div>
+      <div><b>🏆 Charts</b><span>Leaderboards of the best-selling, most-streamed and most-awarded songs ever, plus the artists with the most hits and the most awards.</span></div>
+      <div><b>⏳ Time Machine</b><span>A 1942 hit sold to a world of 2.3&nbsp;billion. What would that reach be among today's 8.3&nbsp;billion? Slide through history and re-rank music by its share of all humanity alive at the time.</span></div>
+    </div>
+    <p class="ov-foot">Figures are best-documented estimates from public sources (Wikipedia best-seller lists, the Recording Academy, Billboard, IFPI). Cultural significance is necessarily a judgment call — this is a celebration, not a court ruling. Part of <b>42-apps</b>.</p>
+  </div>
+</div>
+
+<script src="lib/globe.gl.min.js"></script>
+<script src="data/countries.js?v=1"></script>
+<script src="data/music.js?v=1"></script>
+<script src="app.js?v=1"></script>
+</body>
+</html>
