@@ -6,7 +6,7 @@
 <title>The Hitchhiker's Guide to the Known Galaxy</title>
 <meta name="description" content="A real, well-researched guide to the Milky Way — every star, world, nebula and black hole written in the deadpan voice of the Guide. Fly the 3D galaxy, then read the Guide. DON'T PANIC.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Crect width='256' height='256' rx='56' fill='%23050913'/%3E%3Cg fill='none' stroke='%2347f0a0' stroke-width='10' stroke-linecap='round'%3E%3Cpath d='M128 60 C180 70 196 128 196 128 C196 128 150 150 110 140'/%3E%3Cpath d='M128 196 C76 186 60 128 60 128 C60 128 106 106 146 116'/%3E%3C/g%3E%3Ccircle cx='128' cy='128' r='14' fill='%23ffe06b'/%3E%3C/svg%3E">
-<link rel="stylesheet" href="app.css?v=1">
+<link rel="stylesheet" href="app.css?v=3">
 <script type="importmap">
 { "imports": { "three": "./lib/three.module.min.js", "three/addons/": "./lib/addons/" } }
 </script>
@@ -59,6 +59,7 @@
     <button class="mbtn" data-view="home" title="Cinematic overview">🌌 Galaxy</button>
     <button class="mbtn" data-view="sol" title="Fly to the Sun &amp; the stellar neighbourhood">☀️ Sol</button>
     <button class="mbtn" data-view="core" title="Fly to the galactic centre">⚫ Core</button>
+    <button class="mbtn" id="btnSky" title="Show the familiar constellations (best from the Sol view)">✦ Sky</button>
     <button class="mbtn" id="btnSpin" title="Toggle auto-rotate">⟳ Spin</button>
   </div>
 
@@ -102,8 +103,10 @@
       <h1 class="cover-title">The Hitchhiker's Guide<br><span>to the Known Galaxy</span></h1>
       <p class="cover-tagline" id="coverTagline"></p>
       <p class="cover-intro" id="coverIntro"></p>
+      <p class="cover-modes">Two guides in one — a true map of the Milky Way, and the Guide as Douglas Adams wrote it.</p>
       <div class="cover-actions">
-        <button id="btnBegin" class="cta">Open the Guide</button>
+        <button id="btnBegin" class="cta">🔭 Explore the Real Galaxy</button>
+        <button id="btnBook" class="cta book">📖 Open The Book</button>
         <button id="btnTourStart" class="cta ghost">🎬 Take the tour</button>
       </div>
       <p class="cover-foot" id="coverHowto"></p>
@@ -121,7 +124,7 @@
 
   <div id="toast" class="hidden"></div>
 
-  <script src="data/guide.js?v=1"></script>
-  <script type="module" src="app.js?v=1"></script>
+  <script src="data/guide.js?v=3"></script>
+  <script type="module" src="app.js?v=3"></script>
 </body>
 </html>

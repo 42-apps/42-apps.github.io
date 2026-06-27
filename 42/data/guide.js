@@ -1,6 +1,6 @@
 /* The Hitchhiker's Guide to the Known Galaxy — corpus.
  * REAL Milky Way astronomy + THE BOOK (fictional canon, original encyclopedic prose).
- * 214 entries (146 real + 68 canon) across 13 sections.
+ * 231 entries (146 real + 85 canon) across 14 sections.
  * window.HHGTTG_DATA = { meta, categories, tour, canonTour, entries }.
  */
 window.HHGTTG_DATA = {
@@ -87,6 +87,12 @@ window.HHGTTG_DATA = {
    "label": "The Guide's Greatest Hits",
    "emoji": "📖",
    "blurb": "42, towels & the best drink in existence."
+  },
+  {
+   "key": "canon-event",
+   "label": "Events & Phrases",
+   "emoji": "💥",
+   "blurb": "Wars, disasters & immortal catchphrases."
   }
  ],
  "tour": [
@@ -8591,6 +8597,147 @@ window.HHGTTG_DATA = {
    "distance_ly": null
   },
   {
+   "id": "bk-haggunenons",
+   "name": "The Haggunenons",
+   "category": "canon-species",
+   "objtype": "Species",
+   "verdict": "Lifeforms so impatient with evolution they re-evolve mid-meal into something else entirely.",
+   "guide": "The Haggunenons of Vicissitus Three suffer from the least stable genetic make-up the Guide has on file, an arrangement so eager to reshuffle itself that a Haggunenon may set out across a sentence as one creature and arrive at the full stop as something with markedly more limbs, or markedly fewer, according to its mood and how near it is sitting to the salt. They evolve not across aeons but across the span of a single dinner, which makes a hash of their bureaucracy and turns their seating plans into pure wishful thinking. They turn up in the first original radio series, where a Haggunenon Admiral, overcome by a fit of evolutionary impatience, spontaneously reorganises himself into a far more alarming and considerably more toothed shape, an event that does wonders for the speed at which everyone else decides to leave. Holding a conversation with one is rewarding chiefly for how quickly it is over.",
+   "panic": "Do not lend a Haggunenon money, since by the time the pudding arrives the borrower may have become a creature with no memory of ever owning hands. Praise its present shape only in the vaguest terms, because by your next sentence that shape will almost certainly be out of date.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "The first original radio series (Fit the Sixth)"
+    },
+    {
+     "label": "Home world",
+     "value": "Vicissitus Three"
+    },
+    {
+     "label": "Notable for",
+     "value": "Wildly unstable genetics that re-evolve them between courses of a meal"
+    },
+    {
+     "label": "Running gag",
+     "value": "Spontaneous transformation into ever more improbable anatomies"
+    },
+    {
+     "label": "Associated with",
+     "value": "The Haggunenon Admiral, who abruptly evolves into a monstrous form"
+    },
+    {
+     "label": "Social difficulty",
+     "value": "Identity, hierarchy and seating all rendered hopeless by constant change"
+    }
+   ],
+   "tags": [
+    "radio",
+    "unstable-dna",
+    "evolution",
+    "shapeshifting",
+    "gag",
+    "minor-species"
+   ],
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null
+  },
+  {
+   "id": "bk-perfectly-normal-beasts",
+   "name": "Perfectly Normal Beasts",
+   "category": "canon-species",
+   "objtype": "Animal species",
+   "verdict": "Large migrating animals on Lamuella that arrive from, and depart into, nowhere at all.",
+   "guide": "On the quiet hill-farming world of Lamuella, where Arthur Dent eventually settled into a contented career as the village Sandwich Maker, the turning of the seasons is announced by the migration of the Perfectly Normal Beasts. These are large, herd-going animals whose name is a small masterpiece of local understatement, since there is nothing remotely normal about them. Twice a year they pour across the plain in enormous numbers, except that they do not come in over one horizon and they do not leave over the other. They simply step out of thin air at one side of the plain and walk back into thin air at the far side, a habit the Lamuellans regard as entirely unremarkable and visiting physicists regard as a personal affront. They appear in Mostly Harmless, where the empty patch of air they vanish through turns out to be a doorway to somewhere a good deal less convenient.",
+   "panic": "Resist any urge to follow a Perfectly Normal Beast into the gap it disappears through, because the far side is nowhere near Lamuella and the return trip is emphatically not laid on for your benefit.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "Mostly Harmless (the fifth book)"
+    },
+    {
+     "label": "Home world",
+     "value": "Lamuella"
+    },
+    {
+     "label": "Notable for",
+     "value": "Migrating by materialising from, and dematerialising into, nowhere"
+    },
+    {
+     "label": "Associated with",
+     "value": "Arthur Dent's adopted village and his life as Sandwich Maker"
+    },
+    {
+     "label": "Hidden significance",
+     "value": "Their vanishing point conceals a portal to another world"
+    },
+    {
+     "label": "Local attitude",
+     "value": "Treated by Lamuellans as entirely ordinary, hence the name"
+    }
+   ],
+   "tags": [
+    "mostly-harmless",
+    "lamuella",
+    "migration",
+    "portal",
+    "arthur-dent",
+    "fifth-book"
+   ],
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null
+  },
+  {
+   "id": "bk-silastic-armorfiends",
+   "name": "The Silastic Armorfiends of Striterax",
+   "category": "canon-species",
+   "objtype": "Civilisation",
+   "verdict": "Warlike folk of Striterax who fought so relentlessly they finally outlawed war itself.",
+   "guide": "The Silastic Armorfiends of Striterax were a famously aggressive people who, through a long and exhausting stretch of their history, went to war at the slightest excuse and frequently at no excuse whatsoever. The Guide records that they eventually fought such an extraordinary and tiresome succession of wars that they were driven to a desperate and faintly ridiculous remedy: passing a law that made it a criminal offence to start one. The Armorfiends crop up most often in the Guide's broader meditation on just how dangerous truly dreadful art can be, a region of discussion that sits not far from Vogon poetry and the verse of the Azgoths of Kria, since terrible writing has on more than one occasion been pressed into service as an instrument of genuine menace. They serve as a useful footnote whenever the subject turns to officially sanctioned crimes against the senses.",
+   "panic": "If a Silastic Armorfiend proposes a difference of opinion, remember that on their world such things were once settled by full-scale war and only latterly by legislation, so the safest response is enthusiastic and immediate agreement, ideally from another room.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "The Hitchhiker's canon's discussion of warlike peoples and dreadful art (near the Vogons)"
+    },
+    {
+     "label": "Home world",
+     "value": "Striterax"
+    },
+    {
+     "label": "Notable for",
+     "value": "A warlike temperament and a history of incessant fighting"
+    },
+    {
+     "label": "Famous for",
+     "value": "Fighting so many wars that they finally made starting one a criminal offence"
+    },
+    {
+     "label": "Associated with",
+     "value": "The galactic discussion of menacing art, near Vogon poetry"
+    },
+    {
+     "label": "Moral",
+     "value": "Demonstrates that even the most warlike can eventually legislate against themselves"
+    }
+   ],
+   "tags": [
+    "striterax",
+    "warlike",
+    "bad-poetry",
+    "vogon-adjacent",
+    "civilisation",
+    "running-gag"
+   ],
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null
+  },
+  {
    "id": "bk-improbability-drive",
    "name": "The Infinite Improbability Drive",
    "category": "canon-tech",
@@ -9656,6 +9803,192 @@ window.HHGTTG_DATA = {
    "distance_ly": null
   },
   {
+   "id": "bk-jeltz",
+   "name": "Prostetnic Vogon Jeltz",
+   "category": "canon-character",
+   "objtype": "Vogon bureaucrat / fleet captain",
+   "verdict": "Galactic demolition man who razed Earth, then read poetry aloud about it.",
+   "guide": "Captain of the Vogon Constructor Fleet, Prostetnic Vogon Jeltz is the gentlebeing responsible for demolishing the planet Earth to clear the way for a hyperspace bypass, a project he carried out with the unhurried satisfaction of someone filing paperwork in triplicate. The relevant plans, he pointed out, had been available for inspection at a planning office for ample time, so any complaint at this stage was, in his view, hopelessly overdue. Jeltz embodies the Vogon temperament: officious, joyless, allergic to imagination, and devoted to procedure. Having scooped Arthur Dent and Ford Prefect off the doomed planet, he expressed his displeasure at finding stowaways in the only way a Vogon truly enjoys, by subjecting them to a recital of his own verse before having them ejected into space. He is unbribable, unmovable, and utterly without charm.",
+   "panic": "If a Vogon ship parks overhead, do not bother filing a complaint. Bring a towel and earplugs, in that order.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "The Hitchhiker's Guide to the Galaxy (radio, novel, and later adaptations)"
+    },
+    {
+     "label": "Species",
+     "value": "Vogon"
+    },
+    {
+     "label": "Role",
+     "value": "Captain of the Vogon Constructor Fleet"
+    },
+    {
+     "label": "Notable for",
+     "value": "Demolishing Earth for a hyperspace bypass"
+    },
+    {
+     "label": "Signature torment",
+     "value": "Reading his own poetry to captives before airlocking them"
+    },
+    {
+     "label": "Temperament",
+     "value": "Bureaucratic, vindictive, immune to bribery and pity"
+    }
+   ],
+   "tags": [
+    "vogon",
+    "earth-demolition",
+    "bureaucracy",
+    "poetry",
+    "fleet-captain",
+    "villain"
+   ],
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null
+  },
+  {
+   "id": "bk-zarniwoop",
+   "name": "Zarniwoop",
+   "category": "canon-character",
+   "objtype": "Corporate executive (the Guide)",
+   "verdict": "Ambitious Guide executive cruising an artificial universe in pursuit of the galaxy's true ruler.",
+   "guide": "Zarniwoop is a senior and conspicuously self-important executive at the publishers of the Hitchhiker's Guide, a man so committed to an expensive intergalactic cruise that he undertakes the entire voyage without ever leaving his office, the office having been arranged to travel with him through an artificial universe of his own devising. His grand scheme is to track down the being who actually governs the cosmos, and to that end he manipulates Zaphod Beeblebrox, electronically tampering with Zaphod's own mind to steer him toward the goal. The journey leads to a damp shack at the edge of everything, inhabited by a placid hermit and his cat who decides existence afresh each moment and trusts almost nothing. Zarniwoop's careful plotting collapses into anticlimax, and he is left stranded, a tidy lesson in the limits of scheming.",
+   "panic": "Beware executives offering exclusive cruises. The destination may be a shack, and the man in charge may not believe you exist.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "The Hitchhiker's Guide to the Galaxy / The Restaurant at the End of the Universe"
+    },
+    {
+     "label": "Occupation",
+     "value": "Senior executive at the Guide's publishers"
+    },
+    {
+     "label": "Goal",
+     "value": "To find the true ruler of the Universe"
+    },
+    {
+     "label": "Associated with",
+     "value": "Zaphod Beeblebrox, whom he manipulates"
+    },
+    {
+     "label": "Notable quirk",
+     "value": "Travels through an artificial universe without leaving his office"
+    },
+    {
+     "label": "Outcome",
+     "value": "His plan ends in deflating anticlimax, leaving him stranded"
+    }
+   ],
+   "tags": [
+    "the-guide",
+    "executive",
+    "schemer",
+    "artificial-universe",
+    "ruler-of-the-universe",
+    "zaphod"
+   ],
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null
+  },
+  {
+   "id": "bk-lunkwill-fook",
+   "name": "Lunkwill and Fook",
+   "category": "canon-character",
+   "objtype": "Programmers / philosophers' delegates",
+   "verdict": "The two who switched on Deep Thought and demanded the Answer to Everything.",
+   "guide": "Lunkwill and Fook are the pair of eager technicians granted the honour of being first to address Deep Thought, the second-greatest computer ever built, at the moment of its activation. Brimming with anticipation, they instruct the machine to calculate the Answer to the Great Question of Life, the Universe, and Everything, expecting a swift and tidy reply. Deep Thought informs them, with computerised patience, that it can indeed produce the Answer, but that the task will require a little time, namely seven and a half million years. Their dismay is interrupted by a deputation of philosophers anxious that a thinking machine will put soothsayers and pundits out of business. The two thus stand at the comic origin of the saga's central running gag, the long wait that eventually yields the famous, maddeningly unhelpful number.",
+   "panic": "Never ask a computer the ultimate question unless you have packed for a seven-and-a-half-million-year wait.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "The Hitchhiker's Guide to the Galaxy"
+    },
+    {
+     "label": "Role",
+     "value": "First to switch on and question Deep Thought"
+    },
+    {
+     "label": "Request",
+     "value": "The Answer to Life, the Universe, and Everything"
+    },
+    {
+     "label": "Response received",
+     "value": "A 7.5-million-year calculation time"
+    },
+    {
+     "label": "Associated with",
+     "value": "Deep Thought; the philosophers' protest"
+    },
+    {
+     "label": "Significance",
+     "value": "Set in motion the program that ends in the answer 42"
+    }
+   ],
+   "tags": [
+    "deep-thought",
+    "programmers",
+    "ultimate-question",
+    "42",
+    "running-gag"
+   ],
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null
+  },
+  {
+   "id": "bk-grunthos",
+   "name": "Grunthos the Flatulent",
+   "category": "canon-character",
+   "objtype": "Poet (Azgoths of Kria)",
+   "verdict": "Author of the second-worst poetry in the cosmos, with grievous bodily side effects.",
+   "guide": "Grunthos the Flatulent stands as poet master of the dreaded Azgoths of Kria, a species whose verse is so catastrophically awful that audiences have been known to suffer serious internal injury simply from hearing it recited. Their poetry ranks as the second-worst in the entire Universe, surpassed in dreadfulness only by the work of one doomed Earthling. The poem that did the damage, an ode to a small lump of green putty Grunthos claimed to have found in his armpit one midsummer morning, reportedly caused four of his listeners to perish of internal haemorrhaging, while the president of the Mid-Galactic Arts Nobbling Council survived only by gnawing off one of his own legs. He was on the point of reciting a sprawling twelve-book epic about his favourite bathtime gurgles when his own major intestine, in a heroic act of self-defence, leapt up and throttled his brain. The Guide ranks the Vogons merely third in this hierarchy of literary suffering, a notch below the Azgoths; the very worst verse of all belonged to an Englishwoman who died with the Earth.",
+   "panic": "Should an Azgoth clear his throat to recite, leave immediately. Your internal organs will thank you, assuming they survive.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "The Hitchhiker's Guide to the Galaxy"
+    },
+    {
+     "label": "Species",
+     "value": "Azgoth of Kria"
+    },
+    {
+     "label": "Title",
+     "value": "Poet master of the Azgoths"
+    },
+    {
+     "label": "Notable for",
+     "value": "The second-worst poetry in the Universe"
+    },
+    {
+     "label": "Effect of his work",
+     "value": "Reportedly caused listeners' deaths by internal haemorrhaging"
+    },
+    {
+     "label": "Ranking",
+     "value": "Second worst overall; Vogon verse is third, the absolute worst was an Earthling's"
+    }
+   ],
+   "tags": [
+    "azgoths-of-kria",
+    "bad-poetry",
+    "second-worst",
+    "running-gag",
+    "vogon-poetry-rivalry"
+   ],
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null
+  },
+  {
    "id": "bk-answer-42",
    "name": "42",
    "category": "canon-article",
@@ -10201,6 +10534,447 @@ window.HHGTTG_DATA = {
     "nutri-matic",
     "heart-of-gold",
     "earth"
+   ],
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null
+  },
+  {
+   "id": "bk-krikkit-wars",
+   "name": "The Krikkit Wars",
+   "category": "canon-event",
+   "objtype": "Galactic conflict / war",
+   "verdict": "A xenophobic planet's tidy-minded crusade to remove the rest of the universe.",
+   "guide": "Easily the least neighbourly chapter in galactic history, the Krikkit Wars began when the inhabitants of Krikkit, a world wrapped so thickly in a Dust Cloud that its people had never suspected anything existed beyond their own sky, finally built a ship and discovered the rest of creation. Their reaction was not awe but profound, polite distaste. Having decided the universe was untidy and would look much better gone, they assembled an astonishingly capable war fleet and set about a methodical campaign of total extermination. The Galaxy, after considerable cost, eventually prevailed and sealed Krikkit inside a Slo-Time envelope to wait out the end of everything else. The whole affair gives the game of cricket a faintly grisly racial-memory subtext that Earthlings cheerfully fail to notice.",
+   "panic": "If a small white object is hurtling toward you with malicious tidiness, do not catch it. Run.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "Life, the Universe and Everything (Book 3)"
+    },
+    {
+     "label": "Aggressor",
+     "value": "The people of the planet Krikkit"
+    },
+    {
+     "label": "Cause",
+     "value": "Discovering the universe and disliking how cluttered it looked"
+    },
+    {
+     "label": "Resolution",
+     "value": "Krikkit sealed inside a Slo-Time envelope until the end of all things"
+    },
+    {
+     "label": "Notable for",
+     "value": "Being the inspiration, via racial memory, for the game of cricket"
+    },
+    {
+     "label": "Key tools",
+     "value": "Krikkit war robots and the components of the Wikkit Gate"
+    }
+   ],
+   "tags": [
+    "war",
+    "krikkit",
+    "robots",
+    "slo-time",
+    "cricket",
+    "book-three"
+   ],
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null
+  },
+  {
+   "id": "bk-great-collapsing-hrung",
+   "name": "The Great Collapsing Hrung Disaster",
+   "category": "canon-event",
+   "objtype": "Cataclysm / planetary disaster",
+   "verdict": "An unexplained catastrophe that wiped out a world and left Ford's father its sole survivor.",
+   "guide": "One of those grand-sounding calamities that the Galaxy files away under 'best not dwelt upon', the Great Collapsing Hrung Disaster struck the planet Betelgeuse Seven and effectively wiped out its entire population. What, precisely, a Hrung is, and why it should choose to collapse, are questions that nobody has ever satisfactorily answered, which is rather the point. The episode lingers in Ford Prefect's story because his father was the only man on the planet to survive it, afterwards resettling on Betelgeuse Five and naming his son in memory of a race that no longer existed. It lends a faintly tragic backstory to a man otherwise devoted to towels, parties, and getting off planets that are about to be destroyed, and stands as a tidy reminder that the cosmos can deliver enormous devastation while remaining entirely unbothered about explaining itself.",
+   "panic": "Asking what a Hrung is will not help, and there is no recorded case of one un-collapsing.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "The Hitchhiker's Guide to the Galaxy (Book 1)"
+    },
+    {
+     "label": "Stricken world",
+     "value": "Betelgeuse Seven, in Ford Prefect's home system"
+    },
+    {
+     "label": "Associated with",
+     "value": "Ford Prefect, whose father was the planet's only survivor"
+    },
+    {
+     "label": "Cause",
+     "value": "The collapse of a Hrung, the nature of which is never explained"
+    },
+    {
+     "label": "Notable for",
+     "value": "An impressively grand name attached to a wholly unexplained catastrophe"
+    }
+   ],
+   "tags": [
+    "disaster",
+    "betelgeuse",
+    "ford-prefect",
+    "hrung",
+    "book-one"
+   ],
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null
+  },
+  {
+   "id": "bk-share-and-enjoy",
+   "name": "Share and Enjoy",
+   "category": "canon-event",
+   "objtype": "Corporate slogan / company song",
+   "verdict": "A relentlessly upbeat corporate motto from a company that produces miserable robots.",
+   "guide": "Adopted as both motto and anthem by the Sirius Cybernetics Corporation, 'Share and Enjoy' is a phrase engineered to be soothing and instead achieves a kind of low-grade existential dread. The accompanying company song is, by reliable account, so monumentally awful that the towering illuminated letters spelling it out at the firm's factory complex eventually sank into the surrounding swamp, and the whole edifice now reads, with a certain dark poetry, as an obscene instruction when glimpsed from the right angle. The slogan is the corporate face of a company whose products are cheerful in proportion to how badly they work, and it functions throughout the Guide as shorthand for the gulf between what marketing promises and what reality grudgingly delivers.",
+   "panic": "When a product tells you to Share and Enjoy, share your concerns with someone far away and enjoy the exit.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "The Hitchhiker's Guide books / Sirius Cybernetics lore"
+    },
+    {
+     "label": "Belongs to",
+     "value": "The Sirius Cybernetics Corporation"
+    },
+    {
+     "label": "Form",
+     "value": "Both a company motto and an extremely unpopular company song"
+    },
+    {
+     "label": "Notable for",
+     "value": "Giant sign letters sinking into a swamp to read as an obscenity"
+    },
+    {
+     "label": "Theme",
+     "value": "The chasm between corporate cheer and actual function"
+    }
+   ],
+   "tags": [
+    "slogan",
+    "sirius-cybernetics",
+    "satire",
+    "robots",
+    "corporate"
+   ],
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null
+  },
+  {
+   "id": "bk-demolition-of-earth",
+   "name": "The Demolition of Earth",
+   "category": "canon-event",
+   "objtype": "Planetary demolition event",
+   "verdict": "Earth is bulldozed for a bypass, with no more ceremony than a parish notice.",
+   "guide": "The event that launches the entire saga, the Demolition of Earth is carried out by a Vogon constructor fleet to make room for a hyperspace express route, the bureaucratic logic being that the plans had been on public display for the requisite period and humanity simply hadn't bothered to travel the necessary light years to object. The whole planet is dispatched in a matter of moments, an exercise in cosmic town-planning conducted with all the warmth of a demolition order. It happens, with grim appropriateness, on a Thursday, a day the protagonist has already noted he can never quite get the hang of. Only Arthur Dent and Ford Prefect escape, hitching aboard a Vogon ship moments before the planet ceases to be.",
+   "panic": "The plans were apparently on display for fifty years in your local planning department on Alpha Centauri. You really should have made the trip.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "The Hitchhiker's Guide to the Galaxy (Book 1)"
+    },
+    {
+     "label": "Perpetrator",
+     "value": "A Vogon constructor fleet"
+    },
+    {
+     "label": "Stated reason",
+     "value": "Clearing the way for a hyperspace express route"
+    },
+    {
+     "label": "Timing",
+     "value": "A Thursday"
+    },
+    {
+     "label": "Survivors",
+     "value": "Arthur Dent and Ford Prefect, who hitch a ride off-world"
+    },
+    {
+     "label": "Notable for",
+     "value": "The 'plans on display in Alpha Centauri for fifty years' bureaucratic justification"
+    }
+   ],
+   "tags": [
+    "earth",
+    "vogons",
+    "demolition",
+    "bypass",
+    "thursday",
+    "book-one"
+   ],
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null
+  },
+  {
+   "id": "bk-whale-petunias",
+   "name": "A Whale and a Bowl of Petunias",
+   "category": "canon-event",
+   "objtype": "Improbability event / falling objects",
+   "verdict": "Two missiles become a sperm whale and some petunias, then fall onto Magrathea.",
+   "guide": "When the planet Magrathea defends itself by launching a pair of guided missiles at the Heart of Gold, Arthur Dent has the presence of mind to flick on the Infinite Improbability Drive, and the weapons are duly transformed into a very surprised sperm whale and a bowl of petunias, both of which then plummet toward the surface. The whale, freshly minted into existence, spends its brief plunge gamely trying to make sense of the ground, the air, and the meaning of the word 'ground', a monologue that is at once hilarious and genuinely affecting. The petunias have time only for a single weary thought, 'Oh no, not again,' a line whose implications, the Guide notes, would be enormously illuminating if only we knew anything about it.",
+   "panic": "If you are suddenly a whale, enjoy the conversation with the atmosphere; it will be your only one.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "The Hitchhiker's Guide to the Galaxy (Book 1)"
+    },
+    {
+     "label": "Caused by",
+     "value": "The Infinite Improbability Drive aboard the Heart of Gold"
+    },
+    {
+     "label": "Origin",
+     "value": "Two guided missiles fired by Magrathea's defence systems"
+    },
+    {
+     "label": "Outcome",
+     "value": "Both objects fall to the Magrathean surface; the whale does not survive"
+    },
+    {
+     "label": "Notable for",
+     "value": "The whale's musings and the petunias' thought, 'Oh no, not again'"
+    }
+   ],
+   "tags": [
+    "improbability-drive",
+    "whale",
+    "petunias",
+    "magrathea",
+    "heart-of-gold",
+    "book-one"
+   ],
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null
+  },
+  {
+   "id": "bk-campaign-real-time",
+   "name": "The Campaign for Real Time",
+   "category": "canon-event",
+   "objtype": "Protest movement / pressure group",
+   "verdict": "A movement against tourists wearing out history by reliving its best moments.",
+   "guide": "Born of the era when time travel became a routine convenience rather than a theoretical headache, the Campaign for Real Time is a protest movement objecting to the habit, popular among tourists and historians, of repeatedly visiting and re-living the choicest moments of history. The complaint is essentially conservationist: that the prime, most picturesque stretches of the past are being scuffed smooth by overuse, like a beauty spot trampled to mud by sightseers. The campaigners hold that history ought to be left where it happened and allowed to remain what it actually was. It is a wonderfully Adams-ish notion, taking the giddy freedoms of time travel and worrying, very sensibly, about the litter. The Guide files it alongside the many ways advanced civilisations find to be tiresome about their own miracles.",
+   "panic": "If history starts looking worn around the edges, you may already be standing in a tourist queue across the centuries.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "The Hitchhiker's Guide to the Galaxy series"
+    },
+    {
+     "label": "Type",
+     "value": "An organised protest movement"
+    },
+    {
+     "label": "Opposes",
+     "value": "Tourists and historians repeatedly re-living prime moments of history"
+    },
+    {
+     "label": "Concern",
+     "value": "That overused stretches of history are being worn out"
+    },
+    {
+     "label": "Notable for",
+     "value": "Applying conservationist logic to the abuse of time travel"
+    }
+   ],
+   "tags": [
+    "time-travel",
+    "protest",
+    "history",
+    "satire",
+    "tourism"
+   ],
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null
+  },
+  {
+   "id": "bk-disaster-area",
+   "name": "Disaster Area",
+   "category": "canon-event",
+   "objtype": "Rock band / musical act",
+   "verdict": "The loudest band in history, best appreciated from a different planet entirely.",
+   "guide": "Widely held to be not merely the loudest rock band in the history of the Galaxy but the loudest noise of any kind anywhere, Disaster Area performs concerts of such staggering volume that the audience is advised to listen from the relative safety of a heavily reinforced bunker on a planet a respectable distance away. The musicians themselves play not on a stage but from inside a vast force-field enclosure, while their stunt ship, as the spectacular finale, is flown directly into a nearby sun, an act of showmanship that doubles, conveniently, as a manoeuvre for refuelling and assorted tax purposes. Their performances are routinely cited as the cause of several earthquakes, and their accountants are reckoned to be among the most powerful and feared figures in the known universe.",
+   "panic": "If Disaster Area is touring your system, the correct distance to enjoy them from is another system.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "The Restaurant at the End of the Universe (Book 2)"
+    },
+    {
+     "label": "Claim to fame",
+     "value": "Loudest band, and loudest noise of any kind, in the Galaxy"
+    },
+    {
+     "label": "Stage setup",
+     "value": "Performs from within a force field; audiences shelter at a safe distance"
+    },
+    {
+     "label": "Signature finale",
+     "value": "A stunt ship is flown into a sun"
+    },
+    {
+     "label": "Notable for",
+     "value": "Accountants reputed to be among the most feared beings in the universe"
+    }
+   ],
+   "tags": [
+    "music",
+    "rock-band",
+    "loud",
+    "sundive",
+    "book-two"
+   ],
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null
+  },
+  {
+   "id": "bk-sirius-cybernetics",
+   "name": "The Sirius Cybernetics Corporation",
+   "category": "canon-event",
+   "objtype": "Corporation / robotics manufacturer",
+   "verdict": "Galaxy's leading maker of robots that are fun to be with and useless to use.",
+   "guide": "The Galaxy's foremost manufacturer of robots and automated gadgetry, the Sirius Cybernetics Corporation specialises in machines fitted with what it proudly calls Genuine People Personalities, the practical result being doors that sigh with pleasure at being used, drink dispensers that produce something almost entirely unlike tea, and an android prone to crippling depression. Its products are relentlessly cheerful and almost uniformly defective, a combination summed up by the firm's advertising boast about your plastic pal who's fun to be with. So great is the volume of grievances that the company's Complaints division is said to occupy the major land masses of the first three planets of the Sirius Tau star system. The Guide's own verdict on the corporation is famously, and gloriously, unprintable in polite documentation.",
+   "panic": "When a Sirius Cybernetics product greets you warmly, that is the warning, not the warranty.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "The Hitchhiker's Guide to the Galaxy series"
+    },
+    {
+     "label": "Business",
+     "value": "Robots and labour-saving devices with 'Genuine People Personalities'"
+    },
+    {
+     "label": "Slogan",
+     "value": "'Your plastic pal who's fun to be with'"
+    },
+    {
+     "label": "Notable products",
+     "value": "Marvin the Paranoid Android, talking doors, the Nutri-Matic dispenser"
+    },
+    {
+     "label": "Complaints division",
+     "value": "Said to fill the land masses of three planets"
+    },
+    {
+     "label": "Guide's note",
+     "value": "Its definition of a robot is corrected by the Guide in scathing terms"
+    }
+   ],
+   "tags": [
+    "corporation",
+    "robots",
+    "sirius-cybernetics",
+    "marvin",
+    "satire",
+    "genuine-people-personalities"
+   ],
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null
+  },
+  {
+   "id": "bk-end-of-the-universe",
+   "name": "The End of the Universe",
+   "category": "canon-event",
+   "objtype": "Dinner-theatre spectacle / cosmic event",
+   "verdict": "Creation's final moments, served nightly as after-dinner entertainment at Milliways.",
+   "guide": "At Milliways, the Restaurant at the End of the Universe, the headline attraction is the End of the Universe itself, the literal and absolute conclusion of all creation, presented each evening as a floor show for diners who have eaten well and are ready to watch reality wind down over coffee. Through the great panoramic dome the entire cosmos is seen to convulse, contract, and expire in a display of cataclysmic light and noise, all carefully timed to the dessert course. The restaurant exists in a sealed bubble of time, and the show can be repeated indefinitely, so the same apocalypse plays nightly to fresh audiences who applaud the end of everything before being whisked safely back to their own eras. A master of ceremonies provides commentary, treating the death of the universe with the brisk patter of a cabaret host.",
+   "panic": "Watching the universe end is fine; just make sure the time-bubble brings you back before it does.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "The Restaurant at the End of the Universe (Book 2)"
+    },
+    {
+     "label": "Venue",
+     "value": "Milliways, the Restaurant at the End of the Universe"
+    },
+    {
+     "label": "Attraction",
+     "value": "The literal end of all creation, shown as a nightly floor show"
+    },
+    {
+     "label": "How it repeats",
+     "value": "The restaurant sits in a time bubble, replaying the event each evening"
+    },
+    {
+     "label": "Notable for",
+     "value": "An emcee narrating the apocalypse like a cabaret act"
+    }
+   ],
+   "tags": [
+    "milliways",
+    "end-of-universe",
+    "restaurant",
+    "time-bubble",
+    "book-two"
+   ],
+   "fictional": true,
+   "ra_deg": null,
+   "dec_deg": null,
+   "distance_ly": null
+  },
+  {
+   "id": "bk-brockian-ultra-cricket",
+   "name": "Brockian Ultra-Cricket",
+   "category": "canon-event",
+   "objtype": "Sport / game",
+   "verdict": "An incomprehensible game: hit someone, flee, then apologise from a great distance.",
+   "guide": "A bewildering sport played, for reasons that resist all explanation, in some of the higher dimensions, Brockian Ultra-Cricket is to ordinary cricket roughly what a riot is to a polite round of applause. Named after the Arlingtonian Jonny Brock, the game amounts, as far as any outside observer can reconstruct, to this: a player strikes another player with whatever implement comes conveniently to hand, then runs off and hides, and finally, once safely concealed, expresses heartfelt apology for the act. Teams are penned inside a high wall, the joke being that spectators, unable to see what is going on, are free to imagine it far more thrilling than it really is. Points are awarded according to principles so opaque that the Guide essentially gives up trying to describe how scoring works, noting only that following the game requires a mind unburdened by the expectation that anything should make sense. It is, in short, exactly the sort of pastime the Galaxy excels at.",
+   "panic": "If struck without warning by a stranger who then runs away, do not give chase; the apology is on its way.",
+   "facts": [
+    {
+     "label": "Appears in",
+     "value": "Life, the Universe and Everything (Book 3)"
+    },
+    {
+     "label": "Named after",
+     "value": "The Arlingtonian Jonny Brock"
+    },
+    {
+     "label": "Dimensions",
+     "value": "Played in some of the higher dimensions, for unexplained reasons"
+    },
+    {
+     "label": "Basic rule",
+     "value": "Hit someone, run away and hide, then apologise"
+    },
+    {
+     "label": "Scoring",
+     "value": "Governed by rules the Guide finds too baffling to fully relate"
+    },
+    {
+     "label": "Notable for",
+     "value": "Being deliberately, gloriously incomprehensible"
+    }
+   ],
+   "tags": [
+    "sport",
+    "cricket",
+    "jonny-brock",
+    "higher-dimensions",
+    "absurd",
+    "book-three"
    ],
    "fictional": true,
    "ra_deg": null,

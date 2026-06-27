@@ -18,18 +18,38 @@ const CATCOLOR = {
   'exoplanet':'#88ff9b', 'galactic-structure':'#c79bff', 'nebula-cluster':'#ff8fd0',
   'exotic-object':'#ff5d6c', 'concept-artifact':'#b8c3d9',
   'canon-place':'#ffd24a', 'canon-species':'#9be37d', 'canon-tech':'#b69cff',
-  'canon-character':'#ff9ecf', 'canon-article':'#ffb86b'
+  'canon-character':'#ff9ecf', 'canon-article':'#ffb86b', 'canon-event':'#ff7a59'
 };
 const CATLABEL = Object.fromEntries((DATA.categories||[]).map(c => [c.key, c.label]));
 const CATEMOJI = Object.fromEntries((DATA.categories||[]).map(c => [c.key, c.emoji]));
 
-/* realm = which Guide an entry belongs to: the REAL galaxy, or THE BOOK (canon). */
-const CANON_CATS = new Set(['canon-place','canon-species','canon-tech','canon-character','canon-article']);
-const entryRealm = e => (e && CANON_CATS.has(e.category)) ? 'book' : 'real';
-const catRealm = k => CANON_CATS.has(k) ? 'book' : 'real';
+/* realm = which Guide an entry belongs to: the REAL galaxy, or THE BOOK (canon = any 'canon-*' section). */
+const isCanonCat = k => typeof k === 'string' && k.startsWith('canon-');
+const entryRealm = e => isCanonCat(e && e.category) ? 'book' : 'real';
+const catRealm = k => isCanonCat(k) ? 'book' : 'real';
 let mode = 'real';
 const realmEntries = () => ENTRIES.filter(e => entryRealm(e) === mode);
 const realmCats = () => (DATA.categories||[]).filter(c => catRealm(c.key) === mode);
+
+/* real stars are coloured by true spectral type (temperature); everything else by section colour */
+function specColor(e){
+  const t = (e.objtype||'').toLowerCase();
+  if(t.includes('white dwarf')) return '#dfe9ff';
+  const m = (e.objtype||'').match(/\b([OBAFGKM])\s*\d/);
+  let cls = m ? m[1] : null;
+  if(!cls){
+    if(/blue|\bo[- ]?type|\bb[- ]?type/.test(t)) cls='B';
+    else if(/white/.test(t)) cls='A';
+    else if(/yellow/.test(t)) cls='G';
+    else if(/orange/.test(t)) cls='K';
+    else if(/red/.test(t)) cls='M';
+  }
+  return {O:'#9bb0ff',B:'#aac4ff',A:'#cdd9ff',F:'#f6f7ff',G:'#fff3d0',K:'#ffd095',M:'#ff9a68'}[cls] || '#ffe6c2';
+}
+function displayColor(e){
+  if(e.id==='sol' || e.category==='nearby-star' || e.category==='famous-star') return specColor(e);
+  return CATCOLOR[e.category] || '#ffffff';
+}
 
 /* objects whose labels are always drawn (the headline sights) */
 const MAJOR = new Set(['sol','sagittarius-a-star','betelgeuse','sirius-a','vega','polaris',
@@ -223,6 +243,10 @@ ENTRIES.forEach(e => {
   if(e.id==='sol') base = 22; else if(e.id==='sagittarius-a-star') base = 24;
   else if(MAJOR.has(e.id)) base = 16;
   else if(e.category==='galactic-structure'||e.category==='nebula-cluster'||e.category==='canon-place') base = 14;
+  const ot=(e.objtype||'').toLowerCase();   // size luminous stars larger
+  if(/hypergiant/.test(ot)) base=Math.max(base,20);
+  else if(/supergiant/.test(ot)) base=Math.max(base,18);
+  else if(/\bgiant\b/.test(ot)) base=Math.max(base,15);
   mapObjs.push({ entry:e, pos:p, base, realm:entryRealm(e), screen:{x:0,y:0,vis:false} });
 });
 const posById = new Map(mapObjs.map(o => [o.entry.id, o.pos]));
@@ -232,7 +256,7 @@ const cN = mapObjs.length;
 const cPos = new Float32Array(cN*3), cCol = new Float32Array(cN*3), cSize = new Float32Array(cN);
 mapObjs.forEach((o,i) => {
   cPos[i*3]=o.pos.x; cPos[i*3+1]=o.pos.y; cPos[i*3+2]=o.pos.z;
-  const c = hexToRGB(CATCOLOR[o.entry.category]||'#ffffff');
+  const c = hexToRGB(displayColor(o.entry));
   cCol[i*3]=c[0]; cCol[i*3+1]=c[1]; cCol[i*3+2]=c[2];
   cSize[i]=o.base;
 });
@@ -264,11 +288,68 @@ const labelLayer = document.getElementById('labels');
 mapObjs.forEach(o => {
   const el = document.createElement('div');
   el.className = 'lbl' + (MAJOR.has(o.entry.id)?' major':'');
-  el.style.setProperty('--dot', CATCOLOR[o.entry.category]||'#fff');
+  el.style.setProperty('--dot', displayColor(o.entry));
   el.textContent = o.entry.name;
   el.addEventListener('click', ev => { ev.stopPropagation(); openEntry(o.entry.id, true); });
   o.label = el; labelLayer.appendChild(el);
 });
+
+/* ============================================================
+ * Constellations — the familiar sky, drawn from real star
+ * directions on a 600 ly shell (so from Sol they line up).
+ * ============================================================ */
+const CONSTELLATIONS = [
+  { name:'Orion', stars:{ bet:[88.79,7.41], bel:[81.28,6.35], mei:[83.78,9.93], aln:[85.19,-1.94], anm:[84.05,-1.20], min:[83.00,-0.30], sai:[86.94,-9.67], rig:[78.63,-8.20] },
+    lines:[['bet','bel'],['bet','mei'],['bel','mei'],['bet','aln'],['bel','min'],['aln','anm'],['anm','min'],['aln','sai'],['min','rig'],['sai','rig']] },
+  { name:'Ursa Major', stars:{ dub:[165.93,61.75], mer:[165.46,56.38], phe:[178.46,53.69], meg:[183.86,57.03], ali:[193.51,55.96], miz:[200.98,54.93], alk:[206.89,49.31] },
+    lines:[['dub','mer'],['mer','phe'],['phe','meg'],['meg','dub'],['meg','ali'],['ali','miz'],['miz','alk']] },
+  { name:'Cassiopeia', stars:{ cap:[2.29,59.15], sch:[10.13,56.54], gam:[14.18,60.72], ruc:[21.45,60.24], seg:[28.60,63.67] },
+    lines:[['cap','sch'],['sch','gam'],['gam','ruc'],['ruc','seg']] },
+  { name:'Cygnus', stars:{ den:[310.36,45.28], sad:[305.56,40.26], gie:[311.55,33.97], del:[296.24,45.13], alb:[292.68,27.96] },
+    lines:[['den','sad'],['sad','alb'],['gie','sad'],['sad','del']] },
+  { name:'Crux', stars:{ acr:[186.65,-63.10], mim:[191.93,-59.69], gac:[187.79,-57.11], ima:[183.79,-58.75] },
+    lines:[['acr','gac'],['mim','ima']] },
+  { name:'Leo', stars:{ reg:[152.09,11.97], eta:[151.83,16.76], alg:[154.99,19.84], zos:[168.56,20.52], den:[177.26,14.57] },
+    lines:[['reg','eta'],['eta','alg'],['alg','zos'],['zos','den'],['reg','den']] },
+  { name:'Scorpius', stars:{ dsc:[240.08,-22.62], ant:[247.35,-26.43], eps:[252.97,-34.29], sar:[264.33,-42.99], sha:[263.40,-37.10] },
+    lines:[['dsc','ant'],['ant','eps'],['eps','sar'],['sar','sha']] },
+  { name:'Lyra', stars:{ veg:[279.23,38.78], del:[283.63,36.90], sul:[284.74,32.69], she:[282.52,33.36] },
+    lines:[['veg','del'],['del','sul'],['sul','she'],['she','del']] },
+  { name:'Canis Major', stars:{ mir:[95.67,-17.96], sir:[101.29,-16.72], wez:[107.10,-26.39], adh:[104.66,-28.97], alu:[111.02,-29.30] },
+    lines:[['mir','sir'],['sir','wez'],['wez','adh'],['wez','alu']] },
+];
+const CR = 600;
+const constGroup = new THREE.Group(); constGroup.visible = false; scene.add(constGroup);
+const constLabels = [];
+CONSTELLATIONS.forEach(c => {
+  const pts = [];
+  c.lines.forEach(([a,b]) => {
+    const A = galacticXYZ(c.stars[a][0], c.stars[a][1], CR), B = galacticXYZ(c.stars[b][0], c.stars[b][1], CR);
+    pts.push(A.x,A.y,A.z, B.x,B.y,B.z);
+  });
+  const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(pts,3));
+  constGroup.add(new THREE.LineSegments(g, new THREE.LineBasicMaterial({ color:0x86c4ff, transparent:true, opacity:0.6 })));
+  const cen = new THREE.Vector3(); const keys = Object.keys(c.stars);
+  keys.forEach(k => cen.add(galacticXYZ(c.stars[k][0], c.stars[k][1], CR))); cen.multiplyScalar(1/keys.length);
+  const el = document.createElement('div'); el.className = 'clbl'; el.textContent = c.name; el.style.display='none';
+  labelLayer.appendChild(el);
+  constLabels.push({ pos:cen, el });
+});
+let skyOn = false;
+function updateConstLabels(){
+  if(!skyOn){ for(const c of constLabels) c.el.style.display='none'; return; }
+  for(const c of constLabels){
+    _v.copy(c.pos).project(camera);
+    if(_v.z < 1){ c.el.style.display='block'; c.el.style.left=((_v.x*0.5+0.5)*innerWidth)+'px'; c.el.style.top=((-_v.y*0.5+0.5)*innerHeight)+'px'; }
+    else c.el.style.display='none';
+  }
+}
+function setSky(on){
+  skyOn = on && mode==='real';
+  constGroup.visible = skyOn;
+  document.getElementById('btnSky').classList.toggle('on', skyOn);
+  if(skyOn){ flyTo(new THREE.Vector3(0,0,0), 1500); toast('The constellations, drawn around the Sun ✦ drag to look around'); }
+}
 
 /* ============================================================
  * Render loop + projection (labels & picking)
@@ -333,7 +414,7 @@ function tick(now){
   }
   controls.update();
   solGlow.scale.setScalar(Math.max(8, controls.getDistance? controls.getDistance()*0.012 : 30));
-  project(); placeLabels();
+  project(); placeLabels(); updateConstLabels();
   renderer.render(scene, camera);
 }
 requestAnimationFrame(tick);
@@ -482,6 +563,7 @@ document.querySelectorAll('#mapctl .mbtn[data-view]').forEach(b => b.onclick = (
 const btnSpin = document.getElementById('btnSpin');
 function syncSpin(){ btnSpin.classList.toggle('on', controls.autoRotate); }
 btnSpin.onclick = ()=>{ controls.autoRotate=!controls.autoRotate; syncSpin(); };
+document.getElementById('btnSky').onclick = ()=> setSky(!skyOn);
 
 /* ---------- Guide mode (Real galaxy ⟷ The Book) ---------- */
 function updateBanner(){
@@ -500,6 +582,7 @@ function setMode(m){
   if((m!=='real' && m!=='book') || m===mode) return;
   mode = m;
   document.body.classList.toggle('mode-book', m==='book');
+  constGroup.visible = skyOn && m==='real';
   syncModePills();
   if(selectedId && entryRealm(byId.get(selectedId))!==m){ guide.classList.add('closed'); selectedId=null; }
   closeSearch(); endTour();
@@ -534,7 +617,7 @@ function renderResults(list){
   if(!list.length){ searchResults.innerHTML = `<div class="sr-empty">Nothing in the Guide matches. The Guide is, after all, incomplete.</div>`; searchResults.classList.remove('hidden'); return; }
   searchResults.innerHTML = list.map((e,i)=>`
     <div class="sr" data-id="${e.id}" data-i="${i}">
-      <span class="srdot" style="background:${CATCOLOR[e.category]};box-shadow:0 0 7px ${CATCOLOR[e.category]}"></span>
+      <span class="srdot" style="background:${displayColor(e)};box-shadow:0 0 7px ${displayColor(e)}"></span>
       <span style="min-width:0">
         <div class="srn">${esc(e.name)}</div>
         <div class="srt">${CATEMOJI[e.category]||''} ${esc(CATLABEL[e.category]||'')}${e.objtype?' · '+esc(e.objtype):''}</div>
@@ -581,9 +664,12 @@ document.addEventListener('click', ev=>{ if(!ev.target.closest('#browse') && !ev
 
 const legend = document.getElementById('legend');
 function buildLegend(){
+  const spec = `<div class="lg-spec" title="Stars are coloured by their real spectral type">${
+    [['O','#9bb0ff'],['B','#aac4ff'],['A','#cdd9ff'],['F','#f6f7ff'],['G','#fff3d0'],['K','#ffd095'],['M','#ff9a68']]
+    .map(s=>`<span style="background:${s[1]}">${s[0]}</span>`).join('')}<i>star = temperature</i></div>`;
   legend.innerHTML = realmCats().map(c=>`
     <div class="lg" data-key="${c.key}"><span class="d" style="background:${CATCOLOR[c.key]};color:${CATCOLOR[c.key]}"></span>${esc(c.label)}</div>`).join('')
-    + (mode==='book'?`<div class="lg-note">Only places appear on the map.</div>`:'');
+    + (mode==='real' ? spec : `<div class="lg-note">Only places appear on the map.</div>`);
   legend.querySelectorAll('.lg').forEach(el=>el.onclick=()=>{
     const k=el.dataset.key;
     if(hiddenCats.has(k)){ hiddenCats.delete(k); el.classList.remove('off'); }
@@ -669,7 +755,12 @@ document.getElementById('coverTagline').textContent = DATA.meta.tagline||'';
 document.getElementById('coverIntro').textContent = DATA.meta.intro||'';
 document.getElementById('coverHowto').textContent = DATA.meta.howto||'';
 function hideSplash(){ splash.classList.add('gone'); }
-document.getElementById('btnBegin').onclick = ()=>{ hideSplash(); setView('home'); };
+function firstHint(){
+  try{ if(localStorage.getItem('hhg-hint')) return; localStorage.setItem('hhg-hint','1'); }catch(e){}
+  setTimeout(()=>toast('Drag to orbit · scroll to zoom · click anything that glows ✦'), 800);
+}
+document.getElementById('btnBegin').onclick = ()=>{ hideSplash(); setView('home'); firstHint(); };
+document.getElementById('btnBook').onclick = ()=>{ hideSplash(); setMode('book'); firstHint(); };
 document.getElementById('btnTourStart').onclick = ()=>{ startTour(); };
 
 /* home reset (brand/logo → full reset) */
@@ -682,6 +773,7 @@ function goHome(){
   hiddenCats.clear();
   buildLegend(); buildBrowse(); applyCatFilter();
   controls.autoRotate=false; syncSpin();
+  setSky(false);
   setView('home');
   history.replaceState(null,'',location.pathname);
 }
