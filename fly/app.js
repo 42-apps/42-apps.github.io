@@ -201,8 +201,9 @@ function drawAirportArcs(hiRidx) {
       color: hot ? ['#ffffff', '#ffd36b'] : (hiRidx != null
         ? ['rgba(82,150,210,0.18)', 'rgba(120,150,190,0.18)']
         : ['rgba(82,185,255,0.85)', 'rgba(255,211,107,0.9)']),
-      stroke: hot ? 0.85 : (hiRidx != null ? 0.22 : 0.4),
-      dl: hot ? 0.4 : 0.55, dg: hot ? 0.12 : 0.18, dt: hot ? 2200 : 0,
+      stroke: hot ? 0.9 : (hiRidx != null ? 0.22 : 0.4),
+      // solid lines (no dash gaps) so arcs never look "broken"; highlighted one just brighter/thicker
+      dl: 1, dg: 0, dt: 0,
       alt: 0.4, ref: d.ridx
     };
   });
@@ -365,8 +366,8 @@ function drawLongestArcs(hiR) {
       startLat: A.lat, startLng: A.lng, endLat: B.lat, endLng: B.lng,
       color: hot ? ['#ffffff', '#ffd36b'] : (hiR != null ? ['rgba(150,120,120,0.22)', 'rgba(150,120,120,0.22)'] : [col, col]),
       stroke: hot ? 1.1 : (hiR != null ? 0.3 : 0.55),
-      // highlighted arc is solid & steady (no dash) so it reads clearly; others static dashes
-      dl: hot ? 1 : 0.5, dg: hot ? 0 : 0.16, dt: 0, alt: 0.5, ref: null, lf: f.r
+      // all solid so nothing looks broken; the highlighted route reads via white colour + weight
+      dl: 1, dg: 0, dt: 0, alt: 0.5, ref: null, lf: f.r
     };
   });
   globe.arcsData(arcs);
