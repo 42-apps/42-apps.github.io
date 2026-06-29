@@ -43,10 +43,14 @@ function airlineName(tok) {
 function airlineCountry(tok) {
   return (AIRLINES[tok] && AIRLINES[tok].co) || null;
 }
-function estDuration(km) {                            // rough scheduled time from distance
+function estDuration(km) {                            // rough scheduled time from distance (fallback)
   const h = km / 875 + 0.5;
   const hh = Math.floor(h), mm = Math.round((h - hh) * 60);
   return mm === 60 ? `${hh + 1}h 00m` : `${hh}h ${String(mm).padStart(2, '0')}m`;
+}
+function fmtMin(min) {                                 // real flight time in minutes -> "Hh MMm"
+  const hh = Math.floor(min / 60), mm = Math.round(min % 60);
+  return `${hh}h ${String(mm).padStart(2, '0')}m`;
 }
 function midpoint(a, b) {
   // simple interpolation — good enough for camera framing
@@ -274,9 +278,11 @@ function renderRoutePanel(r, origin, dest) {
   $('rtAi').textContent = origin; $('rtAc').textContent = o.c || o.n;
   $('rtBi').textContent = dest; $('rtBc').textContent = d.c || d.n;
   const mi = Math.round(r.km * KM2MI);
+  const dur = r.min ? fmtMin(r.min) : estDuration(r.km);
+  const durLabel = r.min ? 'avg flight time' : 'est. flight time';
   $('rtMetrics').innerHTML =
     `<div class="rt-metric"><b>${fmtInt(r.km)}</b><span>km (${fmtInt(mi)} mi)</span></div>` +
-    `<div class="rt-metric"><b>${estDuration(r.km)}</b><span>est. flight time</span></div>`;
+    `<div class="rt-metric"><b>${dur}</b><span>${durLabel}</span></div>`;
 
   const ops = r.op || [], cs = (r.cs || []).filter(t => !ops.includes(t));
   // de-dup by display name
