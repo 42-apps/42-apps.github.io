@@ -80,14 +80,14 @@ function initGlobe(geo) {
     .polygonCapColor(() => 'rgba(28,42,68,0.72)')
     .polygonSideColor(() => 'rgba(10,16,30,0.4)')
     .polygonStrokeColor(() => 'rgba(90,140,200,0.28)')
-    .polygonAltitude(0.006)
-    // airports
+    .polygonAltitude(0.003)
+    // airports — kept ABOVE the country polygons so they stay clickable over land
     .pointsData(POINTS)
     .pointLat('lat').pointLng('lng')
     .pointColor(pointColor)
     .pointRadius(pointRadius)
-    .pointAltitude(0.002)
-    .pointResolution(6)
+    .pointAltitude(0.012)
+    .pointResolution(8)
     .pointLabel(() => '')
     .onPointClick(p => selectAirport(p.iata, true))
     .onPointHover(onPointHover)
@@ -110,8 +110,10 @@ function initGlobe(geo) {
 
   const c = globe.controls();
   c.autoRotate = true; c.autoRotateSpeed = 0.42; c.enableDamping = true; c.dampingFactor = 0.12;
-  c.minDistance = 130; c.maxDistance = 520;
-  c.addEventListener('start', () => {});  // (keep autorotate unless we stop it)
+  c.minDistance = 101; c.maxDistance = 600;   // 101 ≈ just above the surface (radius 100) so you can zoom right in
+  // globe.gl re-sets zoomSpeed = 0.1*(altitude+1) every frame, so it crawls when zoomed in.
+  // Pin it to a constant the library can't clobber.
+  Object.defineProperty(c, 'zoomSpeed', { configurable: true, get: () => 1.5, set: () => {} });
 
   globe.pointOfView({ lat: 24, lng: 8, altitude: 2.5 }, 0);
   window.__globe = globe;
@@ -322,18 +324,22 @@ function openLongest() {
   LONGEST.forEach(f => { set.add(f.a); set.add(f.b); });
   state.longestSet = set;
 
-  $('lgBody').innerHTML = LONGEST.map(f => {
+  const n = LONGEST.length;
+  $('lgList').innerHTML = LONGEST.map((f, i) => {
     const A = AP[f.a], B = AP[f.b];
-    return `<tr data-r="${f.r}">
-      <td class="lg-rk">${f.r}</td>
-      <td class="lg-route"><b>${f.a} ⇄ ${f.b}</b><br><span>${esc(A.c)} – ${esc(B.c)}</span></td>
-      <td>${esc(f.al.join(', '))}</td>
-      <td class="lg-km">${fmtInt(f.km)}<span> km</span></td>
-      <td class="lg-dur">${f.dur}</td>
-      <td class="lg-ac">${esc(f.ac)}</td></tr>`;
+    const badge = lerpColor([255, 90, 70], [255, 211, 107], i / (n - 1));
+    return `<li class="lg-item" data-r="${f.r}">
+      <span class="lg-rk" style="background:${badge}">${f.r}</span>
+      <span class="lg-tx">
+        <span class="lg-pair">${f.a} ⇄ ${f.b}</span>
+        <span class="lg-cities">${esc(A.c)} – ${esc(B.c)}</span>
+        <span class="lg-meta">${esc(f.al.join(', '))} · ${esc(f.ac)}</span>
+      </span>
+      <span class="lg-right"><span class="lg-km">${fmtInt(f.km)} km</span><br><span class="lg-dur">${f.dur}</span></span>
+    </li>`;
   }).join('');
-  $('lgBody').querySelectorAll('tr').forEach(tr => {
-    tr.onclick = () => highlightLongest(+tr.dataset.r);
+  $('lgList').querySelectorAll('.lg-item').forEach(li => {
+    li.onclick = () => highlightLongest(+li.dataset.r);
   });
   drawLongestArcs(null);
   refreshPoints();
@@ -351,9 +357,10 @@ function drawLongestArcs(hiR) {
     const hot = hiR != null && f.r === hiR;
     return {
       startLat: A.lat, startLng: A.lng, endLat: B.lat, endLng: B.lng,
-      color: hot ? ['#ffffff', '#ff5d54'] : (hiR != null ? ['rgba(150,120,120,0.2)', 'rgba(150,120,120,0.2)'] : [col, col]),
-      stroke: hot ? 1.0 : (hiR != null ? 0.3 : 0.55),
-      dl: 0.5, dg: 0.16, dt: hot ? 2200 : 0, alt: 0.5, ref: null, lf: f.r
+      color: hot ? ['#ffffff', '#ffd36b'] : (hiR != null ? ['rgba(150,120,120,0.22)', 'rgba(150,120,120,0.22)'] : [col, col]),
+      stroke: hot ? 1.1 : (hiR != null ? 0.3 : 0.55),
+      // highlighted arc is solid & steady (no dash) so it reads clearly; others static dashes
+      dl: hot ? 1 : 0.5, dg: hot ? 0 : 0.16, dt: 0, alt: 0.5, ref: null, lf: f.r
     };
   });
   globe.arcsData(arcs);
@@ -362,9 +369,10 @@ function highlightLongest(r) {
   state.longestHi = r;
   const f = LONGEST.find(x => x.r === r); if (!f) return;
   drawLongestArcs(r);
-  $('lgBody').querySelectorAll('tr').forEach(tr => tr.classList.toggle('on', +tr.dataset.r === r));
+  $('lgList').querySelectorAll('.lg-item').forEach(li => li.classList.toggle('on', +li.dataset.r === r));
   const mid = midpoint(AP[f.a], AP[f.b]);
-  globe.pointOfView({ lat: mid.lat, lng: mid.lng, altitude: 2.4 }, 900);
+  // nudge the target east so the arc clears the left-docked panel
+  globe.pointOfView({ lat: mid.lat, lng: mid.lng + 22, altitude: 2.45 }, 900);
 }
 function closeLongest() {
   $('longest').classList.add('hidden');

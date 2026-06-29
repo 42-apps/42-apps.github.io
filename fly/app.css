@@ -147,23 +147,28 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .legend-hot{color:var(--hot);font-weight:700}
 .ov-fine{font-size:11px;color:var(--faint);line-height:1.5}
 
-/* longest table */
-.lg-tablewrap{max-height:58vh;overflow-y:auto;border:1px solid var(--line);border-radius:12px;margin:6px 0 12px}
-#lgTable{width:100%;border-collapse:collapse;font-size:12.5px}
-#lgTable thead th{position:sticky;top:0;background:#0e1626;text-align:left;padding:9px 10px;font-size:11px;
-  text-transform:uppercase;letter-spacing:.5px;color:var(--faint);font-weight:700;border-bottom:1px solid var(--line)}
-#lgTable td{padding:9px 10px;border-bottom:1px solid rgba(120,150,200,.08);vertical-align:middle}
-#lgTable tbody tr{cursor:pointer}
-#lgTable tbody tr:hover{background:rgba(255,93,84,.1)}
-#lgTable tbody tr.on{background:rgba(255,211,107,.13)}
-.lg-rk{width:30px;color:var(--gold);font-weight:800;font-variant-numeric:tabular-nums}
-.lg-route b{color:#bfe0ff;font-weight:700;letter-spacing:.3px}
-.lg-route span{color:var(--dim);font-size:11px}
-.lg-km{white-space:nowrap;font-variant-numeric:tabular-nums;color:#fff;font-weight:600}
-.lg-km span{color:var(--faint);font-weight:400;font-size:11px}
-.lg-dur,.lg-ac{color:var(--dim);white-space:nowrap}
-.lg-ac{font-size:11.5px}
-@media(max-width:680px){.lg-ac,.lg-dur{display:none}}
+/* longest flights — docked left panel */
+.dockpanel{position:absolute;top:62px;left:14px;z-index:18;width:392px;max-width:calc(100vw - 28px);
+  max-height:calc(100vh - 80px);display:flex;flex-direction:column;
+  background:var(--glass);border:1px solid var(--line);border-radius:16px;backdrop-filter:blur(14px);box-shadow:var(--shadow)}
+.lg-head{padding:15px 16px 8px}
+.lg-head h3{margin:0 0 5px;font-size:17px}
+.lg-sub{font-size:11.5px;line-height:1.45;color:var(--dim);margin:0}
+.lg-list{list-style:none;margin:0;padding:0 8px;overflow-y:auto;flex:1}
+.lg-item{display:flex;align-items:center;gap:10px;padding:9px 8px;border-radius:10px;cursor:pointer;border:1px solid transparent}
+.lg-item:hover{background:rgba(255,93,84,.1);border-color:rgba(255,93,84,.22)}
+.lg-item.on{background:rgba(255,211,107,.13);border-color:rgba(255,211,107,.4)}
+.lg-rk{width:24px;height:24px;flex:none;border-radius:7px;display:grid;place-items:center;font-size:12px;font-weight:800;
+  color:#1a1206;font-variant-numeric:tabular-nums}
+.lg-tx{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.25}
+.lg-pair{font-size:13.5px;font-weight:750;color:#bfe0ff;letter-spacing:.4px}
+.lg-cities{font-size:11px;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lg-meta{font-size:10.5px;color:var(--faint);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lg-right{text-align:right;flex:none}
+.lg-km{font-size:12.5px;font-weight:700;color:#fff;font-variant-numeric:tabular-nums;white-space:nowrap}
+.lg-dur{font-size:10.5px;color:var(--dim);white-space:nowrap}
+.lg-fine{padding:6px 16px 14px;margin:0}
+@media(max-width:560px){.dockpanel{left:12px;width:calc(100vw - 24px)}}
 
 /* menu */
 #menu{position:absolute;top:60px;right:14px;z-index:50;width:248px;background:var(--glass);border:1px solid var(--line);

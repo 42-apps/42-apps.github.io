@@ -70,21 +70,16 @@
   <!-- hover tooltip -->
   <div id="tooltip" class="hidden"></div>
 
-  <!-- LONGEST FLIGHTS overlay -->
-  <div id="longest" class="overlay hidden">
-    <div class="ov-card ov-wide">
-      <button class="ov-close" id="lgClose" aria-label="Close">✕</button>
-      <h3>📏 The world's longest non-stop flights</h3>
-      <p class="ov-sub">The longest scheduled passenger routes flown without a stop — a curated 2026 ranking. Click any row to trace it on the globe; they are all drawn at once in <span class="legend-hot">hot colours</span>.</p>
-      <div class="lg-tablewrap">
-        <table id="lgTable">
-          <thead><tr><th class="lg-rk">#</th><th>Route</th><th>Airline(s)</th><th class="lg-km">Distance</th><th class="lg-dur">Time</th><th class="lg-ac">Aircraft</th></tr></thead>
-          <tbody id="lgBody"></tbody>
-        </table>
-      </div>
-      <p class="ov-fine">Distances are great-circle kilometres; flight times are scheduled block times and vary by winds and direction. Routes and times change with airline schedules. Source: Wikipedia “Longest flights” &amp; airline timetables.</p>
+  <!-- LONGEST FLIGHTS — docked left panel (non-blocking, globe stays visible) -->
+  <aside id="longest" class="dockpanel hidden">
+    <button class="d-close" id="lgClose" aria-label="Close">✕</button>
+    <div class="lg-head">
+      <h3>📏 Longest non-stop flights</h3>
+      <p class="lg-sub">The longest scheduled passenger routes flown without a stop — a curated 2026 ranking, all traced at once in <span class="legend-hot">hot colours</span>. Tap a row to fly to it.</p>
     </div>
-  </div>
+    <ol id="lgList" class="lg-list"></ol>
+    <p class="ov-fine lg-fine">Great-circle kilometres; times are scheduled block times and vary by winds &amp; direction. Source: Wikipedia “Longest flights” &amp; airline timetables.</p>
+  </aside>
 
   <!-- menu -->
   <div id="menu" class="hidden">
