@@ -1,0 +1,5 @@
+_dist/
+*.log
+.DS_Store
+Thumbs.db
+_shot_*.jpg

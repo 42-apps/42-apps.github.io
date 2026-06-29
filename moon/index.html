@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Living on the Moon — explore, build & fly there</title>
+<meta name="description" content="A high-resolution 3D Moon you can zoom into, with every landing site & landmark, a colony builder for cities and hotels, and a realistic Starship flight from Earth to the Moon.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8C%95%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="styles.css?v=1">
+<script type="importmap">
+{
+  "imports": {
+    "three": "./lib/three/build/three.module.js",
+    "three/addons/": "./lib/three/examples/jsm/"
+  }
+}
+</script>
+</head>
+<body>
+<canvas id="scene"></canvas>
+
+<!-- Loading veil -->
+<div id="loader">
+  <div class="moon-spin">🌕</div>
+  <div class="ltitle">Living on the Moon</div>
+  <div class="lbar"><i id="lbarFill"></i></div>
+  <div class="lmsg" id="lmsg">Pulling 8K imagery from lunar orbit…</div>
+</div>
+
+<!-- Top bar -->
+<header id="bar">
+  <div class="brand"><span class="logo">🌕</span><span class="btext"><b>Living on the Moon</b><i>explore · build · fly there</i></span></div>
+  <nav id="modes">
+    <button class="mode on" data-mode="explore">🔭 Explore</button>
+    <button class="mode" data-mode="build">🏗️ Build</button>
+    <button class="mode" data-mode="launch">🚀 Launch</button>
+  </nav>
+  <button id="helpBtn" class="icon-btn" title="About & help">ⓘ</button>
+</header>
+
+<!-- EXPLORE panel -->
+<section class="panel" id="explorePanel">
+  <div class="phead">🔭 Explore the Moon</div>
+  <p class="pmuted">Drag to orbit · scroll to zoom right down to the regolith · click a marker to learn more.</p>
+  <div class="row"><label class="chk"><input type="checkbox" id="tgMaria" checked> Maria &amp; highlands</label></div>
+  <div class="row"><label class="chk"><input type="checkbox" id="tgCraters" checked> Major craters</label></div>
+  <div class="row"><label class="chk"><input type="checkbox" id="tgLandings" checked> Landing sites</label></div>
+  <div class="row"><label class="chk"><input type="checkbox" id="tgBases" checked> Future base sites</label></div>
+  <div class="row"><label class="chk"><input type="checkbox" id="tgLabels" checked> Show labels</label></div>
+  <div class="row"><label class="rng">Sun angle <input type="range" id="sunAngle" min="0" max="360" value="55"></label></div>
+  <div class="row"><label class="rng">Relief <input type="range" id="relief" min="0" max="100" value="55"></label></div>
+  <div class="jump" id="jumpList"></div>
+</section>
+
+<!-- BUILD panel -->
+<section class="panel" id="buildPanel" hidden>
+  <div class="phead">🏗️ Build your colony</div>
+  <p class="pmuted">Pick a structure, then click the Moon to place it. Good sites near the poles get water-ice &amp; near-constant sunlight.</p>
+  <div class="palette" id="palette"></div>
+  <div class="stats" id="colonyStats"></div>
+  <div class="brow">
+    <button id="suggestSite" class="btn">✨ Suggest best site</button>
+    <button id="clearColony" class="btn ghost">Clear all</button>
+  </div>
+  <div class="hintline" id="buildHint"></div>
+</section>
+
+<!-- LAUNCH panel -->
+<section class="panel" id="launchPanel" hidden>
+  <div class="phead">🚀 Earth → Moon · Starship</div>
+  <p class="pmuted">A realistic Artemis-style Starship run: launch, staging, trans-lunar injection, a ~3-day coast, then a powered Moon landing.</p>
+  <div class="missionPhase" id="missionPhase">Pre-launch · on the pad</div>
+  <div class="tele" id="telemetry"></div>
+  <div class="timerow">
+    <button id="launchBtn" class="btn big">▶ Launch</button>
+    <button id="resetBtn" class="btn ghost">⟲ Reset</button>
+  </div>
+  <div class="speedrow">
+    <span class="slbl">Time ×</span>
+    <div class="speeds" id="speeds"></div>
+  </div>
+  <label class="chk follow"><input type="checkbox" id="followShip" checked> Camera follows Starship</label>
+  <div class="phaseList" id="phaseList"></div>
+</section>
+
+<!-- POI info card -->
+<div id="poiCard" hidden>
+  <button id="poiClose">✕</button>
+  <div class="pcIcoWrap"><span id="poiIco">🌑</span></div>
+  <h3 id="poiName"></h3>
+  <div id="poiTag" class="pcTag"></div>
+  <p id="poiDesc"></p>
+  <div id="poiMeta" class="pcMeta"></div>
+</div>
+
+<!-- Help / about modal -->
+<div id="overlay" hidden>
+  <div id="aboutModal">
+    <button id="aboutClose">✕</button>
+    <h2>🌕 Living on the Moon</h2>
+    <p>Three things in one little world:</p>
+    <ul>
+      <li><b>🔭 Explore</b> — a high-resolution 3D Moon (NASA / LRO imagery) you can spin and zoom right down to the surface, with the maria, the great craters, every crewed &amp; robotic landing site, and the spots humanity is eyeing for its first bases.</li>
+      <li><b>🏗️ Build</b> — drop dome cities, hotels, solar farms, ice mines and launch pads onto the surface and watch a colony come to life. The poles are prime real estate.</li>
+      <li><b>🚀 Launch</b> — fly a SpaceX <b>Starship</b> from a hi-res Earth to the Moon with a realistic timeline: liftoff, booster separation, trans-lunar injection, a three-day coast you can fast-forward, lunar-orbit insertion, and a powered landing.</li>
+    </ul>
+    <p class="credits"></p>
+  </div>
+</div>
+
+<div id="compass" title="Click a landmark to learn its story"></div>
+
+<script type="module" src="./src/main.js?v=1"></script>
+</body>
+</html>

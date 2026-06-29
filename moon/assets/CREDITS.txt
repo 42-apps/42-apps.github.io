@@ -1,0 +1,7 @@
+Imagery in assets/tex/ — © Solar System Scope (https://www.solarsystemscope.com/textures/)
+NASA-derived equirectangular maps, licensed CC BY 4.0.
+  8k_moon.jpg          — lunar surface (color + bump)
+  8k_earth_day.jpg     — Earth daytime
+  8k_earth_night.jpg   — Earth city lights (night)
+  8k_earth_clouds.jpg  — Earth clouds
+  8k_stars.jpg         — Milky Way starfield
