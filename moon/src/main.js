@@ -59,13 +59,25 @@ const lbarFill = document.getElementById('lbarFill');
 const lmsg = document.getElementById('lmsg');
 const loader = document.getElementById('loader');
 const manager = new THREE.LoadingManager();
-manager.onProgress = (url, done, total) => {
-  lbarFill.style.width = Math.round(100 * done / total) + '%';
-};
-manager.onLoad = () => {
+let loaderHidden = false;
+function hideLoader(){
+  if (loaderHidden) return; loaderHidden = true;
   lbarFill.style.width = '100%';
-  setTimeout(() => loader.classList.add('gone'), 250);
+  loader.classList.add('gone');
+  // fully remove from the layout so it can never intercept clicks or linger
+  setTimeout(() => { loader.style.display = 'none'; }, 650);
+}
+manager.onProgress = (url, done, total) => {
+  if (!loaderHidden) lbarFill.style.width = Math.round(100 * done / total) + '%';
 };
+manager.onLoad = () => setTimeout(hideLoader, 200);
+manager.onError = (url) => { console.warn('[moon] asset failed to load:', url); };
+// Watchdog: never leave the loading screen stuck if a texture stalls.
+setTimeout(hideLoader, 12000);
+// Let the user dismiss it manually too (tap / Esc).
+loader.style.cursor = 'pointer';
+loader.title = 'Click to skip';
+loader.addEventListener('click', hideLoader);
 const texLoader = new THREE.TextureLoader(manager);
 function tex(path, srgb=false){
   const t = texLoader.load(path);
@@ -322,6 +334,13 @@ const overlay = document.getElementById('overlay');
 document.getElementById('helpBtn').onclick = () => overlay.hidden = false;
 document.getElementById('aboutClose').onclick = () => overlay.hidden = true;
 overlay.onclick = e => { if (e.target === overlay) overlay.hidden = true; };
+// Escape closes any open overlay / card, and dismisses the loader.
+addEventListener('keydown', e => {
+  if (e.key !== 'Escape') return;
+  overlay.hidden = true;
+  poiCard.hidden = true;
+  hideLoader();
+});
 document.querySelector('.credits').innerHTML =
   'Imagery: NASA / Solar System Scope lunar &amp; Earth maps (CC BY 4.0). ' +
   'Starship modelled procedurally. Built for fun — distances in Launch mode are compressed for visibility; times are realistic.';
