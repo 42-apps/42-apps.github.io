@@ -284,13 +284,13 @@ function updateLegend() {
     ? { label: 'Organic farmland — ' + state.year, unit: 'hectares · FAOSTAT series', fmt: fmtHa, get: d => curVal(d), _max: tsAreaMax, scale: 'log' }
     : METRICS[state.metric];
   document.getElementById('lgTitle').textContent = m.label;
-  document.getElementById('lgUnit').textContent = m.unit;
   // ramp ticks
   document.getElementById('lgMin').textContent = m.scale === 'signed' ? '≤0' : '0';
   let topVal = m.scale === 'signed' ? m._cap : m._max;
   document.getElementById('lgMax').textContent = m.fmt(topVal);
-  // ranking
-  const arr = Object.keys(DATA).map(k => ({ iso: k, v: m.get(DATA[k]) })).filter(x => x.v != null).sort((a, b) => b.v - a.v).slice(0, 12);
+  // ranking — every country with a value for this metric (scrollable full list)
+  const arr = Object.keys(DATA).map(k => ({ iso: k, v: m.get(DATA[k]) })).filter(x => x.v != null).sort((a, b) => b.v - a.v);
+  document.getElementById('lgUnit').textContent = m.unit + ' · ' + arr.length + ' countries';
   document.getElementById('lgRank').innerHTML = arr.map((x, i) => {
     const [r, g, b] = rampColor(colorT(x.v));
     return `<li data-iso="${x.iso}"><span class="rk">${i + 1}</span><span class="sw" style="background:rgb(${r},${g},${b})"></span>`

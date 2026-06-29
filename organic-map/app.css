@@ -63,7 +63,7 @@ button{font-family:inherit}
 .lg-ramp{height:13px;border-radius:7px;margin:10px 0 2px;
   background:linear-gradient(90deg,#08160d,#0a2816,#104a26,#1e8a43,#36d058,#8cff6e);position:relative}
 .lg-ticks{position:absolute;top:15px;left:0;right:0;display:flex;justify-content:space-between;font-size:10.5px;color:var(--ink3)}
-.lg-rank{list-style:none;margin:22px 0 0;padding:0;max-height:40vh;overflow-y:auto}
+.lg-rank{list-style:none;margin:22px 0 0;padding:0;max-height:48vh;overflow-y:auto}
 .lg-rank li{display:flex;align-items:center;gap:8px;padding:3px 4px;border-radius:7px;cursor:pointer;font-size:12.5px}
 .lg-rank li:hover{background:rgba(54,208,106,.14)}
 .lg-rank .rk{width:17px;color:var(--ink3);font-variant-numeric:tabular-nums;text-align:right;font-size:11px}
