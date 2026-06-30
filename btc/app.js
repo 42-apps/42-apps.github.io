@@ -192,6 +192,7 @@ function render(s) {
   renderOnchain(s);
   renderMarket(s);
   renderRegime(s);
+  renderMining(s);
   renderOptions(s);
   renderEtf(s);
   renderMacro(s);
@@ -675,6 +676,28 @@ function renderRegime(s) {
   if (dr) dr.innerHTML = (r.drivers || []).map(d => `<span class="rgchip ${esc(d.dir)}"><b>${esc(d.label)}</b><span class="d">${esc(d.detail || '')}</span></span>`).join('');
   const fl = $('rgFlags');
   if (fl) fl.innerHTML = (r.flags || []).map(f => `<div class="rgflag ${esc(f.sev)}">${esc(f.text)}</div>`).join('');
+}
+
+// ⛏️ Mining economics — production cost, price-vs-cost, hashprice, revenue, miners.
+function renderMining(s) {
+  const mn = s.mining, sec = $('mining'); if (!sec) return;
+  if (!mn || mn.productionCost == null) { sec.hidden = true; return; }
+  sec.hidden = false;
+  setTxt('mnCost', mn.productionCost != null ? '$' + fmtNum(mn.productionCost) : '—');
+  setTxt('mnCostSub', mn.effAssumed != null ? `est · ${mn.effAssumed} J/TH · $${mn.elecAssumed}/kWh` : '');
+  const pc = $('mnVsCost');
+  if (pc) { pc.className = 'v'; if (mn.priceVsCostPct != null) { pc.textContent = (mn.priceVsCostPct >= 0 ? '+' : '') + mn.priceVsCostPct + '%'; pc.classList.add(mn.priceVsCostPct >= 0 ? 'up' : 'down'); } else pc.textContent = '—'; }
+  setSignedUsd('mnVsCostUsd', mn.priceVsCostUsd);
+  setTxt('mnRevenue', mn.minerRevenueDay != null ? '$' + fmtNum(mn.minerRevenueDay) : '—');
+  setTxt('mnHashprice', mn.hashprice != null ? '$' + mn.hashprice + ' /PH·d' : '—');
+  setTxt('mnPower', mn.networkPowerGW != null ? mn.networkPowerGW + ' GW' : '—');
+  setTxt('mnPools', mn.poolCount != null ? mn.poolCount : '—');
+  setTxt('mnTopPool', mn.topPool ? `${mn.topPool.name} · ${mn.topPool.sharePct}%` : '—');
+  const note = $('mnNote');
+  if (note) note.textContent = mn.productionCost == null ? ''
+    : (mn.priceVsCostPct != null && mn.priceVsCostPct < 0)
+      ? `Price is below the estimated electrical cost to mine 1 BTC — historically a miner-capitulation / value zone. Assumes a ${mn.effAssumed} J/TH fleet at $${mn.elecAssumed}/kWh (electricity only; all-in cost is higher).`
+      : `Estimated electrical cost to mine 1 BTC — miners have a positive margin. Assumes ${mn.effAssumed} J/TH at $${mn.elecAssumed}/kWh (electricity only).`;
 }
 
 // 📈 On-chain valuation (MVRV/SOPR/NUPL via bitcoin-data.com, fed by a GitHub Action).

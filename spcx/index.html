@@ -6,7 +6,7 @@
   <meta name="robots" content="noindex, nofollow">
   <title>🚀 SPCX Monitor</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='0.9em' font-size='90'%3E%F0%9F%9A%80%3C/text%3E%3C/svg%3E">
-  <link rel="stylesheet" href="styles.css?v=20260623j">
+  <link rel="stylesheet" href="styles.css?v=20260623k">
 </head>
 <body class="is-starting">
   <div id="stars"></div>
@@ -152,6 +152,23 @@
       </div>
     </section>
 
+    <section class="netpanel" id="mining" hidden>
+      <div class="panel">
+        <div class="charthead"><span>⛏️ Mining economics</span><span class="muted2">est · mempool.space + price</span></div>
+        <div class="livestats">
+          <div class="lcard"><div class="k">Est. production cost</div><div class="v" id="mnCost">—</div><div class="sub" id="mnCostSub"></div></div>
+          <div class="lcard"><div class="k">Price vs cost</div><div class="v" id="mnVsCost">—</div></div>
+          <div class="lcard"><div class="k">vs cost ($)</div><div class="v" id="mnVsCostUsd">—</div></div>
+          <div class="lcard"><div class="k">Miner revenue / day</div><div class="v" id="mnRevenue">—</div></div>
+          <div class="lcard"><div class="k">Hashprice</div><div class="v" id="mnHashprice">—</div></div>
+          <div class="lcard"><div class="k">Network power</div><div class="v" id="mnPower">—</div></div>
+          <div class="lcard"><div class="k">Active pools</div><div class="v" id="mnPools">—</div></div>
+          <div class="lcard"><div class="k">Biggest miner</div><div class="v" id="mnTopPool">—</div></div>
+        </div>
+        <div class="note" id="mnNote"></div>
+      </div>
+    </section>
+
     <section class="netpanel" id="valuation" hidden>
       <div class="panel">
         <div class="charthead"><span>📈 On-chain valuation</span><span class="muted2" id="valDate">bitcoin-data.com · daily</span></div>
@@ -291,6 +308,6 @@
 
   <footer><span id="footNote">Runs locally on your Mac · read-only market data</span> · <span id="srvTime"></span></footer>
   <script src="config.js"></script>
-  <script src="app.js?v=20260623j"></script>
+  <script src="app.js?v=20260623k"></script>
 </body>
 </html>
