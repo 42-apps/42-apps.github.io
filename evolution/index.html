@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>A short history of evolution on earth</title>
+<meta name="description" content="Watch 4.5 billion years of Earth and life unfold on an interactive 3D globe — from a molten planet and the first cells to trilobites, dinosaurs and us. Continents drift, oceans rise, asteroids fall, and life morphs before your eyes. Set your own speed and travel through deep time.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Crect width='256' height='256' rx='58' fill='%23071018'/%3E%3Ccircle cx='128' cy='132' r='66' fill='%231f8a5a'/%3E%3Cpath d='M70 120 q30 -26 60 0 t58 0' fill='none' stroke='%237fe0b0' stroke-width='9' stroke-linecap='round'/%3E%3Ccircle cx='196' cy='58' r='16' fill='%23e0a13a'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="app.css?v=1">
+</head>
+<body>
+  <!-- ===== Header ===== -->
+  <header id="topbar">
+    <button class="brand" id="brandHome" title="Back to the beginning">
+      <svg class="logo" viewBox="0 0 256 256" aria-hidden="true">
+        <defs>
+          <radialGradient id="evBg" cx="50%" cy="30%" r="90%"><stop offset="0%" stop-color="#0e2233"/><stop offset="60%" stop-color="#071018"/><stop offset="100%" stop-color="#03080d"/></radialGradient>
+          <radialGradient id="evGl" cx="38%" cy="32%" r="80%"><stop offset="0%" stop-color="#3fd08a"/><stop offset="55%" stop-color="#1f8a5a"/><stop offset="100%" stop-color="#0c4a30"/></radialGradient>
+        </defs>
+        <rect width="256" height="256" rx="58" fill="url(#evBg)"/>
+        <circle cx="122" cy="134" r="62" fill="url(#evGl)"/>
+        <g fill="none" stroke="#d8ffe9" stroke-opacity="0.28" stroke-width="2"><ellipse cx="122" cy="134" rx="30" ry="62"/><ellipse cx="122" cy="134" rx="62" ry="30"/></g>
+        <path d="M74 150 q28 -30 60 -2 t56 -6" fill="none" stroke="#8ff0bd" stroke-width="8" stroke-linecap="round" stroke-opacity=".9"/>
+        <circle cx="198" cy="58" r="15" fill="#e8a63c" stroke="#1b0f07" stroke-width="2"/>
+        <g stroke="#e8a63c" stroke-width="5" stroke-linecap="round"><line x1="176" y1="40" x2="192" y2="50"/></g>
+      </svg>
+      <span class="brand-txt">
+        <span class="brand-name">A short history of evolution on earth</span>
+        <span class="brand-sub">4.5 billion years · from first spark to us</span>
+      </span>
+    </button>
+    <div class="tools">
+      <div id="searchWrap">
+        <input id="search" type="text" placeholder="Search a creature, event or era…" autocomplete="off" spellcheck="false" aria-label="Search">
+        <div id="searchResults" class="hidden"></div>
+      </div>
+      <button id="menuBtn" title="Menu" aria-label="Menu">☰</button>
+      <div id="menu" class="hidden">
+        <button class="mi" id="miReset"><span class="mi-ic">⤢</span><span class="mi-tx">Reset view</span></button>
+        <button class="mi" id="miSpin"><span class="mi-ic">⟳</span><span class="mi-tx">Auto-rotate</span><span class="mi-state">On</span></button>
+        <button class="mi" id="miFull"><span class="mi-ic">⛶</span><span class="mi-tx">Fullscreen</span></button>
+        <div class="mi-sep"></div>
+        <button class="mi" id="miTour"><span class="mi-ic">🎬</span><span class="mi-tx">Guided tour of deep time</span></button>
+        <button class="mi" id="miShare"><span class="mi-ic">🔗</span><span class="mi-tx">Copy link to this moment</span></button>
+        <div class="mi-sep"></div>
+        <button class="mi" id="miLife"><span class="mi-ic">🦴</span><span class="mi-tx">Life &amp; fossils</span><span class="mi-state">On</span></button>
+        <button class="mi" id="miEvents"><span class="mi-ic">☄️</span><span class="mi-tx">Cataclysms &amp; events</span><span class="mi-state">On</span></button>
+        <button class="mi" id="miPlates"><span class="mi-ic">🌍</span><span class="mi-tx">Drifting continents</span><span class="mi-state">On</span></button>
+        <button class="mi" id="miLegend"><span class="mi-ic">🎨</span><span class="mi-tx">Colour key</span></button>
+        <div class="mi-sep"></div>
+        <button class="mi" id="miHelp"><span class="mi-ic">❔</span><span class="mi-tx">How it works</span></button>
+        <button class="mi" id="miAbout"><span class="mi-ic">ℹ</span><span class="mi-tx">About &amp; sources</span></button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== Globe ===== -->
+  <div id="globeViz"></div>
+  <div id="flash"></div>
+  <div id="eventBanner" class="hidden"></div>
+  <div id="tooltip" class="hidden"></div>
+  <div id="tourCaption" class="hidden"></div>
+  <div id="toast"></div>
+
+  <!-- ===== Life spotlight panel ===== -->
+  <div id="spotlight">
+    <div class="sp-stage">
+      <div id="spArt" class="sp-art"></div>
+      <div class="sp-head">
+        <div id="spName" class="sp-name">—</div>
+        <div id="spSub" class="sp-sub">—</div>
+      </div>
+    </div>
+    <div id="spWhat" class="sp-what">—</div>
+    <div class="sp-gauges">
+      <div class="gg" id="ggEon"><span class="gg-k">Eon · Era</span><b id="ggEonV">—</b></div>
+      <div class="gg" id="ggPeriod"><span class="gg-k">Period</span><b id="ggPeriodV">—</b></div>
+      <div class="gg" id="ggO2"><span class="gg-k">Oxygen</span><b id="ggO2V">—</b><span class="gg-bar"><i id="ggO2Bar"></i></span></div>
+      <div class="gg" id="ggTemp"><span class="gg-k">Climate</span><b id="ggTempV">—</b></div>
+      <div class="gg" id="ggLife"><span class="gg-k">Life on the map</span><b id="ggLifeV">—</b></div>
+    </div>
+  </div>
+
+  <!-- ===== Detail card ===== -->
+  <div id="detailCard" class="hidden">
+    <button id="detailClose" title="Close">×</button>
+    <div class="detail-head"><span id="detailFlag" class="detail-flag">📍</span>
+      <div><div id="detailName" class="detail-name">—</div>
+      <div id="detailType" class="detail-type"></div></div>
+    </div>
+    <div id="detailArt" class="detail-art hidden"></div>
+    <div id="detailBody"></div>
+    <div id="detailDesc" class="detail-desc hidden"></div>
+  </div>
+
+  <!-- ===== Legend ===== -->
+  <div id="legend" class="collapsed">
+    <button class="lg-head" id="legendToggle" title="Show / hide the colour key"><span>🎨 Colour key</span><span class="lg-caret">▸</span></button>
+    <div id="legendStrip" class="lg-strip" title="The tree of life — click to expand"></div>
+    <div id="legendBody"></div>
+  </div>
+
+  <!-- ===== Time bar ===== -->
+  <div id="timebar">
+    <div id="geoband" class="geoband" aria-hidden="true"></div>
+    <div id="chips" class="chips" aria-label="Jump to a chapter of deep time"></div>
+    <div class="readout">
+      <span id="eraLabel" class="era-label">—</span>
+      <span id="eraChrono" class="era-chrono"></span>
+      <span id="climateBadge" class="climate-badge hidden"></span>
+    </div>
+    <div class="slider-row">
+      <button id="prevEra" class="step" title="Step earlier">‹</button>
+      <input id="timeSlider" type="range" min="0" max="1000" value="0" step="1" aria-label="Deep time">
+      <button id="nextEra" class="step" title="Step later">›</button>
+      <button id="playBtn" class="play" title="Play — watch life unfold (Space)">▶</button>
+      <div id="speedCtl" class="speed" title="Playback speed">
+        <button class="sp-down" id="spDown" title="Slower">−</button>
+        <span id="spMult" class="sp-mult">1×</span>
+        <button class="sp-up" id="spUp" title="Faster">+</button>
+      </div>
+      <span id="rateRead" class="rate-read" title="How fast time is flowing">—</span>
+    </div>
+    <div class="time-ends"><span>4.54 billion years ago · Earth forms</span><span class="te-note">Drag, tap a chapter, or press ▶ — then set your speed and watch evolution unfold</span><span>Today</span></div>
+  </div>
+
+  <!-- ===== Welcome ===== -->
+  <div id="welcomeOverlay" class="hidden">
+    <div class="about-box welcome-box">
+      <div class="wel-kicker">4,540,000,000 years ago &nbsp;→&nbsp; Today</div>
+      <h2>A short history of evolution on earth</h2>
+      <p class="wel-tag">The whole story of our planet and every living thing — on one 3D globe.
+      Start at a ball of molten rock; press play and watch oceans form, continents drift, life spark,
+      and creatures morph from single cells to trilobites, dinosaurs and you.</p>
+      <ul class="wel-tips">
+        <li><span class="wt-ic">▶</span><span><b>Press play.</b> Time runs left→right toward today. Set the <b>speed</b> — from a gentle drift to a billion years a minute.</span></li>
+        <li><span class="wt-ic">🌍</span><span><b>The continents really move.</b> The land is rebuilt from published plate-tectonic reconstructions — watch Pangaea gather and break apart.</span></li>
+        <li><span class="wt-ic">🧬</span><span><b>Life appears where we find it.</b> Creatures light up at their true age and place; tap one to meet it. The panel shows the <b>headline life-form</b> morphing through time.</span></li>
+        <li><span class="wt-ic">☄️</span><span><b>Cataclysms strike.</b> Giant impacts, super-volcanoes, snowball freezes and mass extinctions fire as you reach them.</span></li>
+      </ul>
+      <button id="welStart" class="wel-start">Begin at the beginning →</button>
+      <p class="wel-foot">Dates, places and reconstructions are simplified approximations of a fast-moving science — the deeper the past, the fuzzier. See <b>About &amp; sources</b>.</p>
+    </div>
+  </div>
+
+  <!-- ===== About ===== -->
+  <div id="aboutOverlay" class="hidden">
+    <div class="about-box">
+      <button id="aboutClose" class="about-close" title="Close">×</button>
+      <h2>A short history of evolution on earth</h2>
+      <p>A living 4.5-billion-year atlas. <b>Drag the timeline</b> from the birth of the Earth to today and watch
+      the planet come alive: a magma world cools, oceans rain down, the first cells stir, oxygen fills the sky,
+      animals explode into being, life crawls onto land, and one lineage after another rises, spreads and falls.
+      The <b>continents are real</b> — reconstructed from published plate models — so you can see Pangaea assemble
+      and shatter beneath the creatures living on it.</p>
+      <p class="about-cav"><b>Please read this:</b> deep time is uncertain. Every date, position, temperature and
+      boundary here is an <b>approximation</b>, rounded and often debated — and the further back you go, the
+      fuzzier it gets. Before about a billion years ago there is no reliable map, so the land is shown as
+      <b>stylised, indicative shields</b>, not real geography. Creatures are placed at the <b>modern coordinates of
+      their key fossil sites</b>, reconstructed to their ancient positions; the silhouettes are schematic.
+      Oxygen, CO₂ and temperature curves are simplified sketches of a complex history.</p>
+      <p class="about-src">Continental reconstructions from the <b>GPlates</b> Web Service (Merdith et&nbsp;al. 2021 model).
+      Geologic time scale after the <b>ICS 2023</b> chart. Life and events compiled from the palaeontological and
+      geological literature and cross-checked for dates. Globe: globe.gl. A companion in the
+      <b>42-apps</b> family. Made with much curiosity — and fun.</p>
+    </div>
+  </div>
+
+  <script src="lib/globe.gl.min.js"></script>
+  <script src="dataset.js?v=1"></script>
+  <script src="data.js?v=1"></script>
+  <script src="app.js?v=1"></script>
+</body>
+</html>
