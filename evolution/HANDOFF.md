@@ -1,4 +1,4 @@
-# HANDOFF — A short history of evolution on earth
+# HANDOFF — A short history of life on earth
 
 Deep-time 3D-globe app (globe.gl, no build). Sibling of `ahistoryofus`. Local folder
 `~/Desktop/claude code/evolution`; live at `42-apps.github.io/evolution/`. Dev port 8779.

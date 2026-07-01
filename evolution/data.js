@@ -1,5 +1,5 @@
 /* ============================================================================
-   A short history of evolution on earth — the hand-authored framework.
+   A short history of life on earth — the hand-authored framework.
    (The big dated dataset — EVENTS / LIFE / EXTINCTIONS / GEOSCALE — lives in
    dataset.js, compiled + fact-checked separately. This file holds the deep-time
    "engine furniture": the non-linear time warp, the atmosphere/temperature
@@ -231,5 +231,5 @@ const TOUR = [
   { ma:150,  lat:48.9, lng:11.2, alt:1.9, cap:'Dinosaurs rule the land. At Solnhofen in Germany, Archaeopteris… Archaeopteryx — half dinosaur, half bird — shows feathers taking to the air.' },
   { ma:66,   lat:21.4, lng:-89.5, alt:1.9, cap:'A 10-km asteroid strikes the Yucatán. In hours the sky burns; in years it freezes. The dinosaurs — except the birds — are gone.' },
   { ma:3.2,  lat:11, lng:40, alt:1.8, cap:'On the plains of Ethiopia, a small ape called Lucy walks upright. Her lineage will one day look up and figure all of this out.' },
-  { ma:0,    lat:20, lng:20, alt:2.5, cap:'Today. From molten rock to a living, breathing, thinking planet — 4.5 billion years, and you are the part of the universe that noticed. This is a short history of evolution on Earth.' }
+  { ma:0,    lat:20, lng:20, alt:2.5, cap:'Today. From molten rock to a living, breathing, thinking planet — 4.5 billion years, and you are the part of the universe that noticed. This is a short history of life on Earth.' }
 ];

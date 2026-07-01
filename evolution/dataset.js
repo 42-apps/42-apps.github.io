@@ -1,5 +1,5 @@
 /* ============================================================================
-   A short history of evolution on earth — the compiled, date-checked dataset.
+   A short history of life on earth — the compiled, date-checked dataset.
    GEOSCALE = ICS 2023 geologic time scale. EVENTS / LIFE / EXTINCTIONS compiled
    by a 14-era research pass, each adversarially date-checked, then merged.
    Times in Ma. plat/plng = palaeo-reconstructed coords (GPlates / Merdith 2021)

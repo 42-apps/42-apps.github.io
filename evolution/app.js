@@ -1,5 +1,5 @@
 /* ============================================================================
-   A short history of evolution on earth — engine.
+   A short history of life on earth — engine.
    A continuous deep-time globe: real drifting continents (GPlates/Merdith 2021),
    life forms that ignite at their true age & palaeo-place, animated cataclysms,
    and a morphing "headline life-form" spotlight. Data: dataset.js + data.js.

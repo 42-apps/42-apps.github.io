@@ -1,4 +1,4 @@
-# A short history of evolution on earth
+# A short history of life on earth
 
 A living, 4.5-billion-year atlas of our planet and all life on it — on one interactive 3D globe.
 Start at a ball of molten rock; press play and watch oceans form, **real continents drift**
