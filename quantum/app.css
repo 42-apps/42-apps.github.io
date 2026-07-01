@@ -362,9 +362,9 @@ td .vendor{color:var(--ink-faint);font-size:12px}
 .linkbtn{background:none;border:0;color:var(--cyan);cursor:pointer;font-size:12.5px;text-decoration:underline}
 
 /* chart bits shared */
-.axis line,.axis path{stroke:var(--line2)}
+line.axis,path.axis,.axis line,.axis path{stroke:var(--line2)}
 .gridline{stroke:var(--line);stroke-dasharray:2 4}
-.axis text{fill:var(--ink-faint);font-family:var(--mono);font-size:10px}
+text.axis,.axis text{fill:var(--ink-dim);font-family:var(--mono);font-size:11px}
 .chart-tip{position:fixed;z-index:80;pointer-events:none;background:var(--panel2);
   border:1px solid var(--line2);border-radius:9px;padding:8px 11px;font-size:12px;
   box-shadow:var(--shadow);opacity:0;transition:opacity .12s;max-width:240px}
