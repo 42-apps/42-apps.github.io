@@ -371,7 +371,7 @@ function pickTopic(m){pmode=m;let h='<div class="view">';
   SECTIONS.forEach(s=>{h+=`<div class="chip ${psec===s.id?'on':''}" onclick="psec='${s.id}';pickTopic('${m}')">${s.e} ${esc(secName(s.id))}</div>`;});
   h+=`</div>`;
   const n=(psec==='all'?DATA:DATA.filter(q=>q.s===psec)).length;
-  h+=`<button class="btn block" onclick="startSession('${m}','${'$'}sel')">${esc(t('start'))} · ${n} ${esc(t('questions'))}</button>`.replace('${$}sel',psec);
+  h+=`<button class="btn block" onclick="startSession('${m}','${psec}')">${esc(t('start'))} · ${n} ${esc(t('questions'))}</button>`;
   h+='</div>';app().innerHTML=h;}
 
 /* ============ sessions ============ */
