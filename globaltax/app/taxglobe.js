@@ -11,6 +11,7 @@ const state = {
   hovered: null,         // ISO of hovered country
   selected: null,        // ISO of clicked country
   regimeMode: false,     // highlight new-resident / relocation tax regimes
+  view: 'globe',         // 'globe' | 'table'
 };
 
 const MIN_USD = 1000;       // slider floor (above $0)
@@ -208,6 +209,7 @@ function initGlobe(geo) {
   // Container may not have its final size on the first frame — keep it in sync.
   requestAnimationFrame(sizeGlobe);
   if (window.ResizeObserver) new ResizeObserver(sizeGlobe).observe(elViz);
+  if (state.view === 'table') globe.pauseAnimation();   // opened straight into the table
 }
 
 function sizeGlobe() {
@@ -386,6 +388,7 @@ function showDetailFor(iso, name) {
     rows.innerHTML = `<p style="color:var(--muted);font-size:11.5px;line-height:1.5">No tax data on file for this territory yet.</p>`;
     regEl.classList.add('hidden');
     detailCard.classList.remove('hidden');
+    document.body.classList.add('card-open');
     return;
   }
   const mainRate = rateFor(rec);
@@ -420,19 +423,491 @@ function showDetailFor(iso, name) {
     regEl.innerHTML = '';
   }
   detailCard.classList.remove('hidden');
+  document.body.classList.add('card-open');
 }
 document.getElementById('detailClose').addEventListener('click', () => {
-  detailCard.classList.add('hidden');
+  const prev = state.selected;
+  const hadFocus = detailCard.contains(document.activeElement);
+  hideDetail();
   state.selected = null;
   refreshGlobe();
+  markSelectedRow();
+  // Keyboard users go back to the row they opened the card from.
+  const tr = state.view === 'table' && hadFocus && prev && rowCache.get(prev);
+  if (tr && tr.isConnected) tr.focus({ preventScroll: true });
 });
+function hideDetail() {
+  detailCard.classList.add('hidden');
+  document.body.classList.remove('card-open');
+}
+// "Show on globe" (table view only) — switch views and fly to the country.
+document.getElementById('detailLocate').addEventListener('click', () => {
+  const iso = state.selected;
+  if (!iso) return;
+  setView('globe');
+  locateOnGlobe(iso);
+  document.getElementById('detailClose').focus();   // this button is hidden on the globe — keep focus in the card
+});
+
+/* ============================ Ranking table ============================ */
+// The All-in rate is a weighted average of these seven headline rates. Income tax uses
+// your EFFECTIVE rate at the slider income, so the ranking re-orders as income changes.
+const SCORE_KEYS = ['pit_effective', 'ss', 'vat', 'cit', 'cgt', 'est', 'gift'];
+const PROFILES = {
+  balanced: { label: 'Balanced',          w: { pit_effective: 40, ss: 15, vat: 20, cit: 7,  cgt: 10, est: 5,  gift: 3 } },
+  employee: { label: 'Salaried employee', w: { pit_effective: 50, ss: 25, vat: 20, cit: 0,  cgt: 5,  est: 0,  gift: 0 } },
+  business: { label: 'Business owner',    w: { pit_effective: 25, ss: 10, vat: 10, cit: 40, cgt: 10, est: 5,  gift: 0 } },
+  investor: { label: 'Investor',          w: { pit_effective: 15, ss: 5,  vat: 15, cit: 15, cgt: 40, est: 7,  gift: 3 } },
+  legacy:   { label: 'Retiree & legacy',  w: { pit_effective: 25, ss: 0,  vat: 20, cit: 0,  cgt: 20, est: 25, gift: 10 } },
+  equal:    { label: 'Equal weights',     w: { pit_effective: 1,  ss: 1,  vat: 1,  cit: 1,  cgt: 1,  est: 1,  gift: 1 } },
+};
+const OVERALL_GRADE = [10, 20];   // All-in rate: ≤10% low, ≤20% moderate, above that high
+const TV_COLS = [
+  { key: 'rank',          label: '#',          title: 'Overall rank — lowest All-in rate first. Ties share a rank.' },
+  { key: 'name',          label: 'Country' },
+  { key: 'overall',       label: 'All-in',     sub: 'blended rate', title: 'Weighted average of all seven taxes (weights: ⚖ Weights). Lower is better. Green ≤10% · yellow ≤20% · red above.' },
+  { key: 'bill',          label: 'Income tax', sub: 'per year',     title: 'Income tax on your income at the effective rate (shown in your currency)' },
+  { key: 'pit_effective', label: 'Income',     sub: 'effective' },
+  { key: 'pit_marginal',  label: 'Income',     sub: 'marginal',     title: 'Shown for reference — not part of the All-in rate' },
+  { key: 'ss',            label: 'Social sec.' },
+  { key: 'vat',           label: 'VAT / GST' },
+  { key: 'cit',           label: 'Corporate' },
+  { key: 'cgt',           label: 'Cap. gains' },
+  { key: 'est',           label: 'Estate' },
+  { key: 'gift',          label: 'Gift' },
+];
+const REGION_OF = {};
+for (const [region, isos] of Object.entries(window.REGIONS || {})) isos.forEach(iso => { REGION_OF[iso] = region; });
+// What a regime's rate covers (REGIMES[iso].scope) and which income source it helps in the table.
+const SCOPE_LABEL = {
+  foreign: 'foreign-source income', earned: 'local employment income',
+  all: 'all income', lumpsum: 'a lump-sum / capped charge — not modelled in the table',
+};
+const SOURCE_SCOPE = { foreign: 'foreign', local: 'earned' };   // income source → regime scope it can use
+const SOURCE_LABEL = { foreign: 'foreign investment & pension income', local: 'a local job / salary' };
+
+const tv = {
+  sort: { key: 'overall', dir: 1 },   // dir 1 = ascending (best first)
+  region: '',
+  query: '',
+  profile: 'balanced',
+  weights: { ...PROFILES.balanced.w },
+  source: 'foreign',                   // new-resident mode: what kind of income the mover has
+  rows: [],                            // last computed (filtered + sorted) rows, for CSV
+  total: 0,
+};
+try {
+  const p = localStorage.getItem('gt_tv_profile');
+  const w = JSON.parse(localStorage.getItem('gt_tv_weights') || 'null');
+  const valid = w && SCORE_KEYS.every(k => Number.isFinite(w[k]) && w[k] >= 0 && w[k] <= 50);
+  if (p === 'custom' && valid) { tv.profile = 'custom'; tv.weights = Object.fromEntries(SCORE_KEYS.map(k => [k, w[k]])); }
+  else if (PROFILES[p]) { tv.profile = p; tv.weights = { ...PROFILES[p].w }; }
+} catch (e) { /* localStorage unavailable — use defaults */ }
+function saveWeights() {
+  try {
+    localStorage.setItem('gt_tv_profile', tv.profile);
+    localStorage.setItem('gt_tv_weights', JSON.stringify(tv.weights));
+  } catch (e) { /* ignore */ }
+}
+
+const tableView = document.getElementById('tableView');
+const tvBody = document.getElementById('tvBody');
+const tvScroll = document.getElementById('tvScroll');
+const rowCache = new Map();   // iso → <tr>, reused so rows can glide to their new rank
+const fmtPct = v => (v == null ? '—' : (Math.round(v * 10) / 10) + '%');
+const escAttr = s => String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+const weightSum = () => SCORE_KEYS.reduce((s, k) => s + (tv.weights[k] || 0), 0);
+const profileLabel = () => (PROFILES[tv.profile] ? PROFILES[tv.profile].label : 'Custom weights');
+// The column to tint — the one the table is sorted by (rank sorts by the All-in rate).
+const sortedCol = () => (tv.sort.key === 'rank' ? 'overall' : tv.sort.key);
+function gradeOverall(v) {
+  if (v == null) return 'grey';
+  return v <= OVERALL_GRADE[0] ? 'green' : v <= OVERALL_GRADE[1] ? 'yellow' : 'red';
+}
+
+// Every country's rates at the current income, its All-in rate and overall rank (unfiltered).
+function computeRows() {
+  const wsum = weightSum();
+  const rows = Object.entries(window.TAX_DATA).map(([iso, rec]) => {
+    const r = { iso, rec, name: rec.n, region: REGION_OF[iso] || '' };
+    for (const k of Object.keys(window.TAX_TYPES)) r[k] = rateFor(rec, k);
+    r.pitNormal = r.pit_effective;
+    // New-resident mode: a mover can use a relocation regime where it beats the normal rules —
+    // but only if the regime covers the kind of income they have (most exempt foreign income only).
+    const reg = window.REGIMES[iso];
+    const covers = reg && (reg.scope === 'all' || reg.scope === SOURCE_SCOPE[tv.source]);
+    r.regimeUsed = !!(state.regimeMode && covers && r.pit_effective != null && reg.rate < r.pit_effective);
+    if (r.regimeUsed) r.pit_effective = reg.rate;
+    r.bill = r.pit_effective == null ? null : state.incomeUSD * r.pit_effective / 100;
+    if (wsum > 0) {
+      let s = 0, used = 0;
+      for (const k of SCORE_KEYS) {
+        const w = tv.weights[k] || 0;
+        if (!w || r[k] == null) continue;
+        s += w * r[k]; used += w;
+      }
+      r.overall = used ? Math.round((s / used) * 10) / 10 : null;
+    } else r.overall = null;
+    return r;
+  });
+  // Competition ranking (1, 2, 2, 4…) on the displayed (rounded) All-in rate.
+  const ranked = rows.filter(r => r.overall != null).sort((a, b) => a.overall - b.overall);
+  ranked.forEach((r, i) => { r.rank = i && r.overall === ranked[i - 1].overall ? ranked[i - 1].rank : i + 1; });
+  return rows;
+}
+
+function sortRows(rows) {
+  const { key, dir } = tv.sort;
+  const k = key === 'rank' ? 'overall' : key;
+  const byOverall = (a, b) => (a.overall ?? Infinity) - (b.overall ?? Infinity) || a.name.localeCompare(b.name);
+  return rows.sort((a, b) => {
+    if (k === 'name') return dir * a.name.localeCompare(b.name);
+    const av = a[k], bv = b[k];
+    if (av == null || bv == null) return (av == null) - (bv == null) || byOverall(a, b);   // no data always last
+    return dir * (av - bv) || byOverall(a, b);
+  });
+}
+
+function rowHTML(r, maxOverall) {
+  const hl = k => (k === sortedCol() ? ' hl' : '');
+  const cell = k => {
+    const v = r[k];
+    return `<td class="c-rate${hl(k)}"><span class="tv-dot" style="background:${COLORS[gradeOf(v, k)]}"></span>${fmtPct(v)}</td>`;
+  };
+  const reg = window.REGIMES[r.iso];
+  const sub = window.SUBNATIONAL[r.iso];
+  const badges =
+    (reg ? `<span class="tv-badge${r.regimeUsed ? ' on' : ''}" title="${escAttr(`✦ ${reg.name} — applies to ${SCOPE_LABEL[reg.scope] || 'qualifying movers'}`)}">✦</span>` : '') +
+    (sub ? `<span class="tv-badge sub" title="${escAttr(sub)}">↕</span>` : '');
+  const og = gradeOverall(r.overall);
+  const bar = r.overall == null || !maxOverall ? 0 : Math.max(2, Math.round(100 * r.overall / maxOverall));
+  const local = r.bill == null ? '—' : fmtMoney(r.bill * cur(state.currency).fx, state.currency);
+  const effTitle = r.regimeUsed
+    ? ` title="${escAttr(`✦ ${reg.name} — ~${r.pit_effective}% on ${SOURCE_LABEL[tv.source]} for a qualifying mover (normal rules: ${fmtPct(r.pitNormal)})`)}"` : '';
+  return `<td class="c-rank">${r.rank ?? '—'}</td>` +
+    `<td class="c-name"><span class="tv-flag">${flagEmoji(r.iso)}</span><span class="tv-nm">${r.name}</span>${badges}</td>` +
+    `<td class="c-overall${hl('overall')}"><div class="tv-ov"><span class="tv-ov-val" style="color:${COLORS[og]}">${fmtPct(r.overall)}</span>` +
+      `<span class="tv-ov-bar"><i style="width:${bar}%;background:${COLORS[og]}"></i></span></div></td>` +
+    `<td class="c-bill">${local}</td>` +
+    `<td class="c-rate${hl('pit_effective')}${r.regimeUsed ? ' regime' : ''}"${effTitle}>` +
+      `<span class="tv-dot" style="background:${COLORS[gradeOf(r.pit_effective, 'pit_effective')]}"></span>${r.regimeUsed ? '✦ ' : ''}${fmtPct(r.pit_effective)}</td>` +
+    ['pit_marginal', 'ss', 'vat', 'cit', 'cgt', 'est', 'gift'].map(cell).join('');
+}
+
+function renderTableHead() {
+  const { key, dir } = tv.sort;
+  const head = document.getElementById('tvHead');
+  const focused = head.contains(document.activeElement) ? document.activeElement.dataset.key : null;
+  head.innerHTML = TV_COLS.map(c => {
+    const active = c.key === key || (key === 'rank' && c.key === 'overall') || (key === 'overall' && c.key === 'rank');
+    const aria = c.key === key ? ` aria-sort="${dir > 0 ? 'ascending' : 'descending'}"` : '';
+    const arrow = active ? (dir > 0 ? '▲' : '▼') : '';
+    const hl = c.key === sortedCol() ? ' hl' : '';
+    return `<th class="h-${c.key}${hl}${active ? ' sorted' : ''}"${aria}>` +
+      `<button data-key="${c.key}"${c.title ? ` title="${escAttr(c.title)}"` : ''}>` +
+      `<span class="th-l">${c.label}<span class="th-arrow">${arrow}</span></span>` +
+      (c.sub ? `<span class="th-sub">${c.sub}</span>` : '') + `</button></th>`;
+  }).join('');
+  if (focused) { const b = head.querySelector(`button[data-key="${focused}"]`); if (b) b.focus(); }   // keep keyboard focus
+}
+
+function renderTable(animate = true) {
+  if (state.view !== 'table') return;
+  const all = computeRows();
+  const maxOverall = Math.max(0, ...all.map(r => r.overall || 0));
+  const q = tv.query.trim().toLowerCase();
+  let rows = all.filter(r =>
+    (!tv.region || r.region === tv.region) &&
+    (!q || r.name.toLowerCase().includes(q) || r.iso.toLowerCase() === q));
+  rows = sortRows(rows);
+  tv.rows = rows;
+  tv.total = all.length;
+
+  renderTableHead();
+  // FLIP: remember where each visible row was, rebuild in the new order, then glide rows into place.
+  const glide = animate && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const before = new Map();
+  if (glide) for (const tr of tvBody.children) before.set(tr.dataset.iso, tr.getBoundingClientRect().top);
+  // Roving tabindex: the table is one Tab stop (focused, selected or first row); arrow keys move within it.
+  const active = tvBody.contains(document.activeElement) ? document.activeElement.dataset.iso : null;
+  const stop = [active, state.selected].find(iso => iso && rows.some(r => r.iso === iso)) || (rows[0] && rows[0].iso);
+  const frag = document.createDocumentFragment();
+  for (const r of rows) {
+    let tr = rowCache.get(r.iso);
+    if (!tr) {
+      tr = document.createElement('tr');
+      tr.dataset.iso = r.iso;
+      rowCache.set(r.iso, tr);
+    }
+    tr.tabIndex = r.iso === stop ? 0 : -1;
+    tr.innerHTML = rowHTML(r, maxOverall);
+    tr.classList.toggle('sel', r.iso === state.selected);
+    frag.appendChild(tr);
+  }
+  tvBody.replaceChildren(frag);
+  if (active && rowCache.get(active).isConnected) rowCache.get(active).focus({ preventScroll: true });
+  if (before.size) {
+    const moved = [];
+    for (const tr of tvBody.children) {
+      const top = before.get(tr.dataset.iso);
+      if (top == null) continue;
+      const dy = top - tr.getBoundingClientRect().top;
+      if (Math.abs(dy) < 1) continue;
+      tr.style.transition = 'none';
+      tr.style.transform = `translateY(${dy}px)`;
+      moved.push(tr);
+    }
+    if (moved.length) {
+      void tvBody.offsetHeight;   // commit the inverted positions before animating
+      for (const tr of moved) { tr.style.transition = 'transform .35s cubic-bezier(.2,.7,.2,1)'; tr.style.transform = ''; }
+    }
+  }
+  document.getElementById('tvEmpty').classList.toggle('hidden', rows.length > 0);
+  renderTableMeta();
+  updateReadout();
+}
+
+function renderTableMeta() {
+  const income = fmtMoney(state.incomeUSD * cur(state.currency).fx, state.currency);
+  const col = TV_COLS.find(c => c.key === tv.sort.key);
+  const sortTxt = tv.sort.key === 'overall' || tv.sort.key === 'rank'
+    ? (tv.sort.dir > 0 ? 'Ranked best → worst' : 'Ranked worst → best')
+    : `Sorted by ${col.label}${col.sub ? ' (' + col.sub + ')' : ''}, ${tv.sort.key === 'name' ? (tv.sort.dir > 0 ? 'A → Z' : 'Z → A') : (tv.sort.dir > 0 ? 'lowest first' : 'highest first')}`;
+  const shown = tv.rows.length === tv.total ? `${tv.total} countries & territories` : `${tv.rows.length} of ${tv.total} shown`;
+  document.getElementById('tvMeta').innerHTML =
+    `<b>${sortTxt}</b> · ${shown} · income <b>${income}</b> · ${profileLabel()}` +
+    (state.regimeMode ? ` · <span class="tv-meta-regime">✦ regimes applied to ${SOURCE_LABEL[tv.source]}</span>` : '') +
+    (weightSum() > 0 ? '' : ` · <span class="tv-warn">set at least one weight above 0</span>`);
+  const wsum = weightSum();
+  const mix = wsum > 0
+    ? SCORE_KEYS.filter(k => tv.weights[k] > 0).map(k => `${window.TAX_TYPES[k].short} ${Math.round(100 * tv.weights[k] / wsum)}%`).join(' · ')
+    : 'no weights set';
+  document.getElementById('tvFoot').innerHTML =
+    `<b>All-in</b> = weighted average of each country's headline rates — ${mix} — with income tax at your ` +
+    `<b>effective</b> rate on ${income}. Lower is better · green ≤${OVERALL_GRADE[0]}% · yellow ≤${OVERALL_GRADE[1]}% · red above. ` +
+    (state.regimeMode
+      ? `<b>✦</b> New-resident mode: where a relocation regime covers ${SOURCE_LABEL[tv.source]} and beats normal income tax, its rate is used (assumes you qualify); ` +
+        `lump-sum / capped regimes (e.g. Swiss forfait) aren't modelled. `
+      : '') +
+    `Excludes state/local taxes, deductions, social-security ceilings & treaties — <b>not tax advice</b>.`;
+}
+
+function markSelectedRow() {
+  for (const tr of tvBody.children) tr.classList.toggle('sel', tr.dataset.iso === state.selected);
+}
+
+let tvPending = false;
+function scheduleTable() {
+  if (state.view !== 'table' || tvPending) return;
+  tvPending = true;
+  const run = () => { if (!tvPending) return; tvPending = false; renderTable(); };
+  requestAnimationFrame(run);
+  setTimeout(run, 120);   // rAF can stall in occluded / background tabs
+}
+
+// Select a country from the table: highlight its row and open the detail card.
+function selectRow(iso, scroll) {
+  state.selected = iso;
+  refreshGlobe();
+  showDetailFor(iso);
+  let tr = rowCache.get(iso);
+  if (scroll && (!tr || !tr.isConnected)) {   // hidden by a filter — clear filters so it shows
+    tv.query = ''; tv.region = '';
+    document.getElementById('tvSearch').value = '';
+    document.getElementById('tvRegion').value = '';
+    renderTable(false);
+    tr = rowCache.get(iso);
+  }
+  markSelectedRow();
+  if (tr) setTabStop(tr);
+  // Scroll only the table (scrollIntoView would also shift the overflow-hidden page containers).
+  if (scroll && tr) {
+    const delta = tr.getBoundingClientRect().top - tvScroll.getBoundingClientRect().top;
+    tvScroll.scrollTo({ top: tvScroll.scrollTop + delta - (tvScroll.clientHeight - tr.offsetHeight) / 2, behavior: 'smooth' });
+  }
+}
+function setTabStop(tr) {
+  for (const row of tvBody.children) row.tabIndex = row === tr ? 0 : -1;
+}
+// Move keyboard focus to another row, scrolling the table just enough to keep it clear of the sticky header.
+function focusRow(tr) {
+  if (!tr) return;
+  setTabStop(tr);
+  tr.focus({ preventScroll: true });
+  const head = tvScroll.querySelector('thead').offsetHeight;
+  const r = tr.getBoundingClientRect(), s = tvScroll.getBoundingClientRect();
+  if (r.top < s.top + head) tvScroll.scrollTop -= s.top + head - r.top;
+  else if (r.bottom > s.bottom) tvScroll.scrollTop += r.bottom - s.bottom;
+}
+
+function buildWeightsPanel() {
+  const wsum = weightSum();
+  document.getElementById('tvWeights').innerHTML =
+    `<div class="tvw-head"><span>How much each tax counts toward <b>All-in</b></span>` +
+    `<button class="tv-btn tvw-reset" id="tvwReset">Reset to Balanced</button></div>` +
+    SCORE_KEYS.map(k => {
+      const share = wsum > 0 ? Math.round(100 * (tv.weights[k] || 0) / wsum) : 0;
+      return `<label class="tvw-row"><span class="tvw-l">${window.TAX_TYPES[k].short}</span>` +
+        `<input type="range" min="0" max="50" step="1" value="${tv.weights[k] || 0}" data-key="${k}" aria-label="${window.TAX_TYPES[k].short} weight" />` +
+        `<span class="tvw-v">${share}%</span></label>`;
+    }).join('');
+}
+function buildProfileOptions() {
+  const sel = document.getElementById('tvProfile');
+  sel.innerHTML = Object.entries(PROFILES).map(([k, p]) => `<option value="${k}">⚖ ${p.label}</option>`).join('') +
+    `<option value="custom">⚖ Custom weights</option>`;
+  sel.value = tv.profile;
+}
+
+function exportCSV() {
+  const c = cur(state.currency);
+  const esc = v => {
+    const s = v == null ? '' : String(v);
+    return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+  };
+  const head = ['Rank', 'Country', 'ISO', 'Region', 'All-in rate %', `Income tax per year (${c.code})`,
+    'Income tax effective %', 'Income tax marginal %', 'Social security %', 'VAT/GST %', 'Corporate %',
+    'Capital gains %', 'Estate %', 'Gift %', 'New-resident regime applied'];
+  const lines = [head.map(esc).join(',')].concat(tv.rows.map(r => [
+    r.rank, r.name, r.iso, r.region, r.overall,
+    r.bill == null ? '' : Math.round(r.bill * c.fx), r.pit_effective, r.pit_marginal,
+    r.ss, r.vat, r.cit, r.cgt, r.est, r.gift, r.regimeUsed ? window.REGIMES[r.iso].name : '',
+  ].map(esc).join(',')));
+  // Leading BOM so Excel reads the file as UTF-8 (Côte d'Ivoire, €…).
+  const blob = new Blob(['﻿' + lines.join('\n') + '\n'], { type: 'text/csv;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `globaltax-ranking-${Math.round(state.incomeUSD * c.fx)}-${c.code}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}
+
+function wireTable() {
+  const region = document.getElementById('tvRegion');
+  region.innerHTML = `<option value="">All regions</option>` +
+    Object.keys(window.REGIONS || {}).map(r => `<option value="${r}">${r}</option>`).join('');
+  region.addEventListener('change', () => { tv.region = region.value; renderTable(); });
+
+  const search = document.getElementById('tvSearch');
+  search.addEventListener('input', () => { tv.query = search.value; renderTable(); });
+
+  buildProfileOptions();
+  document.getElementById('tvProfile').addEventListener('change', e => {
+    tv.profile = e.target.value;
+    if (PROFILES[tv.profile]) tv.weights = { ...PROFILES[tv.profile].w };
+    saveWeights();
+    buildWeightsPanel();
+    renderTable();
+  });
+
+  const wBtn = document.getElementById('tvWeightsBtn');
+  const wPanel = document.getElementById('tvWeights');
+  buildWeightsPanel();
+  wBtn.addEventListener('click', () => {
+    const open = wPanel.classList.toggle('hidden') === false;
+    wBtn.setAttribute('aria-expanded', String(open));
+    wBtn.classList.toggle('on', open);
+  });
+  wPanel.addEventListener('input', e => {
+    const k = e.target.dataset && e.target.dataset.key;
+    if (!k) return;
+    tv.weights[k] = +e.target.value;
+    tv.profile = 'custom';
+    document.getElementById('tvProfile').value = 'custom';
+    saveWeights();
+    const wsum = weightSum();   // refresh the share labels without rebuilding the sliders being dragged
+    wPanel.querySelectorAll('input[data-key]').forEach(inp => {
+      inp.nextElementSibling.textContent = (wsum > 0 ? Math.round(100 * (tv.weights[inp.dataset.key] || 0) / wsum) : 0) + '%';
+    });
+    scheduleTable();
+  });
+  wPanel.addEventListener('click', e => {
+    if (e.target.id !== 'tvwReset') return;
+    tv.profile = 'balanced';
+    tv.weights = { ...PROFILES.balanced.w };
+    document.getElementById('tvProfile').value = 'balanced';
+    saveWeights();
+    buildWeightsPanel();
+    document.getElementById('tvwReset').focus();   // the panel was rebuilt — keep keyboard focus on Reset
+    renderTable();
+  });
+
+  const source = document.getElementById('tvSource');
+  source.value = tv.source;
+  source.addEventListener('change', () => { tv.source = source.value; renderTable(); });
+
+  document.getElementById('tvHead').addEventListener('click', e => {
+    const btn = e.target.closest('button[data-key]');
+    if (!btn) return;
+    const key = btn.dataset.key;
+    const same = tv.sort.key === key || (['rank', 'overall'].includes(key) && ['rank', 'overall'].includes(tv.sort.key));
+    tv.sort = { key, dir: same ? -tv.sort.dir : 1 };
+    renderTable();
+  });
+
+  tvBody.addEventListener('click', e => {
+    const tr = e.target.closest('tr[data-iso]');
+    if (tr) selectRow(tr.dataset.iso, false);
+  });
+  tvBody.addEventListener('keydown', e => {
+    const tr = e.target.closest('tr[data-iso]');
+    if (!tr) return;
+    const rows = tvBody.children;
+    const next = { ArrowDown: tr.nextElementSibling, ArrowUp: tr.previousElementSibling,
+                   Home: rows[0], End: rows[rows.length - 1] }[e.key];
+    if (next !== undefined) { e.preventDefault(); focusRow(next); return; }
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    e.preventDefault();
+    selectRow(tr.dataset.iso, false);
+  });
+
+  document.getElementById('tvCsvBtn').addEventListener('click', exportCSV);
+}
+
+// Switch between the 3D globe and the ranking table.
+function setView(view) {
+  if (view !== 'table') view = 'globe';
+  if (view === state.view) return;
+  state.view = view;
+  const table = view === 'table';
+  document.body.classList.toggle('view-table', table);
+  tableView.classList.toggle('hidden', !table);
+  for (const [id, on] of [['viewGlobeBtn', !table], ['viewTableBtn', table]]) {
+    const b = document.getElementById(id);
+    b.classList.toggle('on', on);
+    b.setAttribute('aria-pressed', String(on));
+  }
+  state.hovered = null;
+  tooltip.classList.add('hidden');
+  // On phones the table view lets <main> scroll; start each view at the top so the globe isn't left offset.
+  document.querySelector('main').scrollTop = 0;
+  if (globe) {
+    if (table) globe.pauseAnimation();
+    else { globe.resumeAnimation(); sizeGlobe(); refreshGlobe(); }
+  }
+  if (table) renderTable(false);
+  updateTaxTypeUI();
+  const url = location.pathname + location.search + (table ? '#table' : '');
+  try { history.replaceState(null, '', url); } catch (e) { /* ignore */ }
+}
+
+// Fly the globe to a country (polygon or small-territory marker).
+function locateOnGlobe(iso) {
+  if (!globe) return false;
+  const feat = countries.find(f => isoOf(f.properties) === iso);
+  if (feat) { onClick(feat); return true; }
+  if (window.MARKERS[iso]) { selectJurisdiction(iso, window.MARKERS[iso][0], window.MARKERS[iso][1], markerName(iso)); return true; }
+  return false;
+}
 
 /* ============================ UI wiring ============================ */
 function buildCurrencyOptions() {
   const sel = document.getElementById('currency');
   sel.innerHTML = window.CURRENCIES.map(c => `<option value="${c.code}">${c.code} — ${c.name}</option>`).join('');
   sel.value = state.currency;
-  sel.addEventListener('change', () => { state.currency = sel.value; updateIncomeDisplay(); });
+  sel.addEventListener('change', () => { state.currency = sel.value; updateIncomeDisplay(); scheduleTable(); });
 }
 
 function buildTaxTypeButtons() {
@@ -447,6 +922,8 @@ function buildTaxTypeButtons() {
       updateTaxTypeUI();
       refreshGlobe();
       refreshActive();
+      // In the table, picking a tax type sorts by that column (lowest first).
+      if (state.view === 'table') { tv.sort = { key: state.taxType, dir: 1 }; renderTable(); }
     });
   });
 }
@@ -468,9 +945,8 @@ function wireSearch() {
       if (hit) iso = hit[0];
     }
     if (!iso) return;
-    const feat = countries.find(f => isoOf(f.properties) === iso);
-    if (feat) { onClick(feat); input.blur(); }
-    else if (window.MARKERS[iso]) { selectJurisdiction(iso, window.MARKERS[iso][0], window.MARKERS[iso][1], markerName(iso)); input.blur(); }
+    if (state.view === 'table') { selectRow(iso, true); input.blur(); return; }
+    if (locateOnGlobe(iso)) input.blur();
   };
   input.addEventListener('change', go);
   input.addEventListener('keydown', e => { if (e.key === 'Enter') go(); });
@@ -478,7 +954,10 @@ function wireSearch() {
 
 function updateReadout() {
   const rt = document.getElementById('readoutType'), rs = document.getElementById('readoutSub');
-  if (state.regimeMode) {
+  if (state.view === 'table') {
+    rt.textContent = state.regimeMode ? 'All-tax ranking ✦ movers' : 'All-tax ranking';
+    rs.textContent = `${profileLabel()} weights · click a row for details`;
+  } else if (state.regimeMode) {
     rt.textContent = 'New-resident regimes';
     rs.textContent = '✦ Relocation tax breaks · hover a country';
   } else {
@@ -497,8 +976,9 @@ function updateTaxTypeUI() {
   document.getElementById('lgGreen').textContent = `0–${g}%`;
   document.getElementById('lgYellow').textContent = `${g}–${y}%`;
   document.getElementById('lgRed').textContent = `${y}%+`;
-  // dim income controls when not income-based (income is the 2nd .ctrl — after search)
-  document.querySelectorAll('.panel .ctrl')[1].style.opacity = t.incomeBased ? '1' : '0.45';
+  // dim income controls when not income-based (income is the 2nd .ctrl — after search);
+  // the table's All-in rate always depends on income, so keep it lit there.
+  document.querySelectorAll('.panel .ctrl')[1].style.opacity = t.incomeBased || state.view === 'table' ? '1' : '0.45';
 
   // plain-language explainer for the income tax types (marginal vs effective)
   const ex = document.getElementById('explainer');
@@ -534,6 +1014,7 @@ function wireIncomeSlider() {
       refreshGlobe();
       refreshActive();
     }
+    scheduleTable();
   });
 }
 
@@ -547,7 +1028,7 @@ document.getElementById('spinBtn').addEventListener('click', e => {
 });
 document.getElementById('resetBtn').addEventListener('click', () => {
   state.selected = null;
-  detailCard.classList.add('hidden');
+  hideDetail();
   refreshGlobe();
   globe.pointOfView({ lat: 25, lng: 10, altitude: 2.3 }, 800);
 });
@@ -577,7 +1058,13 @@ document.getElementById('regimeToggle').addEventListener('change', e => {
   refreshGlobe();
   updateReadout();
   refreshActive();
+  scheduleTable();
 });
+
+/* globe / table view switch */
+document.getElementById('viewGlobeBtn').addEventListener('click', () => setView('globe'));
+document.getElementById('viewTableBtn').addEventListener('click', () => setView('table'));
+window.addEventListener('hashchange', () => setView(location.hash === '#table' ? 'table' : 'globe'));
 
 window.addEventListener('resize', sizeGlobe);
 
@@ -605,6 +1092,8 @@ function boot() {
   updateTaxTypeUI();
   updateIncomeDisplay();
   buildAbout();
+  wireTable();
+  if (location.hash === '#table') setView('table');
 
   fetch('data/countries.geojson')
     .then(r => r.json())

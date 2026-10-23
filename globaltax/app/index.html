@@ -26,8 +26,12 @@
 
       <div class="actions">
         <a href="/" title="Back to 42-apps home" style="display:inline-flex;align-items:center;padding:6px 11px;margin-right:6px;border:1px solid var(--line);border-radius:9px;color:var(--fg);text-decoration:none;font-size:13px">&larr; 42&middot;apps</a>
-        <button id="spinBtn" title="Toggle auto-rotation">❙❙ Spin</button>
-        <button id="resetBtn" title="Reset view">⟳ Reset</button>
+        <div class="view-toggle" role="group" aria-label="View">
+          <button id="viewGlobeBtn" class="on" aria-pressed="true" title="3D globe view">🌐 Globe</button>
+          <button id="viewTableBtn" aria-pressed="false" title="Rank every country in a table — all taxes combined">☰ Table</button>
+        </div>
+        <button id="spinBtn" class="globe-only" title="Toggle auto-rotation">❙❙ Spin</button>
+        <button id="resetBtn" class="globe-only" title="Reset view">⟳ Reset</button>
         <button id="fsBtn" title="Fullscreen">⛶ Full</button>
         <button id="aboutBtn" title="About, data sources & disclaimer">ⓘ About</button>
       </div>
@@ -61,7 +65,7 @@
         </section>
 
         <!-- Tax type -->
-        <section class="ctrl">
+        <section class="ctrl taxtype-ctrl">
           <div class="ctrl-head"><span class="ctrl-title">Tax Type</span></div>
           <div class="taxtype-grid" id="taxTypeGrid"><!-- buttons injected --></div>
           <p class="taxtype-desc" id="taxTypeDesc"></p>
@@ -78,7 +82,7 @@
         </section>
 
         <!-- Legend -->
-        <section class="ctrl">
+        <section class="ctrl legend-ctrl">
           <div class="ctrl-head"><span class="ctrl-title">Tax Burden</span></div>
           <div class="legend">
             <div class="legend-row"><span class="sw green"></span><span class="legend-txt">Low / none</span><span class="legend-rng" id="lgGreen"></span></div>
@@ -94,6 +98,32 @@
       <!-- Globe -->
       <div id="globeViz"></div>
 
+      <!-- Ranking table (all taxes combined) -->
+      <section id="tableView" class="table-view hidden" aria-label="Country tax ranking">
+        <div class="tv-toolbar">
+          <input id="tvSearch" class="tv-search" type="search" placeholder="Filter countries…" autocomplete="off" aria-label="Filter countries" />
+          <select id="tvRegion" class="tv-select" aria-label="Region"></select>
+          <select id="tvProfile" class="tv-select" aria-label="Weighting profile" title="How much each tax counts toward the All-in rate"></select>
+          <select id="tvSource" class="tv-select tv-regime-only" aria-label="Your income source, for new-resident regimes"
+                  title="Most relocation regimes only exempt foreign income — pick what kind of income you'd move with">
+            <option value="foreign">✦ Foreign investment &amp; pension income</option>
+            <option value="local">✦ Local job / salary</option>
+          </select>
+          <button id="tvWeightsBtn" class="tv-btn" aria-expanded="false" aria-controls="tvWeights">⚖ Weights</button>
+          <button id="tvCsvBtn" class="tv-btn" title="Download this ranking as a CSV file">⬇ CSV</button>
+        </div>
+        <div id="tvWeights" class="tv-weights hidden"></div>
+        <div class="tv-meta" id="tvMeta"></div>
+        <div class="tv-scroll" id="tvScroll">
+          <table class="tv-table">
+            <thead><tr id="tvHead"></tr></thead>
+            <tbody id="tvBody"></tbody>
+          </table>
+          <p class="tv-empty hidden" id="tvEmpty">No countries match that filter.</p>
+        </div>
+        <p class="tv-foot" id="tvFoot"></p>
+      </section>
+
       <!-- Country detail card -->
       <div id="detailCard" class="detail-card hidden">
         <button class="detail-close" id="detailClose">✕</button>
@@ -103,6 +133,7 @@
         <div class="detail-sub hidden" id="detailSub"></div>
         <div class="detail-rows" id="detailRows"></div>
         <div class="detail-regime hidden" id="detailRegime"></div>
+        <button class="detail-locate" id="detailLocate">🌐 Show on globe</button>
       </div>
 
       <!-- Hover tooltip -->
@@ -123,7 +154,8 @@
 
         <p class="modal-lead">An interactive 3D globe of world tax rates. Set your income &amp; currency,
           pick a tax type, and every country is graded green → yellow → red by its tax burden — plus a
-          <b>New-resident mode</b> highlighting relocation tax regimes.</p>
+          <b>New-resident mode</b> highlighting relocation tax regimes. Switch to <b>☰ Table</b> to rank every
+          country best → worst on all seven taxes combined, live as you move the income slider.</p>
 
         <div class="modal-warn">
           ⚠️ <b>Not tax, legal or financial advice.</b> The figures are approximate <b>headline</b> rates
@@ -153,7 +185,7 @@
           <b>globe.gl</b> / <b>three.js</b> (MIT). More info:
           <a href="https://42-apps.github.io/globaltax/" target="_blank" rel="noopener">42-apps.github.io/globaltax</a>.</p>
 
-        <p class="modal-ver" id="aboutVer">v1.0.9</p>
+        <p class="modal-ver" id="aboutVer">v1.1.0</p>
       </div>
     </div>
   </div>

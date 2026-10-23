@@ -105,6 +105,8 @@ main { position: relative; overflow: hidden; }
   border-radius: 14px;
   padding: 16px 16px 14px;
   box-shadow: 0 18px 50px rgba(0, 0, 0, 0.55);
+  max-height: calc(100% - 36px);   /* short screens: scroll the panel rather than clip its lower controls */
+  overflow-y: auto;
 }
 .ctrl { padding: 12px 0; border-bottom: 1px solid var(--line); }
 .ctrl:first-child { padding-top: 2px; }
@@ -296,6 +298,8 @@ input[type=range]::-moz-range-thumb {
   padding: 16px;
   box-shadow: 0 18px 50px rgba(0, 0, 0, 0.55);
   transition: opacity 0.2s ease, transform 0.2s ease;
+  max-height: calc(100% - 36px);
+  overflow-y: auto;
 }
 .detail-card.hidden { opacity: 0; transform: translateY(-8px); pointer-events: none; }
 .detail-close {
@@ -422,7 +426,205 @@ input[type=range]::-moz-range-thumb {
 
 .hidden { display: none; }
 
+/* ---------------- Globe / table view switch ---------------- */
+.view-toggle {
+  display: inline-flex; border: 1px solid var(--line-strong); border-radius: 9px;
+  overflow: hidden; margin-right: 4px;
+}
+.actions .view-toggle button { border: none; border-radius: 0; }
+.actions .view-toggle button + button { border-left: 1px solid var(--line-strong); }
+.actions .view-toggle button:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+body.view-table .globe-only { display: none; }
+body.view-table #globeViz { visibility: hidden; }
+body:not(.view-table) .detail-locate { display: none; }
+/* Table view: the globe-only explainers & legend make way (the table's footnote explains its colours) */
+body.view-table .taxtype-desc, body.view-table .explainer,
+body.view-table .legend-ctrl, body.view-table .panel .disclaimer { display: none; }
+body:not(.regime-on) .tv-regime-only { display: none; }
+@media (min-width: 1100px) {
+  /* keep the open detail card from covering the toolbar & right-hand columns */
+  body.view-table.card-open .table-view { right: 306px; }
+}
+@media (min-width: 761px) and (max-width: 1099px) {
+  /* too narrow to sit beside the table — dock the card bottom-right, clear of the toolbar */
+  body.view-table .detail-card { top: auto; bottom: 18px; max-height: 55%; }
+}
+.detail-locate {
+  margin-top: 12px; width: 100%;
+  background: rgba(90, 209, 197, 0.1); color: var(--accent);
+  border: 1px solid rgba(90, 209, 197, 0.4); border-radius: 8px;
+  padding: 7px 10px; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; cursor: pointer;
+}
+.detail-locate:hover { background: rgba(90, 209, 197, 0.2); }
+
+/* ---------------- Ranking table ---------------- */
+.table-view {
+  position: absolute; top: 18px; right: 18px; bottom: 18px; left: 326px;   /* clears the 290px panel */
+  z-index: 4;
+  display: flex; flex-direction: column;
+  background: var(--panel-bg);
+  backdrop-filter: blur(14px);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.55);
+  overflow: hidden;
+}
+.table-view.hidden { display: none; }
+.tv-toolbar {
+  display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+  padding: 12px 14px 10px; border-bottom: 1px solid var(--line);
+}
+.tv-search {
+  flex: 1 1 160px; min-width: 120px;
+  background: rgba(255, 255, 255, 0.05); color: var(--fg);
+  border: 1px solid var(--line-strong); border-radius: 8px;
+  padding: 7px 10px; font-size: 12px; outline: none;
+}
+.tv-search::placeholder { color: var(--muted); }
+.tv-search:focus { border-color: var(--accent); }
+.tv-select {
+  background: #11203f; color: var(--fg);
+  border: 1px solid var(--line-strong); border-radius: 8px;
+  padding: 6px 8px; font-size: 11.5px; cursor: pointer; max-width: 190px;
+}
+.tv-select:hover, .tv-select:focus { border-color: var(--accent); outline: none; }
+.tv-select option { background: #0d1a33; color: var(--fg); }
+.tv-btn {
+  background: rgba(255, 255, 255, 0.04); color: var(--fg);
+  border: 1px solid var(--line-strong); border-radius: 8px;
+  padding: 7px 11px; font-size: 11px; letter-spacing: 1px; text-transform: uppercase;
+  cursor: pointer; transition: all 0.15s ease; white-space: nowrap;
+}
+.tv-btn:hover, .tv-btn.on { border-color: var(--accent); color: var(--accent); background: rgba(90, 209, 197, 0.1); }
+
+.tv-weights {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 4px 18px;
+  padding: 10px 14px 12px; border-bottom: 1px solid var(--line);
+  background: rgba(90, 209, 197, 0.04);
+}
+.tv-weights.hidden { display: none; }
+.tvw-head {
+  grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: center;
+  font-size: 11px; color: var(--muted); margin-bottom: 4px;
+}
+.tvw-head b { color: var(--fg); }
+.tvw-reset { padding: 4px 9px; font-size: 9.5px; }
+.tvw-row { display: grid; grid-template-columns: 112px 1fr 38px; align-items: center; gap: 8px; font-size: 11px; }
+.tvw-l { color: var(--fg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tvw-v { color: var(--accent); text-align: right; font-variant-numeric: tabular-nums; }
+.tv-weights input[type=range]::-webkit-slider-runnable-track { background: rgba(255, 255, 255, 0.12); height: 4px; }
+.tv-weights input[type=range]::-webkit-slider-thumb { width: 14px; height: 14px; margin-top: -5px; border-width: 2px; }
+.tv-weights input[type=range]::-moz-range-track { background: rgba(255, 255, 255, 0.12); height: 4px; }
+.tv-weights input[type=range]::-moz-range-thumb { width: 12px; height: 12px; border-width: 2px; }
+
+.tv-meta { padding: 8px 14px; font-size: 11px; color: var(--muted); line-height: 1.45; border-bottom: 1px solid var(--line); }
+.tv-meta b { color: var(--fg); font-weight: 600; }
+.tv-meta-regime { color: var(--accent); }
+.tv-warn { color: var(--yellow); }
+
+.tv-scroll { flex: 1; overflow: auto; position: relative; overscroll-behavior: contain; scroll-padding-top: 44px; }
+.tv-table {
+  width: 100%; border-collapse: separate; border-spacing: 0;
+  font-size: 12px; font-variant-numeric: tabular-nums;
+}
+.tv-table th {
+  position: sticky; top: 0; z-index: 2;
+  background: #0b1530; border-bottom: 1px solid var(--line-strong);
+  padding: 0; text-align: right; white-space: nowrap; vertical-align: bottom;
+}
+.tv-table th button {
+  all: unset; box-sizing: border-box; display: flex; flex-direction: column; align-items: flex-end;
+  width: 100%; padding: 9px 10px 8px; cursor: pointer;
+  font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: var(--muted);
+}
+.tv-table th button:hover, .tv-table th.sorted button { color: var(--accent); }
+.tv-table th button:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+.th-l { display: inline-flex; gap: 3px; align-items: center; }
+.th-arrow { font-size: 8px; }
+.th-sub { font-size: 9.5px; letter-spacing: .5px; text-transform: none; margin-top: 1px; }
+.tv-table th.h-name button, .tv-table th.h-rank button { align-items: flex-start; }
+.tv-table th.hl button { color: var(--accent); }
+
+.tv-table td {
+  padding: 7px 10px; text-align: right; white-space: nowrap;
+  border-bottom: 1px solid var(--line);
+}
+.tv-table tbody tr { cursor: pointer; will-change: transform; }
+.tv-table tbody tr:hover td { background-color: rgba(255, 255, 255, 0.035); }
+.tv-table tbody tr:focus { outline: none; }
+.tv-table tbody tr:focus-visible td { background-color: rgba(90, 209, 197, 0.08); }
+.tv-table tbody tr.sel td { background-color: rgba(90, 209, 197, 0.13); }
+.tv-table td.hl { background-color: rgba(90, 209, 197, 0.06); }
+
+/* sticky rank + country columns for horizontal scrolling */
+.tv-table .h-rank, .tv-table .c-rank { position: sticky; left: 0; width: 44px; min-width: 44px; }
+.tv-table .h-name, .tv-table .c-name { position: sticky; left: 44px; }
+.tv-table th.h-rank, .tv-table th.h-name { z-index: 3; }
+.tv-table td.c-rank, .tv-table td.c-name { z-index: 1; background: #0a1430; }
+.tv-table tbody tr:hover td.c-rank, .tv-table tbody tr:hover td.c-name { background: #101b38; }
+.tv-table tbody tr.sel td.c-rank, .tv-table tbody tr.sel td.c-name { background: #0f2a3e; }
+.tv-table tbody tr:focus-visible td.c-rank, .tv-table tbody tr:focus-visible td.c-name { background: #12263f; }
+.tv-table tbody tr:focus-visible td.c-rank { box-shadow: inset 3px 0 0 var(--accent); }
+.tv-table tbody tr:focus-visible td { border-bottom-color: var(--accent); }
+.tv-table td.c-name { box-shadow: 1px 0 0 var(--line-strong); }
+
+.c-rank { text-align: left !important; color: var(--muted); font-size: 11px; }
+.c-name { text-align: left !important; max-width: 220px; overflow: hidden; text-overflow: ellipsis; }
+.tv-flag { font-size: 15px; margin-right: 7px; vertical-align: -1px; }
+.tv-nm { font-weight: 600; color: var(--fg); }
+.tv-badge { margin-left: 6px; font-size: 10px; color: var(--muted); }
+.tv-badge.on { color: var(--accent); text-shadow: 0 0 6px var(--accent-glow); }
+.tv-badge.sub { font-size: 11px; }
+
+.c-overall { min-width: 120px; }
+.tv-ov { display: flex; align-items: center; justify-content: flex-end; gap: 8px; }
+.tv-ov-val { font-weight: 700; font-size: 13px; min-width: 42px; }
+.tv-ov-bar { width: 56px; height: 5px; border-radius: 3px; background: rgba(255, 255, 255, 0.07); overflow: hidden; flex: none; }
+.tv-ov-bar i { display: block; height: 100%; border-radius: 3px; }
+.c-bill { color: var(--fg); }
+.c-rate { color: var(--fg); }
+.c-rate.regime { color: var(--accent); font-weight: 600; }
+.tv-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 6px; vertical-align: 1px; }
+
+.tv-empty { padding: 28px; text-align: center; color: var(--muted); font-size: 12px; }
+.tv-foot {
+  padding: 8px 14px 10px; font-size: 9.5px; line-height: 1.5; color: var(--muted);
+  border-top: 1px solid var(--line); opacity: .9;
+}
+.tv-foot b { color: var(--fg); font-weight: 600; }
+
+@media (prefers-reduced-motion: reduce) {
+  .tv-table tbody tr { transition: none !important; }
+}
+
+@media (max-width: 900px) {
+  /* drop the centre readout so the header buttons fit; let them wrap rather than run off-screen */
+  header { grid-template-columns: auto 1fr; gap: 12px; }
+  .readout { display: none; }
+  .actions { flex-wrap: wrap; }
+}
+
 @media (max-width: 760px) {
   .panel { width: 240px; }
   .detail-card { width: 220px; }
+
+  /* Header stacks on phones (both views) so the Globe / Table switch stays reachable */
+  header { grid-template-columns: 1fr; gap: 8px; padding: 10px 16px; }
+  .readout { display: none; }
+  .actions { justify-content: flex-start; }
+
+  /* Table view on phones: panel and table stack and the page area scrolls */
+  body.view-table main { overflow-y: auto; padding: 12px 16px; }
+  body.view-table .panel { position: relative; top: 0; left: 0; width: auto; margin-bottom: 12px; padding-bottom: 4px; max-height: none; overflow: visible; }
+  /* the table has its own filter + sortable headers + footnote — keep only income & new-resident mode */
+  body.view-table .search-ctrl, body.view-table .taxtype-ctrl,
+  body.view-table .legend-ctrl, body.view-table .panel .disclaimer, body.view-table .regime-hint { display: none; }
+  body.view-table .regime-ctrl { border-bottom: none; }
+  body.view-table .table-view { position: relative; inset: auto; height: 78vh; }
+  body.view-table .detail-card {
+    position: fixed; top: auto; bottom: 12px; left: 16px; right: 16px; width: auto;
+    max-height: 60vh; overflow-y: auto; z-index: 8;
+  }
+  .tv-select { max-width: 150px; }
+  .tvw-row { grid-template-columns: 104px 1fr 34px; }
 }
