@@ -277,7 +277,7 @@ input[type=range]::-moz-range-thumb {
 .dr-head { font-size: 9.5px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--accent); margin-bottom: 3px; }
 .dr-name { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
 .dr-meta { font-size: 11px; margin-bottom: 6px; font-variant-numeric: tabular-nums; }
-.dr-rate { font-weight: 700; }
+.dr-rate b { font-weight: 700; }
 .dr-who { font-size: 10.5px; color: var(--muted); font-style: italic; margin-bottom: 6px; line-height: 1.4; }
 .dr-note { font-size: 10.5px; line-height: 1.5; color: var(--fg); }
 

@@ -113,6 +113,14 @@ const GRADE_LABEL = { green: 'Low / no tax', yellow: 'Moderate', red: 'High', gr
 const GRADE_BURDEN = { green: 'Low burden', yellow: 'Moderate burden', red: 'High burden', grey: 'No data' };
 const KIND_LABEL = { mover: 'New-resident regime', territorial: 'Territorial — foreign income exempt', notax: 'No personal income tax', low: 'Structurally low tax' };
 const KIND_FOOT = { mover: 'New-resident tax break', territorial: 'Foreign income exempt (territorial)', notax: 'No personal income tax', low: 'Structurally low tax' };
+const SCOPE_SHORT = { foreign: 'on foreign income', earned: 'on local pay', all: 'effective', pension: 'on foreign pensions' };
+// A regime's headline rate, saying which income it covers (+ any flat option on local pay), as HTML.
+function regimeRateHTML(reg, color) {
+  const main = reg.scope === 'lumpsum'
+    ? `<b style="color:${color}">Lump-sum / capped</b>`
+    : `<b style="color:${color}">${reg.rate === 0 ? '~0%' : '~' + reg.rate + '%'}</b> ${SCOPE_SHORT[reg.scope] || 'effective'}`;
+  return main + (typeof reg.earned === 'number' ? ` · ${reg.earned}% flat option on local pay` : '');
+}
 
 /* ============================ Globe ============================ */
 let globe, countries = [], regimePoints = [], markerData = [];
@@ -282,8 +290,7 @@ function hoverEnter(iso, name, present) {
       const rg = regimeGrade(reg.rate);
       body = `<div class="tt-regime">` +
         `<div class="ttr-title">✦ ${reg.name}</div>` +
-        `<div class="ttr-rate"><b style="color:${COLORS[rg]}">${reg.rate === 0 ? '~0%' : '~' + reg.rate + '%'}</b> ` +
-        `effective · ${reg.years ? reg.years + ' yrs' : 'ongoing'}</div>` +
+        `<div class="ttr-rate">${regimeRateHTML(reg, COLORS[rg])} · ${reg.years ? reg.years + ' yrs' : 'ongoing'}</div>` +
         `<div class="ttr-who">${reg.who}</div><div class="ttr-note">${reg.note}</div></div>`;
     } else {
       body = `<div class="tt-nodata">No special new-resident regime</div>`;
@@ -414,7 +421,7 @@ function showDetailFor(iso, name) {
     regEl.innerHTML =
       `<div class="dr-head">✦ ${KIND_LABEL[reg.kind] || 'Relocation perk'}</div>` +
       `<div class="dr-name">${reg.name}</div>` +
-      `<div class="dr-meta"><span class="dr-rate" style="color:${COLORS[rg]}">${reg.rate === 0 ? '~0%' : '~' + reg.rate + '%'} effective</span>` +
+      `<div class="dr-meta"><span class="dr-rate">${regimeRateHTML(reg, COLORS[rg])}</span>` +
       ` · ${reg.years ? reg.years + ' years' : 'ongoing'}</div>` +
       `<div class="dr-who">${reg.who}</div>` +
       `<div class="dr-note">${reg.note}</div>`;
@@ -482,6 +489,7 @@ for (const [region, isos] of Object.entries(window.REGIONS || {})) isos.forEach(
 const SCOPE_LABEL = {
   foreign: 'foreign-source income', earned: 'local employment income',
   all: 'all income', lumpsum: 'a lump-sum / capped charge — not modelled in the table',
+  pension: 'foreign pensions only — not applied to investment income in the table',
 };
 const SOURCE_SCOPE = { foreign: 'foreign', local: 'earned' };   // income source → regime scope it can use
 const SOURCE_LABEL = { foreign: 'foreign investment & pension income', local: 'a local job / salary' };
@@ -535,9 +543,12 @@ function computeRows() {
     // New-resident mode: a mover can use a relocation regime where it beats the normal rules —
     // but only if the regime covers the kind of income they have (most exempt foreign income only).
     const reg = window.REGIMES[iso];
-    const covers = reg && (reg.scope === 'all' || reg.scope === SOURCE_SCOPE[tv.source]);
-    r.regimeUsed = !!(state.regimeMode && covers && r.pit_effective != null && reg.rate < r.pit_effective);
-    if (r.regimeUsed) r.pit_effective = reg.rate;
+    // A foreign-income regime may also offer a flat rate on local pay (reg.earned, e.g. Korea's 19% option).
+    const regRate = !reg ? null
+      : reg.scope === 'all' || reg.scope === SOURCE_SCOPE[tv.source] ? reg.rate
+      : tv.source === 'local' && typeof reg.earned === 'number' ? reg.earned : null;
+    r.regimeUsed = !!(state.regimeMode && regRate != null && r.pit_effective != null && regRate < r.pit_effective);
+    if (r.regimeUsed) r.pit_effective = regRate;
     r.bill = r.pit_effective == null ? null : state.incomeUSD * r.pit_effective / 100;
     if (wsum > 0) {
       let s = 0, used = 0;
@@ -577,7 +588,8 @@ function rowHTML(r, maxOverall) {
   const reg = window.REGIMES[r.iso];
   const sub = window.SUBNATIONAL[r.iso];
   const badges =
-    (reg ? `<span class="tv-badge${r.regimeUsed ? ' on' : ''}" title="${escAttr(`✦ ${reg.name} — applies to ${SCOPE_LABEL[reg.scope] || 'qualifying movers'}`)}">✦</span>` : '') +
+    (reg ? `<span class="tv-badge${r.regimeUsed ? ' on' : ''}" title="${escAttr(`✦ ${reg.name} — applies to ${SCOPE_LABEL[reg.scope] || 'qualifying movers'}` +
+      (typeof reg.earned === 'number' ? `; ${reg.earned}% flat option on local employment income` : ''))}">✦</span>` : '') +
     (sub ? `<span class="tv-badge sub" title="${escAttr(sub)}">↕</span>` : '');
   const og = gradeOverall(r.overall);
   const bar = r.overall == null || !maxOverall ? 0 : Math.max(2, Math.round(100 * r.overall / maxOverall));
@@ -687,7 +699,7 @@ function renderTableMeta() {
     `<b>effective</b> rate on ${income}. Lower is better · green ≤${OVERALL_GRADE[0]}% · yellow ≤${OVERALL_GRADE[1]}% · red above. ` +
     (state.regimeMode
       ? `<b>✦</b> New-resident mode: where a relocation regime covers ${SOURCE_LABEL[tv.source]} and beats normal income tax, its rate is used (assumes you qualify); ` +
-        `lump-sum / capped regimes (e.g. Swiss forfait) aren't modelled. `
+        `lump-sum / capped regimes (e.g. Swiss forfait) and pension-only reliefs aren't modelled. `
       : '') +
     `Excludes state/local taxes, deductions, social-security ceilings & treaties — <b>not tax advice</b>.`;
 }
