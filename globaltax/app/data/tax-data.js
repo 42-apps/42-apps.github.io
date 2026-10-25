@@ -92,8 +92,10 @@ window.TAX_DATA = {
   SI: { n:"Slovenia", cur:"EUR", pit:50, cit:22, vat:22, cgt:25, est:39, gift:39, ss:22.1 },
   RS: { n:"Serbia", cur:"RSD", pit:25, cit:15, vat:20, cgt:15, est:2.5, gift:2.5, ss:19.9 },
   UA: { n:"Ukraine", cur:"UAH", pit:23, cit:18, vat:20, cgt:18, est:0, gift:0, ss:0 },
-  RU: { n:"Russia", cur:"RUB", pit:22, cit:25, vat:22, cgt:15, est:0, gift:0, ss:0,
+  RU: { n:"Russia", cur:"RUB", pit:22, cit:25, vat:22, cgt:15, est:0, gift:15, ss:0,
         pitb:[[0,13],[26000,15],[54000,18],[217000,20],[543000,22]] },
+        // gift: no separate gift tax, but property/vehicles/shares gifted by non-relatives are the
+        // recipient's income at 13% (to RUB 2.4m) / 15%; inheritances are exempt (Tax Code Arts 210, 217, 224)
   BY: { n:"Belarus", cur:"BYN", pit:30, cit:20, vat:20, cgt:13, est:0, gift:0, ss:1 },
   MD: { n:"Moldova", cur:"MDL", pit:12, cit:12, vat:20, cgt:12, est:0, gift:0, ss:9 },
   EE: { n:"Estonia", cur:"EUR", pit:22, cit:22, vat:24, cgt:22, est:0, gift:0, ss:1.6 },
