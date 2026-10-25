@@ -482,7 +482,24 @@ const TV_COLS = [
   { key: 'cgt',           label: 'Cap. gains' },
   { key: 'est',           label: 'Estate' },
   { key: 'gift',          label: 'Gift' },
+  { key: 'regime',        label: '✦ Regime',   sub: 'for movers',   title: 'New-resident / relocation regime — sorts by its headline rate', regime: true },
 ];
+// Regime filter categories, derived from each regime's kind & scope.
+const REGIME_CATS = {
+  mover:       'New-resident & non-dom schemes',
+  territorial: 'Territorial — foreign income untaxed',
+  notax:       'No income tax',
+  lumpsum:     'Lump-sum / capped',
+  pension:     'Foreign-pension relief',
+  low:         'Structurally low tax',
+};
+function regimeCat(reg) {
+  if (reg.scope === 'lumpsum' || reg.scope === 'pension') return reg.scope;
+  return REGIME_CATS[reg.kind] ? reg.kind : 'mover';
+}
+// The ✦ Regime column shows while new-resident mode or a regime filter is on.
+const showRegimeCol = () => state.regimeMode || !!tv.regimeFilter;
+const visibleCols = () => TV_COLS.filter(c => !c.regime || showRegimeCol());
 const REGION_OF = {};
 for (const [region, isos] of Object.entries(window.REGIONS || {})) isos.forEach(iso => { REGION_OF[iso] = region; });
 // What a regime's rate covers (REGIMES[iso].scope) and which income source it helps in the table.
@@ -501,6 +518,7 @@ const tv = {
   profile: 'balanced',
   weights: { ...PROFILES.balanced.w },
   source: 'foreign',                   // new-resident mode: what kind of income the mover has
+  regimeFilter: '',                    // '' | 'any' | 'applied' | a REGIME_CATS key
   rows: [],                            // last computed (filtered + sorted) rows, for CSV
   total: 0,
 };
@@ -549,6 +567,7 @@ function computeRows() {
       : tv.source === 'local' && typeof reg.earned === 'number' ? reg.earned : null;
     r.regimeUsed = !!(state.regimeMode && regRate != null && r.pit_effective != null && regRate < r.pit_effective);
     if (r.regimeUsed) r.pit_effective = regRate;
+    r.regime = reg ? reg.rate : null;   // sort key for the ✦ Regime column
     r.bill = r.pit_effective == null ? null : state.incomeUSD * r.pit_effective / 100;
     if (wsum > 0) {
       let s = 0, used = 0;
@@ -603,14 +622,32 @@ function rowHTML(r, maxOverall) {
     `<td class="c-bill">${local}</td>` +
     `<td class="c-rate${hl('pit_effective')}${r.regimeUsed ? ' regime' : ''}"${effTitle}>` +
       `<span class="tv-dot" style="background:${COLORS[gradeOf(r.pit_effective, 'pit_effective')]}"></span>${r.regimeUsed ? '✦ ' : ''}${fmtPct(r.pit_effective)}</td>` +
-    ['pit_marginal', 'ss', 'vat', 'cit', 'cgt', 'est', 'gift'].map(cell).join('');
+    ['pit_marginal', 'ss', 'vat', 'cit', 'cgt', 'est', 'gift'].map(cell).join('') +
+    (showRegimeCol() ? regimeCellHTML(r, reg, hl('regime')) : '');
+}
+function regimeCellHTML(r, reg, hl) {
+  if (!reg) return `<td class="c-regime${hl}"><span class="rg-none">—</span></td>`;
+  const yrs = reg.years ? `${reg.years} yrs` : 'ongoing';
+  const title = `✦ ${reg.name} — ${REGIME_CATS[regimeCat(reg)]}; applies to ${SCOPE_LABEL[reg.scope] || 'qualifying movers'}` +
+    (typeof reg.earned === 'number' ? `; ${reg.earned}% flat option on local pay` : '') + `. Who: ${reg.who}`;
+  return `<td class="c-regime${hl}${r.regimeUsed ? ' on' : ''}" title="${escAttr(title)}">` +
+    `<span class="rg-n">${reg.name}</span><span class="rg-y">${yrs}</span></td>`;
+}
+function passesRegimeFilter(r) {
+  const f = tv.regimeFilter;
+  if (!f) return true;
+  const reg = window.REGIMES[r.iso];
+  if (!reg) return false;
+  if (f === 'any') return true;
+  if (f === 'applied') return r.regimeUsed;
+  return regimeCat(reg) === f;
 }
 
 function renderTableHead() {
   const { key, dir } = tv.sort;
   const head = document.getElementById('tvHead');
   const focused = head.contains(document.activeElement) ? document.activeElement.dataset.key : null;
-  head.innerHTML = TV_COLS.map(c => {
+  head.innerHTML = visibleCols().map(c => {
     const active = c.key === key || (key === 'rank' && c.key === 'overall') || (key === 'overall' && c.key === 'rank');
     const aria = c.key === key ? ` aria-sort="${dir > 0 ? 'ascending' : 'descending'}"` : '';
     const arrow = active ? (dir > 0 ? '▲' : '▼') : '';
@@ -628,9 +665,18 @@ function renderTable(animate = true) {
   const all = computeRows();
   const maxOverall = Math.max(0, ...all.map(r => r.overall || 0));
   const q = tv.query.trim().toLowerCase();
+  // "Applies to my income" needs new-resident mode; if it's switched off, fall back to "any regime".
+  if (tv.regimeFilter === 'applied' && !state.regimeMode) {
+    tv.regimeFilter = 'any';
+    const sel = document.getElementById('tvRegimeFilter');
+    if (sel) sel.value = 'any';
+  }
+  // The ✦ Regime column can disappear (mode and filter both off) — don't stay sorted by a hidden column.
+  if (tv.sort.key === 'regime' && !showRegimeCol()) tv.sort = { key: 'overall', dir: 1 };
   let rows = all.filter(r =>
     (!tv.region || r.region === tv.region) &&
-    (!q || r.name.toLowerCase().includes(q) || r.iso.toLowerCase() === q));
+    (!q || r.name.toLowerCase().includes(q) || r.iso.toLowerCase() === q) &&
+    passesRegimeFilter(r));
   rows = sortRows(rows);
   tv.rows = rows;
   tv.total = all.length;
@@ -689,7 +735,14 @@ function renderTableMeta() {
   document.getElementById('tvMeta').innerHTML =
     `<b>${sortTxt}</b> · ${shown} · income <b>${income}</b> · ${profileLabel()}` +
     (state.regimeMode ? ` · <span class="tv-meta-regime">✦ regimes applied to ${SOURCE_LABEL[tv.source]}</span>` : '') +
+    (tv.regimeFilter ? ` · showing <b>${regimeFilterLabel(tv.regimeFilter)}</b>` : '') +
     (weightSum() > 0 ? '' : ` · <span class="tv-warn">set at least one weight above 0</span>`);
+  // keep the toolbar's ✦ New-resident toggle in step with the panel switch
+  const rb = document.getElementById('tvRegimeBtn');
+  if (rb) {
+    rb.classList.toggle('on', state.regimeMode);
+    rb.setAttribute('aria-pressed', String(state.regimeMode));
+  }
   const wsum = weightSum();
   const mix = wsum > 0
     ? SCORE_KEYS.filter(k => tv.weights[k] > 0).map(k => `${window.TAX_TYPES[k].short} ${Math.round(100 * tv.weights[k] / wsum)}%`).join(' · ')
@@ -771,6 +824,28 @@ function buildProfileOptions() {
   sel.value = tv.profile;
 }
 
+function regimeCSV(r) {
+  const reg = window.REGIMES[r.iso];
+  if (!reg) return ['', '', '', ''];
+  return [reg.name, REGIME_CATS[regimeCat(reg)], reg.years || 'ongoing', r.regimeUsed ? 'yes' : (state.regimeMode ? 'no' : '')];
+}
+function regimeFilterLabel(f) {
+  return f === 'any' ? 'countries with a new-resident regime'
+    : f === 'applied' ? 'regimes that apply to your income'
+    : REGIME_CATS[f] ? REGIME_CATS[f].toLowerCase() : f;
+}
+function buildRegimeFilterOptions() {
+  const regs = Object.values(window.REGIMES);
+  const count = cat => regs.filter(r => regimeCat(r) === cat).length;
+  const sel = document.getElementById('tvRegimeFilter');
+  if (!sel) return;
+  sel.innerHTML = `<option value="">✦ All countries</option>` +
+    `<option value="any">✦ Any new-resident regime (${regs.length})</option>` +
+    `<option value="applied">✦ Applies to my income</option>` +
+    Object.entries(REGIME_CATS).map(([k, label]) => `<option value="${k}">✦ ${label} (${count(k)})</option>`).join('');
+  sel.value = tv.regimeFilter;
+}
+
 function exportCSV() {
   const c = cur(state.currency);
   const esc = v => {
@@ -779,11 +854,12 @@ function exportCSV() {
   };
   const head = ['Rank', 'Country', 'ISO', 'Region', 'All-in rate %', `Income tax per year (${c.code})`,
     'Income tax effective %', 'Income tax marginal %', 'Social security %', 'VAT/GST %', 'Corporate %',
-    'Capital gains %', 'Estate %', 'Gift %', 'New-resident regime applied'];
+    'Capital gains %', 'Estate %', 'Gift %', 'New-resident regime', 'Regime type', 'Regime years',
+    'Regime applied to your income'];
   const lines = [head.map(esc).join(',')].concat(tv.rows.map(r => [
     r.rank, r.name, r.iso, r.region, r.overall,
     r.bill == null ? '' : Math.round(r.bill * c.fx), r.pit_effective, r.pit_marginal,
-    r.ss, r.vat, r.cit, r.cgt, r.est, r.gift, r.regimeUsed ? window.REGIMES[r.iso].name : '',
+    r.ss, r.vat, r.cit, r.cgt, r.est, r.gift, ...regimeCSV(r),
   ].map(esc).join(',')));
   // Leading BOM so Excel reads the file as UTF-8 (Côte d'Ivoire, €…).
   const blob = new Blob(['﻿' + lines.join('\n') + '\n'], { type: 'text/csv;charset=utf-8' });
@@ -849,6 +925,18 @@ function wireTable() {
   const source = document.getElementById('tvSource');
   source.value = tv.source;
   source.addEventListener('change', () => { tv.source = source.value; renderTable(); });
+
+  // ✦ New-resident toggle on the toolbar drives the same switch as the side panel.
+  const regimeSwitch = document.getElementById('regimeToggle');
+  // ?. — tolerate a stale cached index.html without these controls
+  document.getElementById('tvRegimeBtn')?.addEventListener('click', () => regimeSwitch.click());
+  buildRegimeFilterOptions();
+  document.getElementById('tvRegimeFilter')?.addEventListener('change', e => {
+    tv.regimeFilter = e.target.value;
+    // "Applies to my income" only means something with new-resident mode on.
+    if (tv.regimeFilter === 'applied' && !state.regimeMode) regimeSwitch.click();
+    renderTable();
+  });
 
   document.getElementById('tvHead').addEventListener('click', e => {
     const btn = e.target.closest('button[data-key]');
